@@ -15,7 +15,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
+import { LoginComponent } from './sesion/login/login.component';
+//Formularios
+import {ReactiveFormsModule} from '@angular/forms';
 
 const rutas: Routes = [
   {
@@ -26,6 +28,10 @@ const rutas: Routes = [
   {
     path: 'inicio',
     component: InicioComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: 'profile',
@@ -56,6 +62,7 @@ const rutas: Routes = [
     HeaderComponent,
     InicioComponent,
     NavbarComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,6 +71,7 @@ const rutas: Routes = [
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(rutas, {
       useHash: true
     }),
