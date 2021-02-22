@@ -1,5 +1,5 @@
 export class User {
-    registroAcademico: number | undefined;
+    registroAcademico: string | undefined;
     nombreCompleto: string | undefined;
     password: string | undefined;
     fechaDeNacimiento: string | undefined;
@@ -9,5 +9,5 @@ export class User {
     rolUsuario: string | undefined;
     ciudad: string | undefined;
     estado: string | undefined;
-
+    token: string | undefined;
 }
