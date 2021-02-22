@@ -1,13 +1,14 @@
 export class User {
-    registroAcademico: number | undefined;
+    registroAcademico: string | undefined;
+    ciudad: string | undefined;
+    correoElectronico: string | undefined;
+    estado: string | undefined;
+    fechaDeNacimiento: string | undefined;
+    fotoDePerfil: string | undefined;
+    genero: string | undefined;
     nombreCompleto: string | undefined;
     password: string | undefined;
-    fechaDeNacimiento: string | undefined;
-    genero: string | undefined;
-    fotoDePerfil: string | undefined;
-    correoElectronico: string | undefined;
     rolUsuario: string | undefined;
-    ciudad: string | undefined;
-    estado: string | undefined;
+    token: string | undefined;
 
 }

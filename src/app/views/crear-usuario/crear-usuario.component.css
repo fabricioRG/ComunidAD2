@@ -1,0 +1,40 @@
+form{
+    align-items: center;
+    align-content: center;
+}
+
+mat-form-field{
+    width:50%;
+    align-self: center;
+    margin-left: 25% ;
+    
+}
+mat-label{
+    width:50%;
+    align-self: center;
+    margin-left: 25% ;
+    
+}
+
+mat-radio-group{
+    width:50%;
+    align-self: center;
+    margin-left: 25% ;
+    
+}
+mat-radio-button{
+    width:50%;
+    align-self: center;
+    margin-left: 25% ;
+    
+}
+button{
+    width:50%;
+    align-self: center;
+    margin-left: 25% ;
+}
+
+
+.centrado{
+    align-content: center;
+}
