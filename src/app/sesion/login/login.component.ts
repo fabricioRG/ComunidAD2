@@ -1,7 +1,8 @@
 import {FormControl, FormGroup, Validators} from '@angular/forms'
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,8 +12,9 @@ import { DataService } from '../../data.service';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
+  credencialesIncorrectas: boolean;
 
-  constructor(private dataService: DataService) { 
+  constructor(private dataService: DataService,private router:Router) { 
     this.loginForm=this.createFormGroup();
   }
 
@@ -36,15 +38,19 @@ export class LoginComponent implements OnInit {
   //Guardar los valores del formulario
   onSaveForm(){
     if(this.loginForm.valid){
-      this.loginForm.value['password']="OtraCosaa";
+      //this.loginForm.value['password']="OtraCosaa";
       console.log(this.loginForm.value)
-      this.dataService.postAuthentication(this.loginForm.value).subscribe(result =>
-        console.log(result)
-      )
-      //console.log("Se inicio sesion");
-      //console.log(this.loginForm.value);
-      //console.log(this.loginForm.value['password'])
-      this.onResetForm();
+      this.dataService.postAuthentication(this.loginForm.value).subscribe(result =>{
+        console.log(result);
+        if(result!=null){
+          this.onResetForm();
+          this.router.navigate(['inicio']);
+        }else{
+          console.log("No se encontro el usuario");//Indicar que las credenciales son incorrectas
+          this.credencialesIncorrectas=true;
+        }
+      }
+      );
     }else{
       console.log("No se envio la informacion");
     }

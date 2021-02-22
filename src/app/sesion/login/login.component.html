@@ -9,14 +9,16 @@
             </div>
         </div>
 
-        <input type="password" formControlName="password" placeholder="PSSWORD">
+        <input type="password" formControlName="password" placeholder="Password">
         <div class="alert alert-danger" *ngIf="password!=null && password.invalid &&(password.dirty || password.touched)">
             <div class="container-error-mesage ">
                 La contraseña es requerida
             </div>
         </div>
-        
 
+        <div class="alert alert-danger" *ngIf="credencialesIncorrectas">
+            No se ha encontrado el usuario. Verifica tus credenciales
+        </div>
         <button type="submit" class="btn-send">Iniciar Sesion</button>
     </form>
 </div>
