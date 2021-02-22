@@ -3,6 +3,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CrearUsuarioComponent } from './crear-usuario.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatDatepickerModule} from '@angular/material/datepicker'; 
+import { MatNativeDateModule } from '@angular/material/core';
+import {MatRadioModule} from '@angular/material/radio'; 
+import {MatInputModule} from '@angular/material/input'; 
+
+
 
 describe('CrearUsuarioComponent', () => {
   let component: CrearUsuarioComponent;
@@ -11,7 +19,7 @@ describe('CrearUsuarioComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ CrearUsuarioComponent ],
-      imports: [ReactiveFormsModule,HttpClientTestingModule ]
+      imports: [ReactiveFormsModule,HttpClientTestingModule,RouterTestingModule,BrowserAnimationsModule,MatDatepickerModule,MatNativeDateModule,MatRadioModule,MatInputModule]
     })
     .compileComponents();
   });
@@ -58,6 +66,21 @@ describe('CrearUsuarioComponent', () => {
     expect(resultado).toEqual(expect1)
 
   });
+
+  it('convertir fecha test', () => {
+    //arrange
+    var fecha = new Date('2021-01-01')
+    fecha.setTime(fecha.getTime() + 21600000)
+    var fechaEsperada = '2021-01-01' // esto esta asi porque el sistema le resta 6 horas
+
+    //act
+    var fechaFormateada = component.convertirFecha(fecha)
+    //assert
+    expect(fechaFormateada).toEqual(fechaEsperada)
+
+  });
+
+  
 
   
 });
