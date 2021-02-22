@@ -14,8 +14,10 @@ export class AppComponent implements OnInit{
   constructor(private dataService: DataService) {}
 
   ngOnInit(){
+
     // return this.dataService.getUsers()
     // .subscribe(data => this.users$ = data);
   }
 
+  title='myApp';
 }
