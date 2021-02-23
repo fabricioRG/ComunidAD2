@@ -9,5 +9,5 @@ export class User {
     rolUsuario?: string;
     ciudad?: string;
     estado?: string;
-
+    token?: string;
 }

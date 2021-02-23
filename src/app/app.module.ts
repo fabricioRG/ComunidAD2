@@ -26,6 +26,17 @@ import { InicioComponent } from './views/inicio/inicio.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component'
 import { PetitionsComponent } from './views/petitions/petitions.component';
+import { LoginComponent } from './sesion/login/login.component';
+//Formularios
+import {ReactiveFormsModule,FormsModule} from '@angular/forms';
+import { CrearUsuarioComponent } from './views/crear-usuario/crear-usuario.component';
+import {MatDatepickerModule} from '@angular/material/datepicker'; 
+import { MatNativeDateModule } from '@angular/material/core';
+
+import {MatRadioModule} from '@angular/material/radio'; 
+
+import {MatInputModule} from '@angular/material/input'; 
+
 
 
 const rutas: Routes = [
@@ -37,6 +48,15 @@ const rutas: Routes = [
   {
     path: 'inicio',
     component: InicioComponent
+    
+  },{
+    path: 'crearUsuario',
+    component: CrearUsuarioComponent
+
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: 'profile',
@@ -73,6 +93,8 @@ const rutas: Routes = [
     NavbarComponent,
     NavigationBarComponent,
     PetitionsComponent,
+    LoginComponent,
+    CrearUsuarioComponent,
   ],
   imports: [
     BrowserModule,
@@ -84,6 +106,12 @@ const rutas: Routes = [
     MatCardModule,
     MatTableModule,
     MatCheckboxModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule,
     RouterModule.forRoot(rutas, {
       useHash: true
     }),
