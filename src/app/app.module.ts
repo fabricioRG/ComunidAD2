@@ -5,21 +5,31 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http'
 import { DataService } from './data.service';
+
 import { RouterModule, Routes } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatCardModule} from '@angular/material/card';
+import {MatTableModule} from '@angular/material/table'; 
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
 import { ProfileComponent } from './views/profile/profile.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { DashboardUsersComponent } from './views/dashboard-users/dashboard-users.component';
 import { HeaderComponent } from './views/header/header.component';
 import { InicioComponent } from './views/inicio/inicio.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component'
+import { PetitionsComponent } from './views/petitions/petitions.component';
 import { LoginComponent } from './sesion/login/login.component';
 //Formularios
 import {ReactiveFormsModule,FormsModule} from '@angular/forms';
 import { CrearUsuarioComponent } from './views/crear-usuario/crear-usuario.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDatepickerModule} from '@angular/material/datepicker'; 
 import { MatNativeDateModule } from '@angular/material/core';
 
@@ -64,6 +74,10 @@ const rutas: Routes = [
       {
         path: 'users',
         component: DashboardUsersComponent
+      },
+      {
+        path: 'petitions',
+        component: PetitionsComponent
       }
     ]
   }
@@ -77,6 +91,8 @@ const rutas: Routes = [
     HeaderComponent,
     InicioComponent,
     NavbarComponent,
+    NavigationBarComponent,
+    PetitionsComponent,
     LoginComponent,
     CrearUsuarioComponent,
   ],
@@ -87,6 +103,9 @@ const rutas: Routes = [
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatCardModule,
+    MatTableModule,
+    MatCheckboxModule,
     ReactiveFormsModule,
     FormsModule,
     MatInputModule,
@@ -96,7 +115,10 @@ const rutas: Routes = [
     RouterModule.forRoot(rutas, {
       useHash: true
     }),
-    BrowserAnimationsModule,
+    LayoutModule,
+    MatSidenavModule,
+    MatListModule,
+    BrowserAnimationsModule
   ],
   exports: [
   ],

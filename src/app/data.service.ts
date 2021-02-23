@@ -7,15 +7,25 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DataService {
+  postAdminCreationUrl = 'http://localhost:8080/api/users/adminCreation';
+  apiUrl2 = 'http://localhost:8080/api/users/accounts'
   apiUrl = 'http://localhost:8080/api/users/987654333'
   apiUrlAuthentication='http://localhost:8080/api/users/authentication';
-  addUserUrl = '/api/users';
+  addUserUrl = 'http://localhost:8080/api/users';
 
 
   constructor(private _http: HttpClient) { }
 
   getUsers() {
     return this._http.get<User>(this.apiUrl);
+  }
+
+  getAllUsers(){
+    return this._http.get<User[]>(this.apiUrl2);
+  }
+
+  postAdminCreation(registroAcadem: string){
+    return this._http.post<number>(this.postAdminCreationUrl, { registroAcademico: registroAcadem });
   }
   addNewUser(user: User): Observable<any>{
     console.log('llegue a addNewUser')

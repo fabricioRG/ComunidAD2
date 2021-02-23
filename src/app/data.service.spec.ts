@@ -1,16 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-<<<<<<< HEAD
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-
-import { DataService } from './data.service';
-import { User } from './user.model';
-
-=======
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import {HttpClientModule} from '@angular/common/http';
 import { DataService } from './data.service';
 import { User } from './user.model';
->>>>>>> develop
 
 describe('DataService', () => {
   let service: DataService;
