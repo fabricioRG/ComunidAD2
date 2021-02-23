@@ -82,7 +82,7 @@ export class PetitionsComponent implements OnInit {
     } else {
       console.log("Not enough")
     }
-    setTimeout(function(){location.reload()}, 250);
+    // setTimeout(function(){location.reload()}, 500);
   }
 
   postAdminCreation(registroAcademico: string){
@@ -91,8 +91,13 @@ export class PetitionsComponent implements OnInit {
   }
 
   updateUsers(){
-    return this.dataService.getUsers()
-    .subscribe(data => this.users = data);
+    return this.dataService.getAllUsers()
+    .subscribe(data => {
+      this.users = data;
+      this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {
+        return !user.estado?.localeCompare("EN_ESPERA");
+      }))
+    });
   }
 
   ngOnInit() {
