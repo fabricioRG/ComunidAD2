@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import {SelectionModel} from '@angular/cdk/collections';
 import { User } from 'src/app/user.model';
+import { DataService } from '../../data.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button'; 
 
 @Component({
   selector: 'app-petitions',
@@ -9,21 +13,90 @@ import { User } from 'src/app/user.model';
 
 export class PetitionsComponent implements OnInit {
 
-  animalsArray: {
-    name: string;
-    size: string;
-  }[] = [
-    { name: "chicken", size: "small" },
-    { name: "pig", size: "medium" },
-    { name: "cow", size: "large" },
+
+  /*DEFINITIONS */
+  enableButtonAcceptarSolicitud = false;
+  users: User[] = [];
+  usersArray: User[] = [
+    { nombreCompleto: "Jesfrin", password: "Jess" },
+    { nombreCompleto: "Bryan", password: "bryan" },
+    { nombreCompleto: "Carlos", password: "carlos" },
   ];
 
-  displayedColumns: string[] = ['name', 'size'];
-  dataSource = this.animalsArray;
+  displayedColumns: string[] = ['select','registroAcademico','nombreCompleto','correoElectronico','genero','ciudad','estado','rolUsuario'];
+  dataSource = new MatTableDataSource<User>(this.users);
+  selection = new SelectionModel<User>(true, []);
 
-  constructor() { }
+  response: number | undefined;
 
-  ngOnInit(): void {
+
+  /* CONSTRUCTOR */
+  constructor(private dataService: DataService) { }
+
+
+  /* FUNCTIONS */
+  printUsers(){
+    // console.log(this.users);
+    this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {
+      return !user.estado?.localeCompare("EN_ESPERA");
+    }))
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    // console.log("numSelected: ", numSelected, "numRows: ", numRows);
+    if(numSelected > 0){
+      this.setStateButtonAcceptarSolicitud(true);
+    } else {
+      this.setStateButtonAcceptarSolicitud(false);
+    }
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  checkboxLabel(row?: User): string {
+    // console.log("row",row);
+    // console.log("pressed: ", this.selection.selected)
+    // console.log("Selections: ",this.selection.selected);
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row}`;
+  }
+
+  setStateButtonAcceptarSolicitud(state: boolean){
+    this.enableButtonAcceptarSolicitud = state;
+  }
+
+  aceptarSolicitudPressedButton(){
+    const numSelected = this.selection.selected.length;
+    if(numSelected > 0){
+      this.selection.selected.forEach(row => this.postAdminCreation(row.registroAcademico!))
+      console.log("Printing")
+    } else {
+      console.log("Not enough")
+    }
+    setTimeout(function(){location.reload()}, 250);
+  }
+
+  postAdminCreation(registroAcademico: string){
+    return this.dataService.postAdminCreation(registroAcademico)
+    .subscribe(data => this.response = data);
+  }
+
+  updateUsers(){
+    return this.dataService.getUsers()
+    .subscribe(data => this.users = data);
+  }
+
+  ngOnInit() {
+    return this.updateUsers();
   }
 
 }

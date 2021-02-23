@@ -6,12 +6,17 @@ import { User } from './user.model';
   providedIn: 'root'
 })
 export class DataService {
-  apiUrl = 'http://localhost:8080/api/users/987654333'
+  apiUrl = 'http://localhost:8080/api/users/accounts'
+  postAdminCreationUrl = 'http://localhost:8080/api/users/adminCreation';
 
   constructor(private _http: HttpClient) { }
 
   getUsers() {
-    return this._http.get<User>(this.apiUrl);
+    return this._http.get<User[]>(this.apiUrl);
+  }
+
+  postAdminCreation(registroAcadem: string){
+    return this._http.post<number>(this.postAdminCreationUrl, { registroAcademico: registroAcadem });
   }
 
 }

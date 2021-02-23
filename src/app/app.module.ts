@@ -16,6 +16,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule} from '@angular/material/card';
 import {MatTableModule} from '@angular/material/table'; 
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 import { ProfileComponent } from './views/profile/profile.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
@@ -82,6 +83,7 @@ const rutas: Routes = [
     MatIconModule,
     MatCardModule,
     MatTableModule,
+    MatCheckboxModule,
     RouterModule.forRoot(rutas, {
       useHash: true
     }),
