@@ -17,7 +17,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LoginComponent } from './sesion/login/login.component';
 //Formularios
-import {ReactiveFormsModule} from '@angular/forms';
+import {ReactiveFormsModule,FormsModule} from '@angular/forms';
+import { CrearUsuarioComponent } from './views/crear-usuario/crear-usuario.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatDatepickerModule} from '@angular/material/datepicker'; 
+import { MatNativeDateModule } from '@angular/material/core';
+
+import {MatRadioModule} from '@angular/material/radio'; 
+
+import {MatInputModule} from '@angular/material/input'; 
+
+
 
 const rutas: Routes = [
   {
@@ -28,6 +38,11 @@ const rutas: Routes = [
   {
     path: 'inicio',
     component: InicioComponent
+    
+  },{
+    path: 'crearUsuario',
+    component: CrearUsuarioComponent
+
   },
   {
     path: 'login',
@@ -63,6 +78,7 @@ const rutas: Routes = [
     InicioComponent,
     NavbarComponent,
     LoginComponent,
+    CrearUsuarioComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,9 +88,15 @@ const rutas: Routes = [
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
+    FormsModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule,
     RouterModule.forRoot(rutas, {
       useHash: true
     }),
+    BrowserAnimationsModule,
   ],
   exports: [
   ],

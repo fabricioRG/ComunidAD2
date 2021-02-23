@@ -3,6 +3,7 @@ import { DataService } from './data.service';
 import { OnInit } from '@angular/core'
 import { User } from './user.model';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,10 +15,9 @@ export class AppComponent implements OnInit{
   constructor(private dataService: DataService) {}
 
   ngOnInit(){
-
     // return this.dataService.getUsers()
     // .subscribe(data => this.users$ = data);
   }
-
-  title='myApp';
+  title = 'myApp';
+  
 }
