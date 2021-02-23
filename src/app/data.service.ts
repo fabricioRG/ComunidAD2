@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class DataService {
   apiUrl = 'http://localhost:8080/api/users/987654333'
+  apiUrlAuthentication='http://localhost:8080/api/users/authentication';
   addUserUrl = '/api/users';
 
 
@@ -20,6 +21,10 @@ export class DataService {
     console.log('llegue a addNewUser')
     console.log(user)
     return this._http.post<any>(this.addUserUrl,user);
+  }
+
+  postAuthentication(user: any){
+    return this._http.post(this.apiUrlAuthentication,user);
   }
 
 }

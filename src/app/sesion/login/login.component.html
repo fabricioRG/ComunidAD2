@@ -1,0 +1,24 @@
+<div class="form-container">
+    <h1>Inicio de Sesion</h1>
+    <form [formGroup]="loginForm" (ngSubmit)="onSaveForm()">
+        <input type="text" formControlName="registroAcademico" placeholder="Numero de registro">
+        <div class="alert alert-danger" *ngIf="registroAcademico!=null && registroAcademico.invalid &&(registroAcademico.dirty || registroAcademico.touched)">
+            <div class="container-error-mesage">
+                El numero de registro es requerido,
+                con 9 caracteres
+            </div>
+        </div>
+
+        <input type="password" formControlName="password" placeholder="Password">
+        <div class="alert alert-danger" *ngIf="password!=null && password.invalid &&(password.dirty || password.touched)">
+            <div class="container-error-mesage ">
+                La contraseña es requerida
+            </div>
+        </div>
+
+        <div class="alert alert-danger" *ngIf="credencialesIncorrectas">
+            No se ha encontrado el usuario. Verifica tus credenciales
+        </div>
+        <button type="submit" class="btn-send">Iniciar Sesion</button>
+    </form>
+</div>

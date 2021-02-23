@@ -15,8 +15,10 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { LoginComponent } from './sesion/login/login.component';
+//Formularios
+import {ReactiveFormsModule,FormsModule} from '@angular/forms';
 import { CrearUsuarioComponent } from './views/crear-usuario/crear-usuario.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDatepickerModule} from '@angular/material/datepicker'; 
 import { MatNativeDateModule } from '@angular/material/core';
@@ -41,6 +43,10 @@ const rutas: Routes = [
     path: 'crearUsuario',
     component: CrearUsuarioComponent
 
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: 'profile',
@@ -71,6 +77,7 @@ const rutas: Routes = [
     HeaderComponent,
     InicioComponent,
     NavbarComponent,
+    LoginComponent,
     CrearUsuarioComponent,
   ],
   imports: [
