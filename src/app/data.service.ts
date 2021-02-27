@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from './user.model';
 import { Observable } from 'rxjs';
 
@@ -11,6 +11,7 @@ export class DataService {
   apiUrl2 = 'http://localhost:8080/api/users/accounts'
   apiUrl = 'http://localhost:8080/api/users/987654333'
   apiUrlAuthentication='http://localhost:8080/api/users/authentication';
+  apiUrlObtenerToken='http://localhost:8080/token';
   addUserUrl = 'http://localhost:8080/api/users';
 
 
@@ -31,6 +32,20 @@ export class DataService {
     console.log('llegue a addNewUser')
     console.log(user)
     return this._http.post<any>(this.addUserUrl,user);
+  }
+  
+
+
+  getToken(user: any){
+  
+    let headers = new HttpHeaders({
+        'Authorization': `Bearer ${user.token}` ,
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Origin': '*'
+      });
+    let options = { headers: headers };
+    return this._http.post(this.apiUrlObtenerToken,user, options);
   }
 
   postAuthentication(user: any){

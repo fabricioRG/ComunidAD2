@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InicioComponent implements OnInit {
 
-  constructor() { }
+  token: any;
+
+  constructor() {
+    this.token = '';
+   }
 
   ngOnInit(): void {
+    this.token = localStorage.getItem('token');
   }
 
 }

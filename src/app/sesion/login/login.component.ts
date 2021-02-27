@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private dataService: DataService,private router:Router) { 
     this.loginForm=this.createFormGroup();
+    
   }
 
   ngOnInit(): void {
@@ -40,8 +41,9 @@ export class LoginComponent implements OnInit {
     if(this.loginForm.valid){
       //this.loginForm.value['password']="OtraCosaa";
       console.log(this.loginForm.value)
-      this.dataService.postAuthentication(this.loginForm.value).subscribe(result =>{
+      this.dataService.getToken(this.loginForm.value).subscribe(result =>{
         console.log(result);
+        localStorage.setItem('token', JSON.stringify(result));
         if(result!=null){
           this.onResetForm();
           this.router.navigate(['inicio']);
@@ -49,6 +51,8 @@ export class LoginComponent implements OnInit {
           console.log("No se encontro el usuario");//Indicar que las credenciales son incorrectas
           this.credencialesIncorrectas=true;
         }
+      }, error =>{
+        console.log(error.error)
       }
       );
     }else{
