@@ -19,7 +19,7 @@ export class CrearUsuarioComponent implements OnInit {
   signupForm!: FormGroup;
   ESTADO_USUARIO_ACTIVO = 'ACTIVO';
   ROL_USUARIO_NORMAL = 'COMUNIDAD';
-  TOKEN_NULO = 'NADA';
+  TOKEN_NULO = null;
   FOTO_PERFIL = 'FOTO';
   REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,30}/;
 
