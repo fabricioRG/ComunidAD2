@@ -20,6 +20,7 @@ export class CrearUsuarioComponent implements OnInit {
   ESTADO_USUARIO_ACTIVO = 'ACTIVO';
   ROL_USUARIO_NORMAL = 'COMUNIDAD';
   TOKEN_NULO = null;
+  PRIVACIDAD = 'PUBLICO';
   FOTO_PERFIL = 'FOTO';
   REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,30}/;
 
@@ -68,6 +69,7 @@ export class CrearUsuarioComponent implements OnInit {
       ],
       rolUsuario: [this.ROL_USUARIO_NORMAL],
       token: [this.TOKEN_NULO],
+      privacidad: [this.PRIVACIDAD],
     });
     return this.dataService
       .getUsers()
@@ -121,6 +123,7 @@ export class CrearUsuarioComponent implements OnInit {
       usuario.registroAcademico = String(values.numeroCarnet);
       usuario.rolUsuario = values.rolUsuario;
       usuario.token = values.token;
+      usuario.privacidad = values.privacidad;
 
       this.dataService.addNewUser(usuario).subscribe(
         (user) => {

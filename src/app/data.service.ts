@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from './user.model';
 import { Observable } from 'rxjs';
+import { HeadersService } from './services/headers/headers.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,13 @@ export class DataService {
   apiUrl = 'http://localhost:8080/api/users/987654333'
   apiUrlAuthentication='http://localhost:8080/api/users/authentication';
   apiUrlObtenerToken='http://localhost:8080/token';
-  addUserUrl = 'http://localhost:8080/creation/users';
+  addUserUrl = '/creation/users';
   userByTokenUrl = '/api/users/findbytoken';
+  userUpdateUrl = '/api/update/user';
+  
 
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, private controllHeader: HeadersService) { }
 
   getUsers() {
     return this._http.get<User>(this.apiUrl);
@@ -32,7 +35,14 @@ export class DataService {
   addNewUser(user: User): Observable<any>{
     console.log('llegue a addNewUser')
     console.log(user)
-    return this._http.post<any>(this.addUserUrl,user);
+    let headers = new HttpHeaders({
+        
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'POST',
+      'Access-Control-Allow-Origin': '*'
+    });
+  let options = { headers: headers };
+    return this._http.post<any>(this.addUserUrl,user,options);
   }
   
 
@@ -61,5 +71,11 @@ export class DataService {
   postAuthentication(user: any){
     return this._http.post(this.apiUrlAuthentication,user);
   }
+
+  updateUser(user: any){
+    return this._http.post(this.userUpdateUrl,user,this.controllHeader.obtenerHeaderConToken(user.token));
+  }
+
+  
 
 }
