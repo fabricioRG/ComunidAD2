@@ -35,7 +35,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 import {MatRadioModule} from '@angular/material/radio'; 
 import {MatInputModule} from '@angular/material/input';
-import { EditProfileComponent } from './views/edit-profile/edit-profile.component'; 
+import { EditProfileComponent } from './views/edit-profile/edit-profile.component';
+import { CreateComponent } from './comunity/create/create.component'; 
 
 
 
@@ -87,6 +88,10 @@ const rutas: Routes = [
       {
         path: 'petitions',
         component: PetitionsComponent
+      },
+      {
+        path: 'createComunity',
+        component: CreateComponent
       }
     ]
   }
@@ -105,6 +110,7 @@ const rutas: Routes = [
     LoginComponent,
     CrearUsuarioComponent,
     EditProfileComponent,
+    CreateComponent,
   ],
   imports: [
     BrowserModule,

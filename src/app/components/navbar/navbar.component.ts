@@ -7,9 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
+  token: any;
+
   constructor() { }
 
   ngOnInit(): void {
+
+    this.token = localStorage.getItem('token');
+    //this.token=localStorage.clear();
+    console.log("Token:"+this.token);
+
   }
+//Si token es null o indefined
 
 }
