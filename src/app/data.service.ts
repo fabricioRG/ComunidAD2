@@ -13,7 +13,7 @@ export class DataService {
   apiUrlAuthentication='http://localhost:8080/api/users/authentication';
   apiUrlObtenerToken='http://localhost:8080/token';
   addUserUrl = 'http://localhost:8080/creation/users';
-  userByTokenUrl = 'http://localhost:8080/api/users/token/';
+  userByTokenUrl = '/api/users/findbytoken';
 
 
   constructor(private _http: HttpClient) { }
@@ -39,7 +39,7 @@ export class DataService {
 
   getToken(user: any){
     let headers = new HttpHeaders({
-        'Authorization': `Bearer ${user.token}` ,
+        
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST',
         'Access-Control-Allow-Origin': '*'
@@ -48,12 +48,12 @@ export class DataService {
     return this._http.post(this.apiUrlObtenerToken,user, options);
   }
   
-  getUserByToken(token: any) {
+  getUserByToken(token: User) {
+    console.log(token)
+    console.log('En data service: '+token.token)
     let headers = new HttpHeaders({    
-      'Content-Type:' : 'application/json',
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Allow-Methods': 'POST',
-      'Access-Control-Allow-Origin': '*'
+      'Authorization': 'Bearer '+token.token,
+      
     });
     let options = { headers: headers };
     return this._http.post<User>(this.userByTokenUrl,token,options);
