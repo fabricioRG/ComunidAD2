@@ -1,0 +1,55 @@
+<div *ngIf="pruebaRuta()" class="form-container">
+
+    <div class="row d-flex justify-content-center">
+        <!--Grid column-->
+        <div class="col-md-6">
+            <div class="text-center">
+                <h1>Creacion de comunidad</h1>
+            </div>
+            <form [formGroup]="comunityForm" (ngSubmit)="onSaveForm()">
+                
+                <!--Nombre comunidad-->
+                <div class="form-group">
+                    <input type="text" class="form-control" formControlName="registroAcademico" placeholder="Nombre de comunidad">
+                    <div class="alert alert-danger" *ngIf="registroAcademico!=null && registroAcademico.invalid &&(registroAcademico.dirty || registroAcademico.touched)">
+                        <div class="container-error-mesage">
+                            El numero de registro es requerido,
+                            con 9 caracteres
+                        </div>
+                    </div>
+                </div>
+
+                <!--Descripcion-->
+                <div class="form-group">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="password" placeholder="Descipcion de la comunidad"></textarea>
+                    <div class="alert alert-danger" *ngIf="password!=null && password.invalid &&(password.dirty || password.touched)">
+                        <div class="container-error-mesage ">
+                            La contraseña es requerida
+                        </div>
+                    </div>
+                    <div class="alert alert-danger" *ngIf="datosCorrectos">
+                        Usuario o contraseña incorrectas
+                    </div>
+                </div>                
+                
+                <!--Cursos-->
+                <div class="form-group">
+                    <select id="inputState" class="form-control">
+                      <option selected>Seleccione su curso...</option>
+                      <option>...</option>
+                    </select>
+                  </div>
+
+                <!--Foto-->
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Iniciar Sesion</button>
+                </div>
+                
+
+            </form>        
+        </div>
+        <!--Grid column-->
+      </div>
+
+</div>

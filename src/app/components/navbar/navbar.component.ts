@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { DataService } from 'src/app/data.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,17 +9,35 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  token: any;
 
-  constructor() { }
-
-  ngOnInit(): void {
-
-    this.token = localStorage.getItem('token');
-    //this.token=localStorage.clear();
-    console.log("Token:"+this.token);
+  token$: Observable<boolean>;
+  verTablero: boolean;
+  constructor(private dataService: DataService) { 
+    console.log("CONSTRUCTOR"+dataService.getLoggedIn());
+    this.verTablero=dataService.getLoggedIn();
 
   }
+
+  ngOnInit(): void {
+    console.log("sdasdf"+this.verTablero);
+    this.token$=this.dataService.isLoggedIn();//Estas acciones solo las realiza cuando ocurre un cambio en la variable
+    this.token$.subscribe(isSuscribe=>{
+      if(isSuscribe){
+        this.verTablero=true;
+        //POST->Usuario
+      }else{
+        this.verTablero=false;
+      }
+      console.log("Sucribe:"+isSuscribe);
+      console.log("LocalStorage:"+localStorage.getItem('token'));
+    })
+
+  }
+
+  logOut(){
+    this.dataService.logOut();
+  }
+
 //Si token es null o indefined
 
 }

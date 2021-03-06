@@ -10,7 +10,6 @@ import { map, shareReplay } from 'rxjs/operators';
 })
 export class NavigationBarComponent {
 
-  token: any;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -19,15 +18,5 @@ export class NavigationBarComponent {
     );
 
   constructor(private breakpointObserver: BreakpointObserver) {}
-
-
-  ngOnInit(): void {
-
-    this.token = localStorage.getItem('token');
-    //this.token=localStorage.clear();
-    console.log("Token:"+this.token);
-
-  }
-//Si token es null o indefined
 
 }

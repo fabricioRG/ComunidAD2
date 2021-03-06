@@ -3,6 +3,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,8 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   credencialesIncorrectas: boolean;
+  token$: Observable<boolean>;
+  token : any;
 
   constructor(private dataService: DataService,private router:Router) { 
     this.loginForm=this.createFormGroup();
@@ -20,7 +23,37 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.token$=this.dataService.isLoggedIn();
+    this.token$.subscribe(isSuscribe=>{
+    console.log("Sucribe IN LOGIN:"+isSuscribe);
+    console.log("LocalStorage IN LOGIN:"+localStorage.getItem('token'));
+    if(isSuscribe){
+      this.router.navigate(['inicio']);
+      //this.findUser();
+    }else{
+      this.credencialesIncorrectas=true;
+    }
+  })
+  }
 
+  //Buscar usuario
+  findUser(){
+    this.token = localStorage.getItem('token');
+    this.token = JSON.parse(this.token).token
+    var aux = new User();
+    aux.token = this.token;
+    console.log("Token a mandar:"+aux.token);
+    this.dataService.getUserByToken(aux).subscribe(
+      (user) => {
+        console.log(user)
+        alert(user);
+      },
+      (error) => {
+        alert('ERROR: ' + error);
+        console.log(error);
+        
+      }
+    );
   }
 
   //Validaciones de formulario
@@ -41,20 +74,8 @@ export class LoginComponent implements OnInit {
     if(this.loginForm.valid){
       //this.loginForm.value['password']="OtraCosaa";
       console.log(this.loginForm.value)
-      this.dataService.getToken(this.loginForm.value).subscribe(result =>{
-        console.log(result);
-        localStorage.setItem('token', JSON.stringify(result));
-        if(result!=null){
-          this.onResetForm();
-          this.router.navigate(['inicio']);
-        }else{
-          console.log("No se encontro el usuario");//Indicar que las credenciales son incorrectas
-          this.credencialesIncorrectas=true;
-        }
-      }, error =>{
-        console.log(error.error)
-      }
-      );
+      this.dataService.logIn(this.loginForm.value);
+      //Ya revisa el observable
     }else{
       console.log("No se envio la informacion");
     }
