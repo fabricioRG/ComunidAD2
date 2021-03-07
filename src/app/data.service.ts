@@ -15,6 +15,7 @@ export class DataService {
   addUserUrl = 'http://localhost:8080/creation/users';
   userByTokenUrl = '/api/users/findbytoken';
   coursesUrl = '/api/users/getCourses';
+  addComunityUrl='/api/users/creationComunity';
 
   private logger$ = new Subject<boolean>();//Va a emitir un evento
   private loggedIn : boolean;
@@ -121,6 +122,16 @@ export class DataService {
     let options = { headers: headers };
     return this._http.post<User>(this.coursesUrl,token,options);
   }  
+
+  //Posta para agregar comunidad
+  saveComunity(comunity: any,token: User) {
+    console.log('En save comunity: '+comunity.nombre)
+    let headers = new HttpHeaders({    
+      'Authorization': 'Bearer '+token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post(this.addComunityUrl,comunity,options);
+  }
 
   public getLoggedIn(){
     return this.loggedIn;

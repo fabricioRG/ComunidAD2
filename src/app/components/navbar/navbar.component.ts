@@ -12,6 +12,7 @@ export class NavbarComponent implements OnInit {
 
   token$: Observable<boolean>;
   verTablero: boolean;
+  
   constructor(private dataService: DataService) { 
     console.log("CONSTRUCTOR"+dataService.getLoggedIn());
     this.verTablero=dataService.getLoggedIn();
