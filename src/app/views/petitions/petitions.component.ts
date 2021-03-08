@@ -28,10 +28,14 @@ export class PetitionsComponent implements OnInit {
   selection = new SelectionModel<User>(true, []);
 
   response: number | undefined;
+  token: any;
 
 
   /* CONSTRUCTOR */
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService) {
+    this.token = localStorage.getItem('token');
+    this.token = JSON.parse(this.token).token;
+  }
 
 
   /* FUNCTIONS */
@@ -86,12 +90,25 @@ export class PetitionsComponent implements OnInit {
   }
 
   postAdminCreation(registroAcademico: string){
-    return this.dataService.postAdminCreation(registroAcademico)
-    .subscribe(data => this.response = data);
+    var aux = new User();
+    aux.token = this.token;
+    this.dataService.postAdminCreation(registroAcademico, aux)
+    .subscribe(
+      (data) => {
+        this.response = data
+        console.log("Data:: ", data)
+      },
+      (error) => {
+        console.log("Error: ", error)
+      }
+      )
   }
 
   updateUsers(){
-    return this.dataService.getAllUsers()
+    var aux = new User();
+    aux.token = this.token;
+    console.log(aux.token);
+    return this.dataService.getAllUsers(aux)
     .subscribe(data => {
       this.users = data;
       this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {
