@@ -34,6 +34,7 @@ export class PetitionsComponent implements OnInit {
   /* CONSTRUCTOR */
   constructor(private dataService: DataService) {
     this.token = localStorage.getItem('token');
+    this.token = JSON.parse(this.token).token;
   }
 
 
@@ -94,15 +95,18 @@ export class PetitionsComponent implements OnInit {
   }
 
   updateUsers(){
-    const aux = new User();
+    var aux = new User();
     aux.token = this.token;
-    return this.dataService.getAllUsers(aux)
-    .subscribe(data => {
-      this.users = data;
-      this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {
-        return !user.estado?.localeCompare("EN_ESPERA");
-      }))
-    });
+    console.log(aux.token);
+    this.dataService.getUserByToken(aux)
+    .subscribe(data => {console.log(data)});
+    // return this.dataService.getAllUsers(aux)
+    // .subscribe(data => {
+    //   this.users = data;
+    //   this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {
+    //     return !user.estado?.localeCompare("EN_ESPERA");
+    //   }))
+    // });
   }
 
   ngOnInit() {
