@@ -90,23 +90,31 @@ export class PetitionsComponent implements OnInit {
   }
 
   postAdminCreation(registroAcademico: string){
-    return this.dataService.postAdminCreation(registroAcademico)
-    .subscribe(data => this.response = data);
+    var aux = new User();
+    aux.token = this.token;
+    this.dataService.postAdminCreation(registroAcademico, aux)
+    .subscribe(
+      (data) => {
+        this.response = data
+        console.log("Data:: ", data)
+      },
+      (error) => {
+        console.log("Error: ", error)
+      }
+      )
   }
 
   updateUsers(){
     var aux = new User();
     aux.token = this.token;
     console.log(aux.token);
-    this.dataService.getUserByToken(aux)
-    .subscribe(data => {console.log(data)});
-    // return this.dataService.getAllUsers(aux)
-    // .subscribe(data => {
-    //   this.users = data;
-    //   this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {
-    //     return !user.estado?.localeCompare("EN_ESPERA");
-    //   }))
-    // });
+    return this.dataService.getAllUsers(aux)
+    .subscribe(data => {
+      this.users = data;
+      this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {
+        return !user.estado?.localeCompare("EN_ESPERA");
+      }))
+    });
   }
 
   ngOnInit() {

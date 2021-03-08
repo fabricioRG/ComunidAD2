@@ -11,6 +11,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ActiveModalComponent } from '../../components/active-modal/active-modal.component'
 import { MustMatch } from '../../helpers/must-match.validator';
+import { DataService } from 'src/app/data.service';
 
 const USRS: User[] = [
   {
@@ -52,8 +53,11 @@ function search2(text: string, pipe: PipeTransform): User[] {
 })
 export class ChangePasswordComponent implements OnInit {
 
+  // Token
+  token: any;
+
   // Table visibility
-  selectedUser: boolean = true;
+  selectedUser: boolean = false;
   selectedUserObject: User = USRS[0];
 
   // Password visibility
@@ -67,16 +71,23 @@ export class ChangePasswordComponent implements OnInit {
 
   // Validation
   registerForm: FormGroup;
+  generalPipe: DecimalPipe;
 
   users$: Observable<User[]>;
+  usrs: User[];
   filter = new FormControl('');
 
   // Principal contructor
-  constructor(pipe: DecimalPipe, private _modalService: NgbModal, private formBuilder: FormBuilder) {
-    this.users$ = this.filter.valueChanges.pipe(
-      startWith(''),
-      map(text => search2(text, pipe))
-    );
+  constructor(private dataService: DataService, pipe: DecimalPipe,
+    private _modalService: NgbModal, private formBuilder: FormBuilder) {
+    this.token = localStorage.getItem('token');
+    this.token = JSON.parse(this.token).token;
+    this.generalPipe = pipe;
+    this.updateUsers(pipe);
+    // this.users$ = this.filter.valueChanges.pipe(
+    //   startWith(''),
+    //   map(text => this.search(text, pipe))
+    // );
 
   }
 
@@ -91,6 +102,17 @@ export class ChangePasswordComponent implements OnInit {
         });
   }
 
+  search(listUsers: User[], text: string, pipe: PipeTransform): User[] {
+    // this.updateUsers();
+    // console.log("users:: ", this.usrs);
+    return listUsers.filter(user => {
+      const term2 = text.toLowerCase();
+      return user.correoElectronico?.toLowerCase().includes(term2)
+        || user.registroAcademico?.toLowerCase().includes(term2)
+        || user.nombreCompleto?.toLowerCase().includes(term2)
+    });
+  }
+
   get f() { return this.registerForm.controls; }
 
   selectUser(selectedUser: User) {
@@ -103,11 +125,11 @@ export class ChangePasswordComponent implements OnInit {
     this.initAlerts();
     this.registerForm.reset();
     this.selectedUser = false;
+    this.updateUsers(this.generalPipe);
   }
 
   cambiarContraseniaButton() {
     if (!this.registerForm.invalid) {
-      
       this.openModalConfirm()
     } else {
       this.alertClosedDanger = true;
@@ -115,6 +137,7 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   openModalConfirm() {
+    console.log("User Pass: ", this.selectedUserObject.password)
     const modal = this._modalService.open(ActiveModalComponent);
 
     modal.componentInstance.modalHeader = 'Cambiar Contraseña';
@@ -123,7 +146,7 @@ export class ChangePasswordComponent implements OnInit {
     modal.componentInstance.confirmModal = true;
 
     modal.result.then((result) => {
-      this.confirmChangePassword();
+    this.postChangePasswordUser(this.selectedUserObject)
       console.log("Result: ", result);
     }, (reason) => {
       console.log("Reason: ", reason);
@@ -147,10 +170,69 @@ export class ChangePasswordComponent implements OnInit {
     this.cancelarButton();
   }
 
-  initAlerts(){
+  errorMessage(){
+    const modal = this._modalService.open(ActiveModalComponent);
+
+    modal.componentInstance.modalHeader = 'Proceso erroneo';
+    modal.componentInstance.modalBodyTitle = 'No se ha realizado ningun cambio';
+    modal.componentInstance.modalBody = 'Ha ocurrido un error inesperado. No se ha realizado ningun cambio solicitado';
+    modal.componentInstance.infoModal = true;
+
+    modal.result.then((result) => {
+      console.log("Result: ", result);
+    }, (reason) => {
+      console.log("Reason: ", reason);
+    });
+
+    this.cancelarButton();
+  }
+
+  initAlerts() {
     this.alertClosedDanger = false;
     this.alertClosedSuccess = false;
     this.alertClosedWarning = true;
   }
+
+  postChangePasswordUser(usr: User){
+    var aux = new User();
+    aux.token = this.token;
+    return this.dataService.postChangePasswordUser(usr,aux)
+    .subscribe(
+      (data) => {
+        console.log("Data:::: ", data)
+        if(data){
+          this.confirmChangePassword();
+        }
+      },
+      (error) => {
+        console.log("Error:::: ", error)
+        this.errorMessage();
+      }
+    )
+  }
+
+  updateUsers(pipe: PipeTransform) {
+    var aux = new User();
+    aux.token = this.token;
+    console.log(aux.token);
+    return this.dataService.getAllUsers(aux)
+      .subscribe(data => {
+        console.log("users: ", data)
+        this.usrs = data;
+        console.log("usrs: ", this.usrs)
+        this.users$ = this.filter.valueChanges.pipe(
+          startWith(''),
+          map(text => this.search(this.usrs, text, pipe))
+        );
+      });
+  }
+
+  onSubmit(password: string) {
+
+    // stop here if form is invalid
+    console.log(password);
+    this.selectedUserObject.password = password;
+    // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value))
+}
 
 }
