@@ -41,6 +41,7 @@ import { EditProfileComponent } from './views/edit-profile/edit-profile.componen
 import { ChangePasswordComponent } from './views/change-password/change-password.component'; 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveModalComponent } from './components/active-modal/active-modal.component';
+import { CreateComunityComponent } from './comunity/create-comunity/create-comunity.component';
 
 
 
@@ -90,6 +91,10 @@ const rutas: Routes = [
         component: DashboardUsersComponent
       },
       {
+        path: 'createComunity',
+        component: CreateComunityComponent
+      },
+      {
         path: 'petitions',
         component: PetitionsComponent
       },
@@ -116,7 +121,8 @@ const rutas: Routes = [
     EditProfileComponent,
     ActiveModalComponent,
     ChangePasswordComponent,
-  ],
+    CreateComunityComponent
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,

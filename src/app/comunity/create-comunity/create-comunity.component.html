@@ -1,0 +1,62 @@
+<div *ngIf="pruebaRuta()" class="form-container">
+
+    <div class="row d-flex justify-content-center">
+        <!--Grid column-->
+        <div class="col-md-6">
+            <div class="text-center">
+                <h1>Creacion de comunidad</h1>
+            </div>
+            <form [formGroup]="comunityForm" (ngSubmit)="onSaveForm()">
+                
+                <!--Nombre comunidad-->
+                <div class="form-group">
+                    <input type="text" class="form-control" formControlName="nombreDeComunidad" placeholder="Nombre de comunidad*">
+                    <div class="alert alert-danger" *ngIf="nombreDeComunidad!=null && nombreDeComunidad.invalid &&(nombreDeComunidad.dirty || nombreDeComunidad.touched)">
+                        <div class="container-error-mesage">
+                            El nombre de comunidad es requerido
+                        </div>
+                    </div>
+                </div>
+
+                <!--Descripcion-->
+                <div class="form-group">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="descripcion" placeholder="Descipcion de la comunidad*"></textarea>
+                    <div class="alert alert-danger" *ngIf="descripcion!=null && descripcion.invalid &&(descripcion.dirty || descripcion.touched)">
+                        <div class="container-error-mesage ">
+                            La descripcion es requerida
+                        </div>
+                    </div>
+
+                </div>                
+                
+                <!--Cursos-->
+                <div class="form group">
+                    <h4>Escoja el curso al que sera orientado:</h4>
+                </div>
+                <div class="form-group">
+                    <select  id="optionCourse" class="form-control" formControlName="tipoDeCurso">
+                    <option [value]="data.codigoDeCurso" *ngFor="let data of courses">
+                          {{data.codigoDeCurso}}
+                          {{data.nombre}}
+                      </option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="tipoDeCurso!=null && tipoDeCurso.invalid &&(tipoDeCurso.dirty || tipoDeCurso.touched)">
+                        <div class="container-error-mesage ">
+                            Escoja el curso
+                        </div>
+                    </div>
+                  </div>
+
+                <!--Foto  -->
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Crear comunidad</button>
+                </div>
+           
+
+            </form>        
+        </div>
+        <!--Grid column-->
+      </div>
+
+</div>

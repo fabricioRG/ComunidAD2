@@ -14,18 +14,24 @@ export class EditProfileComponent implements OnInit {
 
   constructor( private dataService: DataService) {
     this.token = localStorage.getItem('token');
+    this.token = JSON.parse(this.token).token
+
    }
 
   ngOnInit(): void {
-    const aux = new User();
+    console.log('Entre a editar, token: '+this.token)
+    var aux = new User();
     aux.token = this.token;
+    console.log(aux.token)
     this.dataService.getUserByToken(aux).subscribe(
       (user) => {
         console.log(user)
         alert(user);
       },
       (error) => {
-        alert('ERROR: ' + error.error);
+        alert('ERROR: ' + error);
+        console.log(error);
+        
       }
     );
   }
