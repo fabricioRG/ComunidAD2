@@ -8,6 +8,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ActiveModalComponent implements OnInit {
 
+  modalHeader: string;
+  modalBodyTitle: string;
+  modalBody: string;
+  confirmModal: false;
+  infoModal: false;
+
   constructor(public modal: NgbActiveModal) { }
 
   ngOnInit(): void {

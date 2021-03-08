@@ -28,10 +28,13 @@ export class PetitionsComponent implements OnInit {
   selection = new SelectionModel<User>(true, []);
 
   response: number | undefined;
+  token: any;
 
 
   /* CONSTRUCTOR */
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService) {
+    this.token = localStorage.getItem('token');
+  }
 
 
   /* FUNCTIONS */
@@ -91,7 +94,9 @@ export class PetitionsComponent implements OnInit {
   }
 
   updateUsers(){
-    return this.dataService.getAllUsers()
+    const aux = new User();
+    aux.token = this.token;
+    return this.dataService.getAllUsers(aux)
     .subscribe(data => {
       this.users = data;
       this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {

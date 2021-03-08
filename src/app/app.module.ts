@@ -92,13 +92,13 @@ const rutas: Routes = [
       {
         path: 'petitions',
         component: PetitionsComponent
+      },
+      {
+        path: 'changePassword',
+        component: ChangePasswordComponent
       }
     ]
   },
-  {
-    path: 'changePassword',
-    component: ChangePasswordComponent
-  }
 ]
 
 @NgModule({
@@ -146,6 +146,6 @@ const rutas: Routes = [
   exports: [
   ],
   providers: [DataService, DecimalPipe],
-  bootstrap: [AppComponent, ChangePasswordComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

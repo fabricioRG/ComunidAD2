@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PipeTransform } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormControl } from '@angular/forms';
@@ -7,8 +7,10 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { User } from 'src/app/user.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ActiveModalComponent } from '../../components/active-modal/active-modal.component'
+import { MustMatch } from '../../helpers/must-match.validator';
 
 const USRS: User[] = [
   {
@@ -33,6 +35,7 @@ const USRS: User[] = [
   },
 ]
 
+// Search into table of users
 function search2(text: string, pipe: PipeTransform): User[] {
   return USRS.filter(user => {
     const term2 = text.toLowerCase();
@@ -47,25 +50,48 @@ function search2(text: string, pipe: PipeTransform): User[] {
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.css']
 })
-export class ChangePasswordComponent {
+export class ChangePasswordComponent implements OnInit {
 
+  // Table visibility
   selectedUser: boolean = true;
   selectedUserObject: User = USRS[0];
+
+  // Password visibility
   hide = true;
   hide2 = true;
+
+  // Alerts visibility
   alertClosedSuccess = false;
   alertClosedWarning = true;
-  alertClosedDanger = true;
+  alertClosedDanger = false;
+
+  // Validation
+  registerForm: FormGroup;
+
   users$: Observable<User[]>;
   filter = new FormControl('');
 
-  constructor(pipe: DecimalPipe, private _modalService: NgbModal) {
+  // Principal contructor
+  constructor(pipe: DecimalPipe, private _modalService: NgbModal, private formBuilder: FormBuilder) {
     this.users$ = this.filter.valueChanges.pipe(
       startWith(''),
       map(text => search2(text, pipe))
     );
 
   }
+
+  ngOnInit() {
+    this.registerForm = this.formBuilder
+      .group({
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', Validators.required]
+      },
+        {
+          validator: MustMatch('password', 'confirmPassword')
+        });
+  }
+
+  get f() { return this.registerForm.controls; }
 
   selectUser(selectedUser: User) {
     console.log(selectedUser);
@@ -74,19 +100,57 @@ export class ChangePasswordComponent {
   }
 
   cancelarButton() {
+    this.initAlerts();
+    this.registerForm.reset();
     this.selectedUser = false;
   }
 
   cambiarContraseniaButton() {
-
+    if (!this.registerForm.invalid) {
+      
+      this.openModalConfirm()
+    } else {
+      this.alertClosedDanger = true;
+    }
   }
 
-  openModalConfirm(){
-    this._modalService.open(ActiveModalComponent).result.then((result) => {
-      console.log(result);
-    }
+  openModalConfirm() {
+    const modal = this._modalService.open(ActiveModalComponent);
 
-    )
+    modal.componentInstance.modalHeader = 'Cambiar Contraseña';
+    modal.componentInstance.modalBodyTitle = '¿Estás seguro que deseas cambiar la contraseña?';
+    modal.componentInstance.modalBody = 'Si aceptas se cambiara de manera permanente, no habrá forma de revertir los cambios';
+    modal.componentInstance.confirmModal = true;
+
+    modal.result.then((result) => {
+      this.confirmChangePassword();
+      console.log("Result: ", result);
+    }, (reason) => {
+      console.log("Reason: ", reason);
+    });
+  }
+
+  confirmChangePassword() {
+    const modal = this._modalService.open(ActiveModalComponent);
+
+    modal.componentInstance.modalHeader = 'Proceso exitoso';
+    modal.componentInstance.modalBodyTitle = 'Cambio de contraseña exitoso';
+    modal.componentInstance.modalBody = 'Se ha cambiado la contraseña de manera correcta. Para acceder al usuario deberá utilizar la nueva contraseña';
+    modal.componentInstance.infoModal = true;
+
+    modal.result.then((result) => {
+      console.log("Result: ", result);
+    }, (reason) => {
+      console.log("Reason: ", reason);
+    });
+
+    this.cancelarButton();
+  }
+
+  initAlerts(){
+    this.alertClosedDanger = false;
+    this.alertClosedSuccess = false;
+    this.alertClosedWarning = true;
   }
 
 }
