@@ -37,4 +37,8 @@ export class InicializacionUsuarioService {
       usuario.privacidad = values.privacidad
       return usuario;
   }
+
+  setFechasService(fechas: FechasService){
+    this.fechasServices = fechas
+  }
 }

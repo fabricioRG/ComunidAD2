@@ -21,17 +21,21 @@ export class EditProfileComponent implements OnInit {
   PRIVACIDAD_PRIVADA = ConstantesService.PRIVACIDAD_PRIVADA
   MENSAJE_PERFIL_PUBLICO = ConstantesHtmlService.MENSAJE_PERFIL_PUBLICO
   MENSAJE_PERFIL_PRIVADO = ConstantesHtmlService.MENSAJE_PERFIL_PRIVADO
-  token: any;
+  token: any = '';
   usuario: User = new User();
   signupForm!: FormGroup;
 
   constructor( private _builder: FormBuilder,private dataService: DataService,private fechasServices: FechasService,
     private inicializarUsuario: InicializacionUsuarioService, private mensajesError:MensajesErrorService, public a: ConstantesService) {
-    this.token = localStorage.getItem('token');
-    this.token = JSON.parse(this.token).token
+      this.token = localStorage.getItem('token');
+      if(this.token!=null){
+      this.token = JSON.parse(this.token).token
+      }
    }
 
   ngOnInit(): void {
+    
+    
     this.iniciarFormulario()
     this.obtenerUsuario()
   }
@@ -56,9 +60,12 @@ export class EditProfileComponent implements OnInit {
     );
   }
 
+  confirmarEnvio(): boolean{
+    return confirm("¿Seguro que deseas actualizar los datos?");
+  }
 
   enviar(values: any) {
-    var confirmacion = confirm("¿Seguro que deseas actualizar los datos?");
+    var confirmacion = this.confirmarEnvio()
     if(confirmacion == true){
     var mensajesError = '';
     var contadorErrores = 0;
@@ -66,8 +73,7 @@ export class EditProfileComponent implements OnInit {
     console.log(values);
     console.log('Fecha nacimiento: ' + values.fechaNacimiento);
     console.log('Fecha actual: ' + new Date());
-    if (
-      !this.fechasServices.compararFechas(this.fechasServices.convertirFecha(new Date(values.fechaNacimiento)),this.fechasServices.convertirFecha(new Date()))
+    if (!this.fechasServices.compararFechas(this.fechasServices.convertirFecha(new Date(values.fechaNacimiento)),this.fechasServices.convertirFecha(new Date()))
     ) {
       contadorErrores++;
       mensajesError = this.mensajesError.agregarMensajeError(
@@ -122,9 +128,14 @@ export class EditProfileComponent implements OnInit {
       nombreCompleto: [this.usuario.nombreCompleto, [Validators.required, Validators.maxLength(200)]],
       privacidad: [this.usuario.privacidad, Validators.required]
     });
+
+
+    
   }
 
-  
+  public setDataService(dataSer: DataService){
+      this.dataService  = dataSer;
+    }
  
  
   

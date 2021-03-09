@@ -1,13 +1,13 @@
-<p>edit-profile works! aaaaaaa</p>
 
-<div >
+<div class="row d-flex justify-content-center">
     <br>
+    <div class="col-md-3">  <h1 style="align-self: center;"><b><mat-label>EDITAR USUARIO</mat-label></b></h1></div>
+    <h2 style="align-self: center;"><mat-label>Registro Academico: {{usuario.registroAcademico}} </mat-label></h2>
+    <h2 style="align-self: center;"><mat-label> Estado del perfil: {{usuario.estado}} </mat-label></h2>
+    <h2 style="align-self: center;"><mat-label> Rol del usuario: {{usuario.rolUsuario}} </mat-label></h2>
+    <!-- <h2 style="align-self: center;"><mat-label> Foto de perfil: {{usuario.fotoDePerfil}} </mat-label></h2> -->
 
-        <div> Registro Academico: {{usuario.registroAcademico}} </div>
-        <div> Estado del perfil: {{usuario.estado}} </div>
-        <div> Rol del usuario: {{usuario.rolUsuario}} </div>
-        <div> Foto de perfil: {{usuario.fotoDePerfil}} </div>
-      <h2 style="align-self: center;"><mat-label>EDITAR USUARIO</mat-label></h2>
+    <div class="col-md-3">  <h2 style="align-self: center;"><mat-label>Estos son los datos que puedes cambiar</mat-label></h2></div>
       <form [formGroup]="signupForm"  (ngSubmit)="enviar(signupForm.value)">
           <mat-form-field appearance="fill">
             <mat-label>*Departamento: </mat-label>
@@ -66,9 +66,8 @@
           <br/>
         
           <br/>
-          <!-- <div  *ngIf="signupForm.get('sexo')!.touched && signupForm.get('sexo')!.hasError('required')"> Es necesario introducir el genero </div>-->
           <div class="example-button-row">
-            <button mat-flat-button color="primary" [disabled]="signupForm.invalid" type="submit">Registrarse<mat-icon>done</mat-icon></button>          
+            <button mat-flat-button color="secondary" [disabled]="signupForm.invalid" type="submit">Actualizar Informacino<mat-icon>done</mat-icon></button>          
           </div>
           
           
