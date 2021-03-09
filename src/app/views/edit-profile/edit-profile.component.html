@@ -1,5 +1,5 @@
 
-<div class="row d-flex justify-content-center">
+<div  *ngIf="this.validacionURL.pruebaRuta()" class="row d-flex justify-content-center">
     <br>
     <div class="col-md-3">  <h1 style="align-self: center;"><b><mat-label>EDITAR USUARIO</mat-label></b></h1></div>
     <h2 style="align-self: center;"><mat-label>Registro Academico: {{usuario.registroAcademico}} </mat-label></h2>
@@ -67,7 +67,7 @@
         
           <br/>
           <div class="example-button-row">
-            <button mat-flat-button color="secondary" [disabled]="signupForm.invalid" type="submit">Actualizar Informacino<mat-icon>done</mat-icon></button>          
+            <button mat-flat-button color="secondary" [disabled]="signupForm.invalid" type="submit">Actualizar Informacion<mat-icon>done</mat-icon></button>          
           </div>
           
           

@@ -59,6 +59,7 @@ describe('EditProfileComponent', () => {
         component.obtenerUsuario()
     //assert
     expect(component.usuario.registroAcademico).toEqual('11111111');
+    
    });
 
    it('Probando metodo enviar con fechas correcta, la de nacimiento menor que la actual', () => {

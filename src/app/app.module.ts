@@ -54,12 +54,7 @@ const rutas: Routes = [
   {
     path: 'inicio',
     component: InicioComponent,
-    children:[
-      {
-        path: 'editProfile',
-        component: EditProfileComponent
-      }
-    ]
+    
     
   },{
     path: 'editProfile',
