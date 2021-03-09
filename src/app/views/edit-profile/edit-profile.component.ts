@@ -5,6 +5,7 @@ import { ConstantesHtmlService } from 'src/app/services/constantes/constantes-ht
 import { ConstantesService } from 'src/app/services/constantes/constantes.service';
 import { FechasService } from 'src/app/services/fechas/fechas.service';
 import { InicializacionUsuarioService } from 'src/app/services/inicializacion-usuario/inicializacion-usuario.service';
+import { LoginService } from 'src/app/services/login/login.service';
 import { MensajesErrorService } from 'src/app/services/mensajes-error/mensajes-error.service';
 
 import { User } from 'src/app/user.model';
@@ -26,7 +27,7 @@ export class EditProfileComponent implements OnInit {
   signupForm!: FormGroup;
 
   constructor( private _builder: FormBuilder,private dataService: DataService,private fechasServices: FechasService,
-    private inicializarUsuario: InicializacionUsuarioService, private mensajesError:MensajesErrorService, public a: ConstantesService) {
+    private inicializarUsuario: InicializacionUsuarioService, private mensajesError:MensajesErrorService, public a: ConstantesService, public validacionURL: LoginService) {
       this.token = localStorage.getItem('token');
       if(this.token!=null){
       this.token = JSON.parse(this.token).token

@@ -33,7 +33,5 @@ describe('PetitionsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+   
 });
