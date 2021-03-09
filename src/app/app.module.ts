@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import {DecimalPipe} from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,7 +36,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 import {MatRadioModule} from '@angular/material/radio'; 
 import {MatInputModule} from '@angular/material/input';
-import { EditProfileComponent } from './views/edit-profile/edit-profile.component'; 
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { EditProfileComponent } from './views/edit-profile/edit-profile.component';
+import { ChangePasswordComponent } from './views/change-password/change-password.component'; 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ActiveModalComponent } from './components/active-modal/active-modal.component';
+import { CreateComunityComponent } from './comunity/create-comunity/create-comunity.component';
 
 
 
@@ -85,11 +91,19 @@ const rutas: Routes = [
         component: DashboardUsersComponent
       },
       {
+        path: 'createComunity',
+        component: CreateComunityComponent
+      },
+      {
         path: 'petitions',
         component: PetitionsComponent
+      },
+      {
+        path: 'changePassword',
+        component: ChangePasswordComponent
       }
     ]
-  }
+  },
 ]
 
 @NgModule({
@@ -105,7 +119,10 @@ const rutas: Routes = [
     LoginComponent,
     CrearUsuarioComponent,
     EditProfileComponent,
-  ],
+    ActiveModalComponent,
+    ChangePasswordComponent,
+    CreateComunityComponent
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -122,17 +139,19 @@ const rutas: Routes = [
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule,
+    MatFormFieldModule,
     RouterModule.forRoot(rutas, {
       useHash: true
     }),
     LayoutModule,
     MatSidenavModule,
     MatListModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgbModule,
   ],
   exports: [
   ],
-  providers: [DataService],
+  providers: [DataService, DecimalPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

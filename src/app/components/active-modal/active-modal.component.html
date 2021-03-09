@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h2 class="modal-title" id="modal-title">{{this.modalHeader}}</h2>
+    <button type="button" class="close" aria-describedby="modal-title" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <p><strong>{{this.modalBodyTitle}}</strong> </p>
+    <p>{{this.modalBody}}</p>
+</div>
+<div *ngIf="this.confirmModal" class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">Cancelar</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('ok')">Aceptar</button>
+</div>
+<div *ngIf="this.infoModal" class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close('ok')">Aceptar</button>
+</div>
