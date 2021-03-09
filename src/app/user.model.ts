@@ -10,4 +10,5 @@ export class User {
     ciudad?: string;
     estado?: string;
     token?: string;
+    privacidad?: string;
 }
