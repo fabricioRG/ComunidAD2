@@ -18,12 +18,16 @@ export class CreateComunityComponent implements OnInit {
   datosCorrectos: boolean;
   token : any;
   courses : any;
-
+  comunity : any;
 
   constructor(private dataService : DataService,private router:Router) { 
     this.comunityForm=this.createFormGroup();
+    //this.token = localStorage.getItem('token');
+    //this.token = JSON.parse(this.token).token;
     this.token = localStorage.getItem('token');
-    this.token = JSON.parse(this.token).token;
+    if(this.token!=null){
+      this.token = JSON.parse(this.token).token
+      }
     this.buscarCursos();
   }
 
@@ -41,9 +45,9 @@ export class CreateComunityComponent implements OnInit {
     //this.buscarCursos();
   }
 
-  buscarCursos(){
+  buscarCursos():void{
     if(this.dataService.getLoggedIn()){
-      console.log("SESION INICIADA");
+      console.log("SESION INICIADA EN BUSCAR CURSOS");
       //Tipo de usuario
       var aux = new User();
       aux.token = this.token;
@@ -99,10 +103,12 @@ export class CreateComunityComponent implements OnInit {
             "nombre" : this.comunityForm.value['nombreDeComunidad'],
             "descripcion":this.comunityForm.value['descripcion']
           });
+
         var comunity=JSON.parse(messages)
         this.dataService.saveComunity(comunity,aux).subscribe(response =>{
           console.log(response)
           alert("Comunidad creada con exito")
+          this.comunity=comunity;
           this.onResetForm()
         },(error)=>{
           alert('ERROR: ' + error);
@@ -145,5 +151,9 @@ export class CreateComunityComponent implements OnInit {
     return this.comunityForm.get('tipoDeCurso');
   }
 
+
+  public setDataService(dataSer: DataService){
+    this.dataService  = dataSer;
+  }
 
 }
