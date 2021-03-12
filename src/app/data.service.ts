@@ -19,6 +19,7 @@ export class DataService {
   coursesUrl = '/api/users/getCourses';
   usersURL = '/api/users/accounts';
   addComunityUrl = '/api/users/creationComunity';
+  
   changePasswordUserURL = '/api/users/changePassword';
 
   private logger$ = new Subject<boolean>();//Va a emitir un evento

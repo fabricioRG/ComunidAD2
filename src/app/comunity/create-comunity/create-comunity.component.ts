@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { UploadFileServiceService } from 'src/app/services/uploadFileService/upload-file-service.service';
 import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
 
@@ -20,7 +21,16 @@ export class CreateComunityComponent implements OnInit {
   courses : any;
   comunity : any;
 
-  constructor(private dataService : DataService,private router:Router) { 
+  //Fotos
+  selectedFiles: FileList;
+  progressInfo=[];
+  message='';
+  fileName="";
+  fileInfos: Observable<any>;
+  public archivos : any []=[];
+
+
+  constructor(private dataService : DataService,private router:Router,private uploadFileService : UploadFileServiceService) { 
     this.comunityForm=this.createFormGroup();
     //this.token = localStorage.getItem('token');
     //this.token = JSON.parse(this.token).token;
@@ -75,7 +85,8 @@ export class CreateComunityComponent implements OnInit {
     return new FormGroup({
       nombreDeComunidad : new FormControl('',[Validators.required,Validators.minLength(1),Validators.maxLength(100)]),
       descripcion: new FormControl('',[Validators.required]),
-      tipoDeCurso: new FormControl('',[Validators.required]) 
+      tipoDeCurso: new FormControl('',[Validators.required]),
+      fileImage : new FormControl() 
     })
   }
 
@@ -136,6 +147,56 @@ export class CreateComunityComponent implements OnInit {
 
   }
 
+ /*fileChangeEvent(e : Event): any{
+    
+  //var l: Array<FileList>=(<HTMLInputElement>e.target).files
+  //l[0];
+ /* var l=(<HTMLInputElement>e.target).files
+  if((<HTMLInputElement>e.target).files){
+    (<HTMLInputElement>e.target).files[0];
+  }   */
+
+  //console.log(l)
+
+ /* const element = e.currentTarget as HTMLInputElement;
+  let reader = new FileReader()
+
+  let fileList: FileList | null = element.files;
+  if(fileList){
+    console.log("File Upload -> files",fileList[0])
+    this.archivos.push(fileList)
+    console.log(this.archivos)
+  }*/
+  //}
+
+  cargarImagen(e : Event){
+    console.log("Estoy en cargar imagen")
+   const element = e.currentTarget as HTMLInputElement;
+   let fileList: FileList | null = element.files;
+   const data = new FormData()
+    
+   console.log("FORM DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",element)
+
+   if(fileList){
+    data.append('file', fileList[0])
+    var selectedFile : File | null= fileList.item(0);
+    console.log("FORM DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+data)
+     //this.fileName=fileList[0];
+     //this.selectedFiles=fileList;
+     //console.log(fileList)
+     //console.log("File Upload -> files",fileList[0])
+     //this.archivos.push(fileList)
+     //console.log(this.archivos)
+     var aux = new User();
+     aux.token = this.token;
+    this.uploadFileService.upload(data,aux).subscribe(response=>{
+      console.log("RESPUESTA GUARDAR IMAGEN EN SPRING:"+response)
+    })
+    }
+
+  }
+
+
 
   //Getter and setter
 
@@ -149,6 +210,10 @@ export class CreateComunityComponent implements OnInit {
 
   get tipoDeCurso(){
     return this.comunityForm.get('tipoDeCurso');
+  }
+
+  get fileImage(){
+    return this.comunityForm.get('fileImage');
   }
 
 

@@ -48,11 +48,17 @@
                   </div>
 
                 <!--Foto  -->
+                  <div class="form-group">
+                        <input (change)="cargarImagen($event)" type="file" id="" name="" accept="image/png, image/jpeg">
+                  </div>
+                  <div>
+
+                  </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-success">Crear comunidad</button>
+                    <button type="submit" [disabled]= "comunityForm.invalid" class="btn btn-success">Crear comunidad</button>
                 </div>
-           
+                
 
             </form>        
         </div>
