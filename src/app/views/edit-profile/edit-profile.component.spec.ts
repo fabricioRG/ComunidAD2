@@ -66,8 +66,8 @@ describe('EditProfileComponent', () => {
     //arrange
         var fechasService = TestBed.inject(FechasService)
         spyOn(component, 'realizarEnvio');         
-        spyOn(fechasService, "compararFechas").and.returnValue(true);
-        spyOn(component, "confirmarEnvio").and.returnValue(true);
+        spyOn(fechasService, 'compararFechas').and.returnValue(true);
+        spyOn(component, 'confirmarEnvio').and.returnValue(true);
         var us =  new User();
         us.registroAcademico = '11111111'
     //act
@@ -82,8 +82,8 @@ describe('EditProfileComponent', () => {
     //arrange
         var fechasService = TestBed.inject(FechasService)
         spyOn(component, 'realizarEnvio');         
-        spyOn(fechasService, "compararFechas").and.returnValue(false);
-        spyOn(component, "confirmarEnvio").and.returnValue(true);
+        spyOn(fechasService, 'compararFechas').and.returnValue(false);
+        spyOn(component, 'confirmarEnvio').and.returnValue(true);
         var us =  new User();
         us.registroAcademico = '11111111'
     //act
@@ -100,9 +100,9 @@ describe('EditProfileComponent', () => {
         var us =  new User();
         us.registroAcademico = '11111111'
         spyOn(component, 'realizarEnvio');         
-        spyOn(inicializarService, "asignarCamposEdicionUsuario").and.returnValue(us);
-        spyOn(component, "confirmarEnvio").and.returnValue(true);
-        spyOn(component, "mostrarMensaje");
+        spyOn(inicializarService, 'asignarCamposEdicionUsuario').and.returnValue(us);
+        spyOn(component, 'confirmarEnvio').and.returnValue(true);
+        spyOn(component, 'mostrarMensaje');
         
     //act
         component.realizarEnvio(us)
