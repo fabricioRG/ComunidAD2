@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Comunity } from 'src/app/models/comunity.model';
+import { Course } from 'src/app/models/course.model';
 import { UploadFileServiceService } from 'src/app/services/uploadFileService/upload-file-service.service';
 import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
@@ -43,7 +44,7 @@ export class CreateComunityComponent implements OnInit {
       return false;
     }
       return true;
-    
+
   }
 
   ngOnInit(): void {
@@ -89,34 +90,38 @@ export class CreateComunityComponent implements OnInit {
     this.comunityForm.reset();
 }
 
+  generarComunidad(registroAcademico : any) : Comunity{
+    var user : User= new User;
+    var course : Course = new Course;
+    var comunity : Comunity = new Comunity;
+    comunity.user=user;
+    comunity.course=course;
+    user.registroAcademico=registroAcademico;
+    course.codigoDeCurso=this.comunityForm.value['tipoDeCurso'];
+    comunity.nombre= this.comunityForm.value['nombreDeComunidad'];
+    comunity.descripcion = this.comunityForm.value['descripcion'];
+    this.comunity=comunity;
+    return comunity;
+  }
 
 
-  guardarComunidad(registroAcademico : any, aux : User){
-        //Creamos el JSON 
-        var messages= JSON.stringify(
-          {
-            "user":{"registroAcademico":registroAcademico},
-            "course":{"codigoDeCurso":this.comunityForm.value['tipoDeCurso']},
-            "nombre" : this.comunityForm.value['nombreDeComunidad'],
-            "descripcion":this.comunityForm.value['descripcion']
-          });
-
-        var comunity=JSON.parse(messages)
-        this.dataService.saveComunity(comunity,aux).subscribe(response =>{
-          console.log(response)
-          this.guardarImagen()
+  //Guarda una comunidad en la base de datos(usa la variable global comunity)
+  guardarComunidad( aux : User){
+        //Creamos el JSON
+        this.dataService.saveComunity(this.comunity,aux).subscribe(response =>{
+          var com :Comunity;response; 
+          console.log("ESTO ES EN GUARDAR COMUNIDAD:",response)
           alert("Comunidad creada con exito")
-          this.comunity=comunity;
+          this.comunity=response;
           this.onResetForm()
         },(error)=>{
           alert('ERROR: ' + error);
         });
   }
 
+  //Accion al hacer click en guardar comunidad(Sevalida si el formulario es valido)
   onSaveForm(){
     console.log("ON SAVE FORM)))))")
-          //this.comunityForm.value['tipoDeCurso']="OtraCosaa";
-
     if(this.comunityForm.valid){
       console.log(this.comunityForm.value);
       //Buscamos el usuario para su ID
@@ -125,69 +130,33 @@ export class CreateComunityComponent implements OnInit {
       console.log(aux.token)
       this.dataService.getUserByToken(aux).subscribe(
       (user) => {
-        this.guardarComunidad(user['registroAcademico'],aux)
+        var u : User=user;
+        this.generarComunidad(user.registroAcademico)
+        if(this.fileList){//Si selecciono una imagen
+          this.guardarImagenYComunidad()
+        }else{
+          this.guardarComunidad(aux)
+        }
       },
       (error) => {
         alert('ERROR: ' + error);
-        
       }
     );
     }
   }
 
-  createJSON(){
-    var messages= JSON.stringify(
-          {
-            "user":{"registroAcademico":111111111},
-            "course":{"codigoDeCurso":"119"},
-            "nombre" : "Comunidad LOA GRANDEZA",
-            "descripcion":"Aldea la Grandeza descripcion de la comunidad"
-          });
-
-      console.log("JSONNNNN:"+messages);
-      console.log("JSON PARSE"+JSON.parse(messages).user.registroAcademico);
-
-  }
-
- /*fileChangeEvent(e : Event): any{
-    
-  //var l: Array<FileList>=(<HTMLInputElement>e.target).files
-  //l[0];
- /* var l=(<HTMLInputElement>e.target).files
-  if((<HTMLInputElement>e.target).files){
-    (<HTMLInputElement>e.target).files[0];
-  }   */
-
-  //console.log(l)
-
- /* const element = e.currentTarget as HTMLInputElement;
-  let reader = new FileReader()
-
-  let fileList: FileList | null = element.files;
-  if(fileList){
-    console.log("File Upload -> files",fileList[0])
-    this.archivos.push(fileList)
-    console.log(this.archivos)
-  }*/
-  //}
-
+  //Evento el cual es lanzado al buscar una imagen en el input fyle
   cargarImagen(e : Event){
     const element = e.currentTarget as HTMLInputElement;
     this.fileList = element.files;
   }
 
-  guardarImagen(){
+  //Sube la imagen(regresa una comunidad con el path de la foto), y guarda la comunidad ya con la foto
+  guardarImagenYComunidad(){
    const data = new FormData()
    if(this.fileList){
     data.append('file', this.fileList[0])
     var selectedFile : File | null= this.fileList.item(0);
-    console.log("FORM DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+data)
-     //this.fileName=fileList[0];
-     //this.selectedFiles=fileList;
-     //console.log(fileList)
-     //console.log("File Upload -> files",fileList[0])
-     //this.archivos.push(fileList)
-     //console.log(this.archivos)
      var aux = new User();
      aux.token = this.token;
     this.uploadFileService.upload(data,aux).subscribe(response=>{
@@ -195,12 +164,7 @@ export class CreateComunityComponent implements OnInit {
       var com : Comunity =response;
       this.comunity.foto=com.foto;
       console.log("Communidad que se creo:",this.comunity)
-      //
-      this.dataService.saveComunity(this.comunity,aux).subscribe(response =>{
-        console.log(response)
-      },(error)=>{
-        alert('ERROR: ' + error);
-      });
+      this.guardarComunidad(aux)
     })
     }
 
