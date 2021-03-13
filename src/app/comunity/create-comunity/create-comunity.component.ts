@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { Comunity } from 'src/app/models/comunity.model';
 import { UploadFileServiceService } from 'src/app/services/uploadFileService/upload-file-service.service';
 import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
@@ -19,11 +20,10 @@ export class CreateComunityComponent implements OnInit {
   datosCorrectos: boolean;
   token : any;
   courses : any;
-  comunity : any;
 
   //Fotos
    fileList: FileList | null;
-
+   comunity : Comunity;
 
   constructor(private dataService : DataService,private router:Router,private uploadFileService : UploadFileServiceService) { 
     this.comunityForm=this.createFormGroup();
@@ -88,6 +88,8 @@ export class CreateComunityComponent implements OnInit {
   onResetForm(){
     this.comunityForm.reset();
 }
+
+
 
   guardarComunidad(registroAcademico : any, aux : User){
         //Creamos el JSON 
@@ -175,9 +177,7 @@ export class CreateComunityComponent implements OnInit {
   }
 
   guardarImagen(){
-
    const data = new FormData()
-    
    if(this.fileList){
     data.append('file', this.fileList[0])
     var selectedFile : File | null= this.fileList.item(0);
@@ -192,6 +192,15 @@ export class CreateComunityComponent implements OnInit {
      aux.token = this.token;
     this.uploadFileService.upload(data,aux).subscribe(response=>{
       console.log("RESPUESTA GUARDAR IMAGEN EN SPRING:"+response)
+      var com : Comunity =response;
+      this.comunity.foto=com.foto;
+      console.log("Communidad que se creo:",this.comunity)
+      //
+      this.dataService.saveComunity(this.comunity,aux).subscribe(response =>{
+        console.log(response)
+      },(error)=>{
+        alert('ERROR: ' + error);
+      });
     })
     }
 

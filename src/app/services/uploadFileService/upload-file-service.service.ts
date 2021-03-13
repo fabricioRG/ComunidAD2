@@ -9,7 +9,7 @@ import { User } from 'src/app/user.model';
 export class UploadFileServiceService {
 
 
-  uploadImageCreateComunityURL = '/api/users/pruebaImagen';
+  uploadImageCreateComunityURL = '/api/users/uploadImageComunity';
   loadImageComunityURL = '/api/users/pruebaImagen';
   deleteImageComunityURL = '/api/users/pruebaImagen';
 

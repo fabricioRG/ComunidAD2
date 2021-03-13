@@ -7,4 +7,5 @@ export class Comunity {
     user?: User;
     nombre?: string;
     descripcion?: string;
+    foto?: string;
 }
