@@ -17,6 +17,11 @@ export class LoginComponent implements OnInit {
   token$: Observable<boolean>;
   token : any;
 
+    // Password visibility
+    hide = true;
+    hide2 = true;
+  
+
   constructor(private dataService: DataService,private router:Router) { 
     this.loginForm=this.createFormGroup();
     
@@ -89,6 +94,9 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
+  get f(){
+    return this.loginForm.controls;
+  }
   
 
 }
