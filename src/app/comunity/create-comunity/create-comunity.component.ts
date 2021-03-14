@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { Comunity } from 'src/app/models/comunity.model';
 import { Course } from 'src/app/models/course.model';
 import { UploadFileServiceService } from 'src/app/services/uploadFileService/upload-file-service.service';
 import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
+import { ActiveModalComponent } from '../../components/active-modal/active-modal.component'
 
 @Component({
   selector: 'app-create-comunity',
@@ -26,7 +28,8 @@ export class CreateComunityComponent implements OnInit {
    fileList: FileList | null;
    comunity : Comunity;
 
-  constructor(private dataService : DataService,private router:Router,private uploadFileService : UploadFileServiceService) { 
+  constructor(private dataService : DataService,private router:Router,private uploadFileService : UploadFileServiceService,
+    private formBuilder: FormBuilder,private _modalService: NgbModal) { 
     this.comunityForm=this.createFormGroup();
     //this.token = localStorage.getItem('token');
     //this.token = JSON.parse(this.token).token;
@@ -79,11 +82,12 @@ export class CreateComunityComponent implements OnInit {
 
   createFormGroup(){
     return new FormGroup({
-      nombreDeComunidad : new FormControl('',[Validators.required,Validators.minLength(1),Validators.maxLength(100)]),
-      descripcion: new FormControl('',[Validators.required]),
+      nombreDeComunidad : new FormControl('',[Validators.required,Validators.minLength(1),Validators.maxLength(50)]),
+      descripcion: new FormControl('',[Validators.required,Validators.minLength(1),Validators.maxLength(100)]),
       tipoDeCurso: new FormControl('',[Validators.required]),
-      fileImage : new FormControl() 
+      fileImage : new FormControl('') 
     })
+
   }
 
   onResetForm(){
@@ -104,6 +108,21 @@ export class CreateComunityComponent implements OnInit {
     return comunity;
   }
 
+  llamarModal(){
+    const modal = this._modalService.open(ActiveModalComponent);
+
+    modal.componentInstance.modalHeader = 'Proceso exitoso';
+    modal.componentInstance.modalBodyTitle = 'Comunidad guardada';
+    modal.componentInstance.modalBody = 'Tu comunidad se ha guardado con exito';
+    modal.componentInstance.infoModal = true;
+
+    modal.result.then((result) => {
+      console.log("Result: ", result);
+    }, (reason) => {
+      console.log("Reason: ", reason);
+    });
+
+  }
 
   //Guarda una comunidad en la base de datos(usa la variable global comunity)
   guardarComunidad( aux : User){
@@ -111,7 +130,7 @@ export class CreateComunityComponent implements OnInit {
         this.dataService.saveComunity(this.comunity,aux).subscribe(response =>{
           var com :Comunity;response; 
           console.log("ESTO ES EN GUARDAR COMUNIDAD:",response)
-          alert("Comunidad creada con exito")
+          this.llamarModal()
           this.comunity=response;
           this.onResetForm()
         },(error)=>{
@@ -193,6 +212,10 @@ export class CreateComunityComponent implements OnInit {
 
   public setDataService(dataSer: DataService){
     this.dataService  = dataSer;
+  }
+
+  get f(){
+    return this.comunityForm.controls;
   }
 
 }
