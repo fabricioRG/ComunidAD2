@@ -9,6 +9,7 @@ import { UploadFileServiceService } from 'src/app/services/uploadFileService/upl
 import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
 import { ActiveModalComponent } from '../../components/active-modal/active-modal.component'
+import { SesionService } from 'src/app/services/sesion/sesion.service';
 
 @Component({
   selector: 'app-create-comunity',
@@ -21,41 +22,29 @@ export class CreateComunityComponent implements OnInit {
 
   comunityForm: FormGroup;
   datosCorrectos: boolean;
-  token : any;
-  courses : any;
+  token: any;
+  courses: any;
 
   //Fotos
-   fileList: FileList | null;
-   comunity : Comunity;
+  fileList: FileList | null;
+  comunity: Comunity;
 
-  constructor(private dataService : DataService,private router:Router,private uploadFileService : UploadFileServiceService,
-    private formBuilder: FormBuilder,private _modalService: NgbModal) { 
-    this.comunityForm=this.createFormGroup();
+  constructor(private dataService: DataService, private router: Router, private uploadFileService: UploadFileServiceService,
+    private formBuilder: FormBuilder, private _modalService: NgbModal, private sesionService: SesionService) {
+    this.comunityForm = this.createFormGroup();
     //this.token = localStorage.getItem('token');
     //this.token = JSON.parse(this.token).token;
-    this.token = localStorage.getItem('token');
-    if(this.token!=null){
-      this.token = JSON.parse(this.token).token
-      }
+    this.token = this.sesionService.getToken()
     this.buscarCursos();
   }
 
-  pruebaRuta(){
-    console.log("PRUEBA RUTAA");
-    if(!this.dataService.getLoggedIn()){//Si no hay session que redirija
-      this.router.navigate(['inicio']);
-      return false;
-    }
-      return true;
-
-  }
 
   ngOnInit(): void {
     //this.buscarCursos();
   }
 
-  buscarCursos():void{
-    if(this.dataService.getLoggedIn()){
+  buscarCursos(): void {
+    if (this.sesionService.exitSession()) {
       console.log("SESION INICIADA EN BUSCAR CURSOS");
       //Tipo de usuario
       var aux = new User();
@@ -64,51 +53,51 @@ export class CreateComunityComponent implements OnInit {
       this.dataService.getCourses(aux).subscribe(
         (courses) => {
           console.log(courses)
-          this.courses=courses;
+          this.courses = courses;
           //alert(user);
         },
         (error) => {
           //alert('ERROR: ' + error);
           console.log(error);
-          
+
         }
       );
 
 
-    }else{
+    } else {
       console.log("NO HAY SESION");
     }
   }
 
-  createFormGroup(){
+  createFormGroup() {
     return new FormGroup({
-      nombreDeComunidad : new FormControl('',[Validators.required,Validators.minLength(1),Validators.maxLength(50)]),
-      descripcion: new FormControl('',[Validators.required,Validators.minLength(1),Validators.maxLength(100)]),
-      tipoDeCurso: new FormControl('',[Validators.required]),
-      fileImage : new FormControl('') 
+      nombreDeComunidad: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
+      descripcion: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]),
+      tipoDeCurso: new FormControl('', [Validators.required]),
+      fileImage: new FormControl('')
     })
 
   }
 
-  onResetForm(){
+  onResetForm() {
     this.comunityForm.reset();
-}
+  }
 
-  generarComunidad(registroAcademico : any) : Comunity{
-    var user : User= new User;
-    var course : Course = new Course;
-    var comunity : Comunity = new Comunity;
-    comunity.user=user;
-    comunity.course=course;
-    user.registroAcademico=registroAcademico;
-    course.codigoDeCurso=this.comunityForm.value['tipoDeCurso'];
-    comunity.nombre= this.comunityForm.value['nombreDeComunidad'];
+  generarComunidad(registroAcademico: any): Comunity {
+    var user: User = new User;
+    var course: Course = new Course;
+    var comunity: Comunity = new Comunity;
+    comunity.user = user;
+    comunity.course = course;
+    user.registroAcademico = registroAcademico;
+    course.codigoDeCurso = this.comunityForm.value['tipoDeCurso'];
+    comunity.nombre = this.comunityForm.value['nombreDeComunidad'];
     comunity.descripcion = this.comunityForm.value['descripcion'];
-    this.comunity=comunity;
+    this.comunity = comunity;
     return comunity;
   }
 
-  llamarModal(){
+  llamarModal() {
     const modal = this._modalService.open(ActiveModalComponent);
 
     modal.componentInstance.modalHeader = 'Proceso exitoso';
@@ -125,66 +114,66 @@ export class CreateComunityComponent implements OnInit {
   }
 
   //Guarda una comunidad en la base de datos(usa la variable global comunity)
-  guardarComunidad( aux : User){
-        //Creamos el JSON
-        this.dataService.saveComunity(this.comunity,aux).subscribe(response =>{
-          var com :Comunity;response; 
-          console.log("ESTO ES EN GUARDAR COMUNIDAD:",response)
-          this.llamarModal()
-          this.comunity=response;
-          this.onResetForm()
-        },(error)=>{
-          alert('ERROR: ' + error);
-        });
+  guardarComunidad(aux: User) {
+    //Creamos el JSON
+    this.dataService.saveComunity(this.comunity, aux).subscribe(response => {
+      var com: Comunity; response;
+      console.log("ESTO ES EN GUARDAR COMUNIDAD:", response)
+      this.llamarModal()
+      this.comunity = response;
+      this.onResetForm()
+    }, (error) => {
+      alert('ERROR: ' + error);
+    });
   }
 
   //Accion al hacer click en guardar comunidad(Sevalida si el formulario es valido)
-  onSaveForm(){
+  onSaveForm() {
     console.log("ON SAVE FORM)))))")
-    if(this.comunityForm.valid){
+    if (this.comunityForm.valid) {
       console.log(this.comunityForm.value);
       //Buscamos el usuario para su ID
       var aux = new User();
       aux.token = this.token;
       console.log(aux.token)
       this.dataService.getUserByToken(aux).subscribe(
-      (user) => {
-        var u : User=user;
-        this.generarComunidad(user.registroAcademico)
-        if(this.fileList){//Si selecciono una imagen
-          this.guardarImagenYComunidad()
-        }else{
-          this.guardarComunidad(aux)
+        (user) => {
+          var u: User = user;
+          this.generarComunidad(user.registroAcademico)
+          if (this.fileList) {//Si selecciono una imagen
+            this.guardarImagenYComunidad()
+          } else {
+            this.guardarComunidad(aux)
+          }
+        },
+        (error) => {
+          alert('ERROR: ' + error);
         }
-      },
-      (error) => {
-        alert('ERROR: ' + error);
-      }
-    );
+      );
     }
   }
 
   //Evento el cual es lanzado al buscar una imagen en el input fyle
-  cargarImagen(e : Event){
+  cargarImagen(e: Event) {
     const element = e.currentTarget as HTMLInputElement;
     this.fileList = element.files;
   }
 
   //Sube la imagen(regresa una comunidad con el path de la foto), y guarda la comunidad ya con la foto
-  guardarImagenYComunidad(){
-   const data = new FormData()
-   if(this.fileList){
-    data.append('file', this.fileList[0])
-    var selectedFile : File | null= this.fileList.item(0);
-     var aux = new User();
-     aux.token = this.token;
-    this.uploadFileService.upload(data,aux).subscribe(response=>{
-      console.log("RESPUESTA GUARDAR IMAGEN EN SPRING:"+response)
-      var com : Comunity =response;
-      this.comunity.foto=com.foto;
-      console.log("Communidad que se creo:",this.comunity)
-      this.guardarComunidad(aux)
-    })
+  guardarImagenYComunidad() {
+    const data = new FormData()
+    if (this.fileList) {
+      data.append('file', this.fileList[0])
+      var selectedFile: File | null = this.fileList.item(0);
+      var aux = new User();
+      aux.token = this.token;
+      this.uploadFileService.upload(data, aux).subscribe(response => {
+        console.log("RESPUESTA GUARDAR IMAGEN EN SPRING:" + response)
+        var com: Comunity = response;
+        this.comunity.foto = com.foto;
+        console.log("Communidad que se creo:", this.comunity)
+        this.guardarComunidad(aux)
+      })
     }
 
   }
@@ -193,29 +182,39 @@ export class CreateComunityComponent implements OnInit {
 
   //Getter and setter
 
-  get nombreDeComunidad(){
+  get nombreDeComunidad() {
     return this.comunityForm.get('nombreDeComunidad');
   }
 
-  get descripcion(){
+  get descripcion() {
     return this.comunityForm.get('descripcion');
   }
 
-  get tipoDeCurso(){
+  get tipoDeCurso() {
     return this.comunityForm.get('tipoDeCurso');
   }
 
-  get fileImage(){
+  get fileImage() {
     return this.comunityForm.get('fileImage');
   }
 
 
-  public setDataService(dataSer: DataService){
-    this.dataService  = dataSer;
+  public setDataService(dataSer: DataService) {
+    this.dataService = dataSer;
   }
 
-  get f(){
+  get f() {
     return this.comunityForm.controls;
   }
 
+
+
+  //Roles
+  verificarSesion(): boolean {
+    if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeComunidad()) {//Si no hay session que redirija
+      this.router.navigate(['inicio']);
+      return false;
+    }
+    return true;
+  }
 }
