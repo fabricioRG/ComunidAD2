@@ -22,6 +22,9 @@ export class NavigationBarComponent {
 
     //Roles
     verificarSesion(): boolean {
+      console.log("EN NAV VAR DE EL USUARIO LOGUEADO(sesion):"+this.sesionService.exitSession())
+      console.log("EN NAV VAR DE EL USUARIO LOGUEADO(sesion):"+this.sesionService.usuarioEsAdministradorDeComunidad())
+
       if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeComunidad()) {//Si no hay session que redirija
         return false;
       }

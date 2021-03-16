@@ -10,6 +10,7 @@ import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
 import { ActiveModalComponent } from '../../components/active-modal/active-modal.component'
 import { SesionService } from 'src/app/services/sesion/sesion.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-create-comunity',
@@ -28,14 +29,17 @@ export class CreateComunityComponent implements OnInit {
   //Fotos
   fileList: FileList | null;
   comunity: Comunity;
+  imagenCargada : string |ArrayBuffer| null;
 
   constructor(private dataService: DataService, private router: Router, private uploadFileService: UploadFileServiceService,
-    private formBuilder: FormBuilder, private _modalService: NgbModal, private sesionService: SesionService) {
+    private formBuilder: FormBuilder, private _modalService: NgbModal, private sesionService: SesionService,
+    private sanitizer : DomSanitizer) {
     this.comunityForm = this.createFormGroup();
     //this.token = localStorage.getItem('token');
     //this.token = JSON.parse(this.token).token;
     this.token = this.sesionService.getToken()
     this.buscarCursos();
+    this.probandoRecuperarImagen()
   }
 
 
@@ -127,6 +131,7 @@ export class CreateComunityComponent implements OnInit {
     });
   }
 
+
   //Accion al hacer click en guardar comunidad(Sevalida si el formulario es valido)
   onSaveForm() {
     console.log("ON SAVE FORM)))))")
@@ -154,9 +159,17 @@ export class CreateComunityComponent implements OnInit {
   }
 
   //Evento el cual es lanzado al buscar una imagen en el input fyle
-  cargarImagen(e: Event) {
+  cargarImagen(e: Event ) {
+    
     const element = e.currentTarget as HTMLInputElement;
     this.fileList = element.files;
+    if(this.fileList){
+      const target = e.target as HTMLInputElement;
+      const file: File=(target.files as FileList)[0]
+      const reader = new FileReader()
+      reader.onload = e => this.imagenCargada=reader.result;
+      reader.readAsDataURL(file)
+    }
   }
 
   //Sube la imagen(regresa una comunidad con el path de la foto), y guarda la comunidad ya con la foto
@@ -172,6 +185,7 @@ export class CreateComunityComponent implements OnInit {
         var com: Comunity = response;
         this.comunity.foto = com.foto;
         console.log("Communidad que se creo:", this.comunity)
+        this.imagenCargada=null
         this.guardarComunidad(aux)
       })
     }
@@ -217,4 +231,19 @@ export class CreateComunityComponent implements OnInit {
     }
     return true;
   }
+
+
+  ///Probando cargar imagen(Solo la llamo en el constructor y jala)
+  probandoRecuperarImagen(){
+    var com = new Comunity();
+    com.foto="/home/jesfrin/imagenesDeComunidad/EtkiqBkXYAMbwjk.jpeg";
+    this.uploadFileService.load(com,this.sesionService.getUserWithToken()).subscribe(response =>{
+      var com: Comunity=response;
+      com.datosFoto="data:image/jpeg;base64,"+com.datosFoto;
+      console.log("RECUPERANDO IMAGEN:"+com.datosFoto)
+      this.imagenCargada=com.datosFoto;
+    })
+  }
+
+  
 }

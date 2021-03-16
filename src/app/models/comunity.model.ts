@@ -8,4 +8,5 @@ export class Comunity {
     nombre?: string;
     descripcion?: string;
     foto?: string;
+    datosFoto?:any;
 }
