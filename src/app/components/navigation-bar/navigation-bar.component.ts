@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { SesionService } from 'src/app/services/sesion/sesion.service';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -17,6 +18,16 @@ export class NavigationBarComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(private breakpointObserver: BreakpointObserver,private sesionService : SesionService) {}
 
+    //Roles
+    verificarSesion(): boolean {
+      console.log("EN NAV VAR DE EL USUARIO LOGUEADO(sesion):"+this.sesionService.exitSession())
+      console.log("EN NAV VAR DE EL USUARIO LOGUEADO(sesion):"+this.sesionService.usuarioEsAdministradorDeComunidad())
+
+      if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeComunidad()) {//Si no hay session que redirija
+        return false;
+      }
+      return true;
+    }
 }

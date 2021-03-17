@@ -4,13 +4,13 @@
     <div class="spacer"></div>
 
     <a mat-button routerLink="inicio">Inicio</a>
-    <a  *ngIf="verTablero" mat-button routerLink="profile">Perfil</a>
-    <a  *ngIf="verTablero" mat-button routerLink="dashboard">Tablero</a>
-    <a mat-button routerLink="crearUsuario">Crear Usuario</a>
+    <a  *ngIf="existeSession" mat-button routerLink="profile">Perfil</a>
+    <a  *ngIf="existeSession" mat-button routerLink="dashboard">Tablero</a>
+    <a *ngIf="!existeSession" mat-button routerLink="crearUsuario">Crear Usuario</a>
     
-    <a *ngIf="verTablero" mat-button routerLink="editProfile">Editar Perfil</a>
+    <a *ngIf="existeSession" mat-button routerLink="editProfile">Editar Perfil</a>
     <a mat-button >Nosotros</a>
-    <a *ngIf="!verTablero" mat-raised-button color="accent" routerLink="login">Iniciar Sesion</a>
-    <a  *ngIf="verTablero" mat-raised-button color="gray" routerLink="login" (click)="logOut()">Cerrar Sesion</a>
+    <a *ngIf="!existeSession" mat-raised-button color="accent" routerLink="login">Iniciar Sesion</a>
+    <a  *ngIf="existeSession" mat-raised-button color="gray" routerLink="login" (click)="logOut()">Cerrar Sesion</a>
 
 </mat-toolbar>

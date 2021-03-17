@@ -4,6 +4,7 @@ import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { SesionService } from 'src/app/services/sesion/sesion.service';
 
 @Component({
   selector: 'app-login',
@@ -14,47 +15,32 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   credencialesIncorrectas: boolean;
-  token$: Observable<boolean>;
+  sesion$: Observable<boolean>;
   token : any;
 
-  constructor(private dataService: DataService,private router:Router) { 
+    // Password visibility
+    hide = true;
+    hide2 = true;
+  
+
+  constructor(private dataService: DataService,private router:Router,private sesionService: SesionService) { 
     this.loginForm=this.createFormGroup();
     
   }
 
   ngOnInit(): void {
-    this.token$=this.dataService.isLoggedIn();
-    this.token$.subscribe(isSuscribe=>{
-    console.log("Sucribe IN LOGIN:"+isSuscribe);
-    console.log("LocalStorage IN LOGIN:"+localStorage.getItem('token'));
+    this.sesion$=this.sesionService.loggedIn$();
+    this.sesion$.subscribe(isSuscribe=>{
+    console.log("Sucribe IN LOGIN session service:"+isSuscribe);
+    console.log("LocalStorage IN LOGIN session service:"+localStorage.getItem('token'));
     if(isSuscribe){
       this.router.navigate(['inicio']);
-      //this.findUser();
     }else{
       this.credencialesIncorrectas=true;
     }
   })
   }
 
-  //Buscar usuario
-  findUser(){
-    this.token = localStorage.getItem('token');
-    this.token = JSON.parse(this.token).token
-    var aux = new User();
-    aux.token = this.token;
-    console.log("Token a mandar:"+aux.token);
-    this.dataService.getUserByToken(aux).subscribe(
-      (user) => {
-        console.log(user)
-        alert(user);
-      },
-      (error) => {
-        alert('ERROR: ' + error);
-        console.log(error);
-        
-      }
-    );
-  }
 
   //Validaciones de formulario
   createFormGroup(){
@@ -74,7 +60,7 @@ export class LoginComponent implements OnInit {
     if(this.loginForm.valid){
       //this.loginForm.value['password']="OtraCosaa";
       console.log(this.loginForm.value)
-      this.dataService.logIn(this.loginForm.value);
+      this.sesionService.logIn(this.loginForm.value);
       //Ya revisa el observable
     }else{
       console.log("No se envio la informacion");
@@ -89,6 +75,9 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
+  get f(){
+    return this.loginForm.controls;
+  }
   
 
 }
