@@ -19,7 +19,8 @@ export class DataService {
   coursesUrl = '/api/users/getCourses';
   usersURL = '/api/users/accounts';
   addComunityUrl = '/api/users/creationComunity';
-  
+  findComunytyByRegistroAcademicoUrl='/api/users/findComunityByRegistroAcademico';
+
   changePasswordUserURL = '/api/users/changePassword';
 
   private logger$ = new Subject<boolean>();//Va a emitir un evento
@@ -155,6 +156,15 @@ export class DataService {
     });
     let options = { headers: headers };
     return this._http.post(this.addComunityUrl, comunity, options);
+  }
+
+  findComunytyByRegistroAcademico(user : User){
+    console.log('En save comunity: ' + user.registroAcademico)
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token,
+    });
+    let options = { headers: headers };    
+    return this._http.post(this.findComunytyByRegistroAcademicoUrl,user,options)
   }
 
   public getLoggedIn() {

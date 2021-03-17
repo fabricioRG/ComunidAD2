@@ -43,7 +43,9 @@ import { ChangePasswordComponent } from './views/change-password/change-password
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveModalComponent } from './components/active-modal/active-modal.component';
 import { CreateComunityComponent } from './comunity/create-comunity/create-comunity.component';
-
+import { LoadComunitysComponent } from './comunity/load-comunitys/load-comunitys.component';
+//Layout
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 const rutas: Routes = [
@@ -91,6 +93,10 @@ const rutas: Routes = [
         component: CreateComunityComponent
       },
       {
+        path: 'showComunitys',
+        component : LoadComunitysComponent
+      },
+      {
         path: 'petitions',
         component: PetitionsComponent
       },
@@ -117,7 +123,8 @@ const rutas: Routes = [
     EditProfileComponent,
     ActiveModalComponent,
     ChangePasswordComponent,
-    CreateComunityComponent
+    CreateComunityComponent,
+    LoadComunitysComponent
     ],
   imports: [
     BrowserModule,
@@ -137,6 +144,7 @@ const rutas: Routes = [
     MatRadioModule,
     MatFormFieldModule,
     MatSelectModule,
+    FlexLayoutModule,
     RouterModule.forRoot(rutas, {
       useHash: true
     }),
