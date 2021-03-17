@@ -19,6 +19,7 @@ export class DataService {
   coursesUrl = '/api/users/getCourses';
   usersURL = '/api/users/accounts';
   addComunityUrl = '/api/users/creationComunity';
+  
   changePasswordUserURL = '/api/users/changePassword';
 
   private logger$ = new Subject<boolean>();//Va a emitir un evento
@@ -143,7 +144,7 @@ export class DataService {
       'Authorization': 'Bearer ' + token.token,
     });
     let options = { headers: headers };
-    return this._http.post<User>(this.coursesUrl, token, options);
+    return this._http.post<any>(this.coursesUrl, token, options);
   }
 
   //Posta para agregar comunidad
@@ -158,6 +159,10 @@ export class DataService {
 
   public getLoggedIn() {
     return this.loggedIn;
+  }
+
+  public trueLoggedIn(){
+    this.loggedIn=true;
   }
 
   public getTokenSession() {

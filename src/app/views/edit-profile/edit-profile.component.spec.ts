@@ -53,7 +53,6 @@ describe('EditProfileComponent', () => {
         us.registroAcademico = '11111111'
         var lista =  of(us)
         spyOn(dataService, "getUserByToken").and.returnValue(lista);
-        
     //act
         component.setDataService(dataService)
         component.obtenerUsuario()

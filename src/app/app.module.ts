@@ -38,6 +38,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select'; 
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
 import { EditProfileComponent } from './views/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './views/change-password/change-password.component'; 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -137,6 +138,7 @@ const rutas: Routes = [
     MatRadioModule,
     MatSelectModule,
     MatFormFieldModule,
+    MatSelectModule,
     RouterModule.forRoot(rutas, {
       useHash: true
     }),
