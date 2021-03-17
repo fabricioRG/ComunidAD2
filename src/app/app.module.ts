@@ -35,7 +35,6 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
 import {MatRadioModule} from '@angular/material/radio'; 
-import {MatSelectModule} from '@angular/material/select'; 
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
@@ -44,6 +43,7 @@ import { ChangePasswordComponent } from './views/change-password/change-password
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveModalComponent } from './components/active-modal/active-modal.component';
 import { CreateComunityComponent } from './comunity/create-comunity/create-comunity.component';
+import { StateUserAdminComponent } from './views/state-user-admin/state-user-admin.component';
 
 
 
@@ -98,6 +98,10 @@ const rutas: Routes = [
       {
         path: 'changePassword',
         component: ChangePasswordComponent
+      },
+      {
+        path: 'stateUserAdmin',
+        component: StateUserAdminComponent
       }
     ]
   },
@@ -118,7 +122,8 @@ const rutas: Routes = [
     EditProfileComponent,
     ActiveModalComponent,
     ChangePasswordComponent,
-    CreateComunityComponent
+    CreateComunityComponent,
+    StateUserAdminComponent
     ],
   imports: [
     BrowserModule,
