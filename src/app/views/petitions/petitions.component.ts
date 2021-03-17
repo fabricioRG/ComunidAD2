@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { ActiveModalComponent } from 'src/app/components/active-modal/active-modal.component'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-petitions',
@@ -14,6 +15,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 export class PetitionsComponent implements OnInit {
 
+  @ViewChild(MatTable) tableUsers: MatTable<any>;
 
   /*DEFINITIONS */
   enableButtonAcceptarSolicitud = false;
@@ -79,7 +81,8 @@ export class PetitionsComponent implements OnInit {
   aceptarSolicitudPressedButton() {
     const numSelected = this.selection.selected.length;
     if (numSelected > 0) {
-      this.openModalConfirm();
+      this.updateUsers();
+      // this.openModalConfirm();
       // this.selection.selected.forEach(
       //   row => this.postAdminCreation(row.registroAcademico!))
       // console.log("Printing")
@@ -113,18 +116,33 @@ export class PetitionsComponent implements OnInit {
   }
 
   updateUsers() {
+    console.log("updating:::::")
     var aux = new User();
     aux.token = this.token;
-    console.log(aux.token);
     this.dataService.getAllUsers(aux)
-      .subscribe((data: User[]) => {
-        // this.users = data;
-        this.dataSource.data = data.filter(function (user) {
+      .subscribe((data) => {
+
+        this.dataSource.data.length = 0;
+
+        let result = data.filter(function (user) {
           return !user.estado?.localeCompare("EN_ESPERA");
         });
-        console.log(this.dataSource);
-        console.log(data);
+
+        result.forEach( usr => {
+          this.dataSource.data.push(usr);
+          // console.log(usr)
+        })
+
+        // this.users = data;
+        // this.dataSource.data = data.filter(function (user) {
+        //   return !user.estado?.localeCompare("EN_ESPERA");
+        // });
+        // console.log(this.dataSource);
+        // console.log(data);
       });
+      console.log("Data::",this.dataSource.data)
+      this.tableUsers.renderRows();
+      // this.paginator._changePageSize(this.paginator.pageSize);
   }
 
   ngOnInit() {
@@ -154,6 +172,8 @@ export class PetitionsComponent implements OnInit {
   }
 
   confirmModal() {
+    
+    this.updateUsers();
     const modal = this._modalService.open(ActiveModalComponent);
 
     modal.componentInstance.modalHeader = 'Proceso exitoso';
@@ -166,7 +186,6 @@ export class PetitionsComponent implements OnInit {
     }, (reason) => {
       console.log("Reason: ", reason);
     });
-    this.updateUsers();
     // this.cancelarButton();
   }
 

@@ -4,7 +4,7 @@
     </mat-card-title>
     <mat-card-content>
         <!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z3"></table> -->
-        <table mat-table [dataSource]="dataSource">
+        <table mat-table #tableUsers [dataSource]="dataSource">
             <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>
                     <mat-checkbox (change)="$event ? masterToggle() : null"
