@@ -7,6 +7,7 @@ import { FechasService } from 'src/app/services/fechas/fechas.service';
 import { InicializacionUsuarioService } from 'src/app/services/inicializacion-usuario/inicializacion-usuario.service';
 import { LoginService } from 'src/app/services/login/login.service';
 import { MensajesErrorService } from 'src/app/services/mensajes-error/mensajes-error.service';
+import { SesionService } from 'src/app/services/sesion/sesion.service';
 
 import { User } from 'src/app/user.model';
 
@@ -27,7 +28,7 @@ export class EditProfileComponent implements OnInit {
   signupForm!: FormGroup;
 
   constructor( private _builder: FormBuilder,private dataService: DataService,private fechasServices: FechasService,
-    private inicializarUsuario: InicializacionUsuarioService, private mensajesError:MensajesErrorService, public a: ConstantesService, public validacionURL: LoginService) {
+    private inicializarUsuario: InicializacionUsuarioService, private mensajesError:MensajesErrorService, public a: ConstantesService, public sesionService: SesionService) {
       this.token = localStorage.getItem('token');
       if(this.token!=null){
       this.token = JSON.parse(this.token).token
@@ -138,6 +139,9 @@ export class EditProfileComponent implements OnInit {
       this.dataService  = dataSer;
     }
  
+  public existeSesion(): boolean{
+    return this.sesionService.exitSession();
+  }
  
   
 
