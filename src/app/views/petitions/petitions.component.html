@@ -1,6 +1,15 @@
 <mat-card class="card border-info mb-3" style="margin: 20px;">
     <mat-card-title>
-        Solicitudes
+        <div class="row justify-content-between">
+            <div class="col-4">
+                Solicitudes
+            </div>
+            <div class="col-1">
+                <button mat-mini-fab (click)="this.updateUsers()">
+                    <mat-icon>autorenew</mat-icon>
+                </button>
+            </div>
+        </div>
     </mat-card-title>
     <mat-card-content>
         <!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z3"></table> -->
@@ -50,8 +59,9 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
         </table>
         <div *ngIf="this.enableButtonAcceptarSolicitud" class="row row-content justify-content-center">
-            <button class="col-sm-4 selectionButton" (click)="aceptarSolicitudPressedButton()"
-            mat-raised-button color="primary">ACEPTAR SOLICITUD</button>
+            <button class="col-sm-4 selectionButton" (click)="aceptarSolicitudPressedButton()" mat-raised-button
+                color="primary">ACEPTAR SOLICITUD
+            </button>
         </div>
     </mat-card-content>
 </mat-card>

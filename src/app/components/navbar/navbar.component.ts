@@ -14,13 +14,11 @@ export class NavbarComponent implements OnInit {
   verTablero: boolean;
   
   constructor(private dataService: DataService) { 
-    console.log("CONSTRUCTOR"+dataService.getLoggedIn());
     this.verTablero=dataService.getLoggedIn();
 
   }
 
   ngOnInit(): void {
-    console.log("sdasdf"+this.verTablero);
     this.token$=this.dataService.isLoggedIn();//Estas acciones solo las realiza cuando ocurre un cambio en la variable
     this.token$.subscribe(isSuscribe=>{
       if(isSuscribe){

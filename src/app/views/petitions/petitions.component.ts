@@ -6,6 +6,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { ActiveModalComponent } from 'src/app/components/active-modal/active-modal.component'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatPaginator } from '@angular/material/paginator';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-petitions',
@@ -32,24 +33,16 @@ export class PetitionsComponent implements OnInit {
   numSuccess: number = 0;
 
   /* CONSTRUCTOR */
-  constructor(private dataService: DataService, private _modalService: NgbModal) {
+  constructor(private dataService: DataService, private _modalService: NgbModal, private cdRef:ChangeDetectorRef) {
     this.token = localStorage.getItem('token');
     this.token = JSON.parse(this.token).token;
   }
 
-
   /* FUNCTIONS */
-  // printUsers() {
-  //   // console.log(this.users);
-  //   this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {
-  //     return !user.estado?.localeCompare("EN_ESPERA");
-  //   }))
-  // }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
-    // console.log("numSelected: ", numSelected, "numRows: ", numRows);
     if (numSelected > 0) {
       this.setStateButtonAcceptarSolicitud(true);
     } else {
@@ -65,9 +58,6 @@ export class PetitionsComponent implements OnInit {
   }
 
   checkboxLabel(row?: User): string {
-    // console.log("row",row);
-    // console.log("pressed: ", this.selection.selected)
-    // console.log("Selections: ",this.selection.selected);
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -81,15 +71,12 @@ export class PetitionsComponent implements OnInit {
   aceptarSolicitudPressedButton() {
     const numSelected = this.selection.selected.length;
     if (numSelected > 0) {
-      this.updateUsers();
-      // this.openModalConfirm();
-      // this.selection.selected.forEach(
-      //   row => this.postAdminCreation(row.registroAcademico!))
-      // console.log("Printing")
+      this.openModalConfirm();
+      this.selection.selected.forEach(
+        row => this.postAdminCreation(row.registroAcademico!))
     } else {
       console.log("Not enough")
     }
-    // setTimeout(function () { location.reload() }, 500);
   }
 
   acceptAdminRequest() {
@@ -106,43 +93,27 @@ export class PetitionsComponent implements OnInit {
       .subscribe(
         (data) => {
           this.response = data
-          console.log("Data:: ", data)
+          // console.log("Data:: ", data)
         },
         (error) => {
           this.numErrors++;
-          console.log("Error: ", error)
+          // console.log("Error: ", error)
         }
       )
   }
 
   updateUsers() {
-    console.log("updating:::::")
     var aux = new User();
     aux.token = this.token;
     this.dataService.getAllUsers(aux)
       .subscribe((data) => {
 
-        this.dataSource.data.length = 0;
-
-        let result = data.filter(function (user) {
+        this.dataSource.data = data.filter(function (user) {
           return !user.estado?.localeCompare("EN_ESPERA");
         });
-
-        result.forEach( usr => {
-          this.dataSource.data.push(usr);
-          // console.log(usr)
-        })
-
-        // this.users = data;
-        // this.dataSource.data = data.filter(function (user) {
-        //   return !user.estado?.localeCompare("EN_ESPERA");
-        // });
-        // console.log(this.dataSource);
-        // console.log(data);
       });
-      console.log("Data::",this.dataSource.data)
       this.tableUsers.renderRows();
-      // this.paginator._changePageSize(this.paginator.pageSize);
+      this.selection.clear()
   }
 
   ngOnInit() {
@@ -165,9 +136,7 @@ export class PetitionsComponent implements OnInit {
         this.confirmModal();
       }
       this.numErrors = 0;
-      console.log("Result: ", result);
     }, (reason) => {
-      console.log("Reason: ", reason);
     });
   }
 
@@ -182,11 +151,10 @@ export class PetitionsComponent implements OnInit {
     modal.componentInstance.infoModal = true;
 
     modal.result.then((result) => {
-      console.log("Result: ", result);
+      // console.log("Result: ", result);
     }, (reason) => {
-      console.log("Reason: ", reason);
+      // console.log("Reason: ", reason);
     });
-    // this.cancelarButton();
   }
 
   errorMessage(){
@@ -198,12 +166,15 @@ export class PetitionsComponent implements OnInit {
     modal.componentInstance.infoModal = true;
 
     modal.result.then((result) => {
-      console.log("Result: ", result);
+      // console.log("Result: ", result);
     }, (reason) => {
-      console.log("Reason: ", reason);
+      // console.log("Reason: ", reason);
     });
-
-    // this.cancelarButton();
   }
+
+  ngAfterViewChecked()
+{
+  this.cdRef.detectChanges();
+}
 
 }
