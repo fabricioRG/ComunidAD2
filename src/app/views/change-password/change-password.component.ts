@@ -14,39 +14,6 @@ import { MustMatch } from '../../helpers/must-match.validator';
 import { DataService } from 'src/app/data.service';
 import { ConstantesService } from 'src/app/services/constantes/constantes.service';
 
-const USRS: User[] = [
-  {
-    registroAcademico: '201035894',
-    nombreCompleto: 'Joseph Stews',
-    correoElectronico: 'joseph@gmail.com'
-  },
-  {
-    registroAcademico: '201754987',
-    nombreCompleto: 'Benout Reim',
-    correoElectronico: 'benout@gmail.com'
-  },
-  {
-    registroAcademico: '201789751',
-    nombreCompleto: 'James Hours',
-    correoElectronico: 'james@gmail.com'
-  },
-  {
-    registroAcademico: '201845783',
-    nombreCompleto: 'Maximus Selt',
-    correoElectronico: 'maximus@gmail.com'
-  },
-]
-
-// Search into table of users
-function search2(text: string, pipe: PipeTransform): User[] {
-  return USRS.filter(user => {
-    const term2 = text.toLowerCase();
-    return user.correoElectronico?.toLowerCase().includes(term2)
-      || user.registroAcademico?.toLowerCase().includes(term2)
-      || user.nombreCompleto?.toLowerCase().includes(term2)
-  });
-}
-
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
@@ -59,7 +26,7 @@ export class ChangePasswordComponent implements OnInit {
 
   // Table visibility
   selectedUser: boolean = false;
-  selectedUserObject: User = USRS[0];
+  selectedUserObject: User;
 
   // Password visibility
   hide = true;

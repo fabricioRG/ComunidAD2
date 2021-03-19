@@ -86,7 +86,7 @@ export class PetitionsComponent implements OnInit {
     } else {
       console.log("Not enough")
     }
-     setTimeout(function(){location.reload()}, 500);
+    //  setTimeout(function(){location.reload()}, 500);
   }
 
   postAdminCreation(registroAcademico: string){
