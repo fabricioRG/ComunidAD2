@@ -21,8 +21,13 @@ export class ViewComunityComponent implements OnInit {
   comunity : Comunity;
   comunidadEsDelUsuarioLogueado : boolean;
 
+  //Constante para la imagen
+  encabezadoFoto : string="data:image/jpeg;base64,";
+
+
   ngOnInit(): void {
   }
+
 
   cargarComunidad(){
     this.comunity = new Comunity();
@@ -34,6 +39,7 @@ export class ViewComunityComponent implements OnInit {
     //Ver si la comunidad es del usuario(Dependiendo si es del usuario o no apareceran ciertos botones
     if(this.sessionService.exitSession() && idComunidad){
       if(idComunidad){
+        console.log("EXISTE SESION Y EL ID DE COMUNIDAD")
         var y : number =+idComunidad;
         this.comunity.id=y;
         this.verificarSiComunidadEsDelUsurioLogueado();
@@ -49,8 +55,8 @@ export class ViewComunityComponent implements OnInit {
       //Buscando la comunidad para ver si es del usuario
       this.dataService.findComunityById(this.comunity,this.user).subscribe(response =>{
         var comResponse : Comunity = response;
+        this.comunity=comResponse;
         if(comResponse.user?.registroAcademico===this.user.registroAcademico){//Siel registroAcadmico de la comunidad que se recibio es igual al registroAcademico de usuario, es su comunidad
-          this.comunity=comResponse;
           this.comunidadEsDelUsuarioLogueado=true;
         }else{
           this.comunidadEsDelUsuarioLogueado=false;
@@ -60,5 +66,8 @@ export class ViewComunityComponent implements OnInit {
   }
 
 
+  dibujarImagen(){
+    return this.encabezadoFoto+this.comunity.datosFoto;
+  }
 
 }
