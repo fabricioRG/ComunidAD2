@@ -11,6 +11,8 @@ import { DataService } from '../../data.service';
 import { ActiveModalComponent } from '../../components/active-modal/active-modal.component'
 import { SesionService } from 'src/app/services/sesion/sesion.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ComunityAssign } from 'src/app/models/comunityAssign.model';
+import { IdComunityAssign } from 'src/app/models/idComunityAssign.model';
 
 @Component({
   selector: 'app-create-comunity',
@@ -39,7 +41,7 @@ export class CreateComunityComponent implements OnInit {
     //this.token = JSON.parse(this.token).token;
     this.token = this.sesionService.getToken()
     this.buscarCursos();
-    this.probandoRecuperarImagen()
+    //this.probandoRecuperarImagen()
   }
 
 
@@ -88,17 +90,38 @@ export class CreateComunityComponent implements OnInit {
   }
 
   generarComunidad(registroAcademico: any): Comunity {
-    var user: User = new User;
+    //var user: User = new User;
     var course: Course = new Course;
     var comunity: Comunity = new Comunity;
-    comunity.user = user;
+    //comunity.user = user;
     comunity.course = course;
-    user.registroAcademico = registroAcademico;
+    //user.registroAcademico = registroAcademico;
     course.codigoDeCurso = this.comunityForm.value['tipoDeCurso'];
     comunity.nombre = this.comunityForm.value['nombreDeComunidad'];
     comunity.descripcion = this.comunityForm.value['descripcion'];
     this.comunity = comunity;
     return comunity;
+  }
+
+  generarAsignacionDeComunidad(com : Comunity,registroAcademico : any) : ComunityAssign{
+    var comunityAssign : ComunityAssign = new ComunityAssign;
+    var idCommunityAssign : IdComunityAssign = new IdComunityAssign;
+    var user : User = new User;
+    var comunidad :Comunity = new Comunity;
+    //Id
+    idCommunityAssign.idComunidad=com.id;
+    idCommunityAssign.registroAcademico=registroAcademico;
+    comunityAssign.idComunityAssign=idCommunityAssign;
+    //User
+    user.registroAcademico=registroAcademico;
+    comunityAssign.user=user;
+    //Comunity
+    comunidad.id=com.id;
+    comunityAssign.comunity=comunidad;
+    //Tipo
+    comunityAssign.tipo="ADMINISTRADOR";
+
+    return comunityAssign;
   }
 
   llamarModal() {
@@ -121,11 +144,20 @@ export class CreateComunityComponent implements OnInit {
   guardarComunidad(aux: User) {
     //Creamos el JSON
     this.dataService.saveComunity(this.comunity, aux).subscribe(response => {
-      var com: Comunity; response;
+      var com: Comunity= response;
+      var comAsig : ComunityAssign = this.generarAsignacionDeComunidad(com,aux.registroAcademico);
+      //Guardando la Asignacion de comunidad
+      console.log("COMUNIDAD ASIGNACION A GUARDAR:",comAsig)
+      this.dataService.saveComunityAssign(comAsig,this.sesionService.getUserWithToken()).subscribe(
+        (response)=>{
+          console.log("AsigComunidad:",response)
+          this.llamarModal()
+          this.comunity = response;
+          this.onResetForm()
+        }
+      )
+      //this.dataService.
       console.log("ESTO ES EN GUARDAR COMUNIDAD:", response)
-      this.llamarModal()
-      this.comunity = response;
-      this.onResetForm()
     }, (error) => {
       alert('ERROR: ' + error);
     });
@@ -138,17 +170,14 @@ export class CreateComunityComponent implements OnInit {
     if (this.comunityForm.valid) {
       console.log(this.comunityForm.value);
       //Buscamos el usuario para su ID
-      var aux = new User();
-      aux.token = this.token;
-      console.log(aux.token)
-      this.dataService.getUserByToken(aux).subscribe(
+      this.dataService.getUserByToken(this.sesionService.getUserWithToken()).subscribe(
         (user) => {
-          var u: User = user;
           this.generarComunidad(user.registroAcademico)
+          user.token=this.token;
           if (this.fileList) {//Si selecciono una imagen
-            this.guardarImagenYComunidad()
+            this.guardarImagenYComunidad(user)
           } else {
-            this.guardarComunidad(aux)
+            this.guardarComunidad(user)
           }
         },
         (error) => {
@@ -173,20 +202,18 @@ export class CreateComunityComponent implements OnInit {
   }
 
   //Sube la imagen(regresa una comunidad con el path de la foto), y guarda la comunidad ya con la foto
-  guardarImagenYComunidad() {
+  guardarImagenYComunidad(user : User) {
     const data = new FormData()
     if (this.fileList) {
       data.append('file', this.fileList[0])
       var selectedFile: File | null = this.fileList.item(0);
-      var aux = new User();
-      aux.token = this.token;
-      this.uploadFileService.upload(data, aux).subscribe(response => {
+      this.uploadFileService.upload(data, user).subscribe(response => {
         console.log("RESPUESTA GUARDAR IMAGEN EN SPRING:" + response)
         var com: Comunity = response;
         this.comunity.foto = com.foto;
         console.log("Communidad que se creo:", this.comunity)
         this.imagenCargada=null
-        this.guardarComunidad(aux)
+        this.guardarComunidad(user)
       })
     }
 

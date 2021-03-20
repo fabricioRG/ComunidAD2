@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { DataService } from 'src/app/data.service';
 import { Comunity } from 'src/app/models/comunity.model';
+import { ComunityAssign } from 'src/app/models/comunityAssign.model';
 import { SesionService } from 'src/app/services/sesion/sesion.service';
 import { User } from 'src/app/user.model';
 import { LoadComunitysComponent } from '../load-comunitys/load-comunitys.component';
@@ -18,8 +19,9 @@ export class ViewComunityComponent implements OnInit {
   }
 
   user : User;
-  comunity : Comunity;
+  comunityAssign : ComunityAssign;
   comunidadEsDelUsuarioLogueado : boolean;
+  comunity : Comunity;
 
   //Constante para la imagen
   encabezadoFoto : string="data:image/jpeg;base64,";
@@ -30,6 +32,7 @@ export class ViewComunityComponent implements OnInit {
 
 
   cargarComunidad(){
+    this.comunityAssign = new ComunityAssign();
     this.comunity = new Comunity();
     this.user = new User();
     var idComunidad:string | null=this.route.snapshot.paramMap.get('id')
@@ -41,7 +44,7 @@ export class ViewComunityComponent implements OnInit {
       if(idComunidad){
         console.log("EXISTE SESION Y EL ID DE COMUNIDAD")
         var y : number =+idComunidad;
-        this.comunity.id=y;
+          this.comunity.id=y;
         this.verificarSiComunidadEsDelUsurioLogueado();
       }
     }else{
@@ -54,9 +57,12 @@ export class ViewComunityComponent implements OnInit {
       this.user =response;
       //Buscando la comunidad para ver si es del usuario
       this.dataService.findComunityById(this.comunity,this.user).subscribe(response =>{
-        var comResponse : Comunity = response;
-        this.comunity=comResponse;
-        if(comResponse.user?.registroAcademico===this.user.registroAcademico){//Siel registroAcadmico de la comunidad que se recibio es igual al registroAcademico de usuario, es su comunidad
+        this.comunityAssign=response;
+        if(response.comunity){
+          this.comunity=response.comunity;
+        }
+        console.log("EN VISTA ES",response)
+        if(response.user?.registroAcademico===this.user.registroAcademico){//Siel registroAcadmico de la comunidad que se recibio es igual al registroAcademico de usuario, es su comunidad
           this.comunidadEsDelUsuarioLogueado=true;
         }else{
           this.comunidadEsDelUsuarioLogueado=false;

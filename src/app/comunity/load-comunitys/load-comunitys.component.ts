@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/data.service';
 import { Comunity } from 'src/app/models/comunity.model';
+import { ComunityAssign } from 'src/app/models/comunityAssign.model';
 import { SesionService } from 'src/app/services/sesion/sesion.service';
 import { User } from 'src/app/user.model';
 
@@ -13,7 +14,7 @@ import { User } from 'src/app/user.model';
 export class LoadComunitysComponent implements OnInit {
 
   //COMUNIDADES
-  comunidades : Comunity[];
+  comunidades : ComunityAssign[];
   encabezadoFoto : string="data:image/jpeg;base64,";
   //
   private selectedComunity : Comunity | null;
@@ -60,10 +61,13 @@ export class LoadComunitysComponent implements OnInit {
   }
 
   //Metodo para ver la comunidad(La idea es que redirija a otra pagina donde aparece la comunidad)
-  verComunidad(comunity : Comunity){
-    this.selectedComunity = comunity;
-    this.router.navigate(['viewComunity',comunity.id]);
-    console.log("COMUNIDAD ESCOGIDA:",comunity)
+  verComunidad(id : number | undefined){
+    if(id){
+      //this.selectedComunity = comunity;
+      this.router.navigate(['viewComunity',id]);
+      console.log("ID ESCOGIDAAAAAAA:",id)
+    }
+
   }
 
   

@@ -4,6 +4,7 @@ import { User } from './user.model';
 import { HeadersService } from './services/headers/headers.service';
 import { Observable, Subject } from 'rxjs';
 import { Comunity } from './models/comunity.model';
+import { ComunityAssign } from './models/comunityAssign.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class DataService {
   addComunityUrl = '/api/users/creationComunity';
   findComunytyByRegistroAcademicoUrl = '/api/users/findComunityByRegistroAcademico';
   findComunityByIdURL = '/api/users/findComunityById';
+  saveComunityAssignURL ='/api/users/assignComunity';
 
   changePasswordUserURL = '/api/users/changePassword';
 
@@ -159,6 +161,16 @@ export class DataService {
     let options = { headers: headers };
     return this._http.post(this.addComunityUrl, comunity, options);
   }
+
+  saveComunityAssign(communityAssign :ComunityAssign, user : User){
+    console.log("COMMUNITY ASSIGN POST:",communityAssign)
+    console.log("USER TOKEN EN POST",user)
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token,
+    });
+    let options = { headers: headers };
+    return this._http.post(this.saveComunityAssignURL, communityAssign, options);
+  }
   /**
    * 
    * @param user Devuelve todas las comunidades que un usuario halla creado
@@ -169,7 +181,7 @@ export class DataService {
       'Authorization': 'Bearer ' + user.token,
     });
     let options = { headers: headers };
-    return this._http.post<Comunity[]>(this.findComunytyByRegistroAcademicoUrl, user, options)
+    return this._http.post<ComunityAssign[]>(this.findComunytyByRegistroAcademicoUrl, user, options)
   }
   /**
    * Devulve la comunidad que coincida con el id, si esta existe
@@ -181,7 +193,7 @@ export class DataService {
       'Authorization': 'Bearer ' + user.token,
     });
     let options = { headers: headers };
-    return this._http.post(this.findComunityByIdURL, comunity, options);
+    return this._http.post<ComunityAssign>(this.findComunityByIdURL, comunity, options);
   }
 
   public getLoggedIn() {
