@@ -14,15 +14,35 @@ import { MustMatch } from '../../helpers/must-match.validator';
 import { DataService } from 'src/app/data.service';
 import { ConstantesService } from 'src/app/services/constantes/constantes.service';
 
+const DEFAULT_POSITION_ROW = 2;
+
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.css']
 })
+
 export class ChangePasswordComponent implements OnInit {
+
+  rows = [
+    {valor:0, muestraValor:'Todos'},
+    {valor:5, muestraValor:'5'},
+    {valor:10, muestraValor:'10'},
+    {valor:20, muestraValor:'20'},
+    {valor:50, muestraValor:'50'},
+    {valor:100, muestraValor:'100'},
+  ];
+
+  seleccionada: number = this.rows[DEFAULT_POSITION_ROW].valor;
 
   // Token
   token: any;
+
+  // Search vilibility
+  value = '';
+  filter1 = '';
+  filter2 = '';
+  filter3 = '';
 
   // Table visibility
   selectedUser: boolean = false;
@@ -62,7 +82,7 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit() {
     this.registerForm = this.formBuilder
       .group({
-        password: ['', [Validators.required, Validators.minLength(6),Validators.maxLength(30),Validators.pattern(ConstantesService.REGEX_PASSWORD)]],
+        password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30), Validators.pattern(ConstantesService.REGEX_PASSWORD)]],
         confirmPassword: ['', Validators.required]
       },
         {
@@ -114,7 +134,7 @@ export class ChangePasswordComponent implements OnInit {
     modal.componentInstance.confirmModal = true;
 
     modal.result.then((result) => {
-    this.postChangePasswordUser(this.selectedUserObject)
+      this.postChangePasswordUser(this.selectedUserObject)
       console.log("Result: ", result);
     }, (reason) => {
       console.log("Reason: ", reason);
@@ -138,7 +158,7 @@ export class ChangePasswordComponent implements OnInit {
     this.cancelarButton();
   }
 
-  errorMessage(){
+  errorMessage() {
     const modal = this._modalService.open(ActiveModalComponent);
 
     modal.componentInstance.modalHeader = 'Proceso erroneo';
@@ -161,29 +181,51 @@ export class ChangePasswordComponent implements OnInit {
     this.alertClosedWarning = true;
   }
 
-  postChangePasswordUser(usr: User){
+  postChangePasswordUser(usr: User) {
     var aux = new User();
     aux.token = this.token;
-    return this.dataService.postChangePasswordUser(usr,aux)
-    .subscribe(
-      (data) => {
-        console.log("Data:::: ", data)
-        if(data){
-          this.confirmChangePassword();
+    return this.dataService.postChangePasswordUser(usr, aux)
+      .subscribe(
+        (data) => {
+          console.log("Data:::: ", data)
+          if (data) {
+            this.confirmChangePassword();
+          }
+        },
+        (error) => {
+          console.log("Error:::: ", error)
+          this.errorMessage();
         }
-      },
-      (error) => {
-        console.log("Error:::: ", error)
-        this.errorMessage();
-      }
-    )
+      )
   }
+
+  clickSearchUser(){
+    var aux = new User();
+    aux.token = this.token;
+    let search1: User = {
+      registroAcademico: this.filter1,
+      nombreCompleto: this.filter2,
+      correoElectronico: this.filter3
+    }
+    this.dataService.getUsersByFiltering(search1, aux)
+      .subscribe(
+        (data) => {
+          console.log("getUsersByFiltering:::::", data)
+        }
+      )
+  }
+
 
   updateUsers(pipe: PipeTransform) {
     var aux = new User();
     aux.token = this.token;
-    console.log(aux.token);
-    return this.dataService.getAllUsers(aux)
+    let search: User = {
+      registroAcademico: this.filter1,
+      nombreCompleto: this.filter2,
+      correoElectronico: this.filter3
+    }
+    // console.log(aux.token);
+    return this.dataService.getUsersByFiltering(search,aux)
       .subscribe(data => {
         console.log("users: ", data)
         this.usrs = data;
@@ -201,6 +243,6 @@ export class ChangePasswordComponent implements OnInit {
     console.log(password);
     this.selectedUserObject.password = password;
     // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value))
-}
+  }
 
 }

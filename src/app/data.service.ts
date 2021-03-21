@@ -16,6 +16,7 @@ export class DataService {
   addUserUrl = '/creation/users';
   userByTokenUrl = '/api/users/findbytoken';
   userUpdateUrl = '/api/update/user';
+  getUsersByFilteringURL = '/api/users/byFiltering';
   coursesUrl = '/api/users/getCourses';
   usersURL = '/api/users/accounts';
   addComunityUrl = '/api/users/creationComunity';
@@ -88,6 +89,14 @@ export class DataService {
     });
     let options = { headers: headers };
     return this._http.post<number>(this.postAdminCreationUrl, { registroAcademico: registroAcadem }, options);
+  }
+
+  getUsersByFiltering(search: User, token: User){
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<User[]>(this.getUsersByFilteringURL, search, options);
   }
 
   postChangePasswordUser(usr: User, token:User){
