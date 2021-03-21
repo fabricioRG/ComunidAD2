@@ -35,8 +35,11 @@
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">Opciones para la comunidad</h5>
                                 </div>
+                                <p *ngIf="solicitudEstaActiva" class="text-success">Eres miembro de la comunidad</p>
+                                <p *ngIf="solicitudEstaEnEspera"class="text-warning">Solicitud Enviada :)</p>
+                                <p *ngIf="solicitudEstaDenegada" class="text-danger">.Tu solicitud ha sido rechazada</p>
                                 <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-success">Crear publicacion</button>
-                                <button *ngIf='!comunidadEsDelUsuarioLogueado' type="button" class="btn btn-warning">Unirse a la Comunidad</button>
+                                <button *ngIf='puedeEnviarSolicitud' (click)="solicitarUnionAComunidad()" type="button" class="btn btn-warning">Unirse a la Comunidad</button>
 
                             </a>
                         </div>
