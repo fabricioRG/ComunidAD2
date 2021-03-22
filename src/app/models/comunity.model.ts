@@ -2,9 +2,9 @@ import { User } from "../user.model";
 import { Course } from "./course.model";
 
 export class Comunity {
-    id?: string;
+    id?: number;
     course?: Course;
-    user?: User;
+    //user?: User;
     nombre?: string;
     descripcion?: string;
     foto?: string;

@@ -18,16 +18,23 @@ export class NavigationBarComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver,private sesionService : SesionService) {}
+  constructor(private breakpointObserver: BreakpointObserver, private sesionService: SesionService) { }
 
-    //Roles
-    verificarSesion(): boolean {
-      console.log("EN NAV VAR DE EL USUARIO LOGUEADO(sesion):"+this.sesionService.exitSession())
-      console.log("EN NAV VAR DE EL USUARIO LOGUEADO(sesion):"+this.sesionService.usuarioEsAdministradorDeComunidad())
-
-      if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeComunidad()) {//Si no hay session que redirija
-        return false;
-      }
-      return true;
+  //Roles
+  verificarSesionSuperUsuario(): boolean {
+     if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeSistema()) {//Si no hay session que redirija
+      return false;
     }
+    return true;
+  }
+
+  verificarSesionUsuarioComunidad(): boolean {
+    if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeComunidad()) {//Si no hay session que redirija
+      return false;
+    }
+    return true;
+  }
+
+
+
 }
