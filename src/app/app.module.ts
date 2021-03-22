@@ -49,6 +49,7 @@ import { LoadComunitysComponent } from './comunity/load-comunitys/load-comunitys
 //Layout
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ViewComunityComponent } from './comunity/view-comunity/view-comunity.component';
+import { RequestComunityComponent } from './comunity/request-comunity/request-comunity/request-comunity.component';
 
 
 const rutas: Routes = [
@@ -82,6 +83,10 @@ const rutas: Routes = [
     path: 'viewComunity/:id',
     component : ViewComunityComponent
   },
+  {
+    path: 'comunityRequest/:id',
+    component: RequestComunityComponent
+  },  
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -137,7 +142,8 @@ const rutas: Routes = [
     CreateComunityComponent,
     StateUserAdminComponent,
     LoadComunitysComponent,
-    ViewComunityComponent
+    ViewComunityComponent,
+    RequestComunityComponent
     ],
   imports: [
     BrowserModule,
