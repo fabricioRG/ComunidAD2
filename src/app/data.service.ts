@@ -24,6 +24,7 @@ export class DataService {
   findComunytyByRegistroAcademicoUrl = '/api/users/findComunityByRegistroAcademico';
   findComunityByIdURL = '/api/users/findComunityById';
   saveComunityAssignURL ='/api/users/assignComunity';
+  findSuscriptionComunityURL='/api/users/findMemberComunityById';
 
   changePasswordUserURL = '/api/users/changePassword';
 
@@ -184,7 +185,7 @@ export class DataService {
     return this._http.post<ComunityAssign[]>(this.findComunytyByRegistroAcademicoUrl, user, options)
   }
   /**
-   * Devulve la comunidad que coincida con el id, si esta existe
+   * Devulve un ComunityAssign que coincida con el id de la comunidad, si esta existe
    * @param comunity ,se necesita el id de la comunidad
    */
   findComunityById(comunity: Comunity, user: User) {
@@ -194,6 +195,16 @@ export class DataService {
     });
     let options = { headers: headers };
     return this._http.post<ComunityAssign>(this.findComunityByIdURL, comunity, options);
+  }
+
+  findSuscriptionComunity(comunityAssign: ComunityAssign,user : User){
+    //console.log('En save comunity: ' + comunity.nombre)
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<ComunityAssign>(this.findSuscriptionComunityURL, comunityAssign, options);
+
   }
 
   public getLoggedIn() {
@@ -212,6 +223,11 @@ export class DataService {
     return this._http.post(this.userUpdateUrl, user, this.controllHeader.obtenerHeaderConToken(user.token));
   }
 
+  updateAnyUser(user: any, token:string){
+    return this._http.post(this.userUpdateUrl,user,this.controllHeader.obtenerHeaderConToken(token));
+  }
 
+
+  
 
 }

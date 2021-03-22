@@ -260,17 +260,5 @@ export class CreateComunityComponent implements OnInit {
   }
 
 
-  ///Probando cargar imagen(Solo la llamo en el constructor y jala)
-  probandoRecuperarImagen(){
-    var com = new Comunity();
-    com.foto="/home/jesfrin/imagenesDeComunidad/EtkiqBkXYAMbwjk.jpeg";
-    this.uploadFileService.load(com,this.sesionService.getUserWithToken()).subscribe(response =>{
-      var com: Comunity=response;
-      com.datosFoto="data:image/jpeg;base64,"+com.datosFoto;
-      console.log("RECUPERANDO IMAGEN:"+com.datosFoto)
-      this.imagenCargada=com.datosFoto;
-    })
-  }
-
   
 }
