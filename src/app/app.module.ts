@@ -38,6 +38,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { EditProfileComponent } from './views/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './views/change-password/change-password.component'; 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -142,6 +143,7 @@ const rutas: Routes = [
     MatCardModule,
     MatTableModule,
     MatCheckboxModule,
+    MatAutocompleteModule,
     ReactiveFormsModule,
     FormsModule,
     MatInputModule,

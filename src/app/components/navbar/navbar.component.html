@@ -1,16 +1,45 @@
 <mat-toolbar color="primary" class="mat-elevation-z6">
-    <span><mat-icon>whatshot</mat-icon>ComunidAD2</span>
+    <span>
+        <div>
+            <img style="width: 35px;height: 35px;" src="assets/img/logo_comunidad2.png">
+            ComunidAD2
+        </div>
+    </span>
 
     <div class="spacer"></div>
 
-    <a mat-button routerLink="inicio">Inicio</a>
-    <a  *ngIf="existeSession" mat-button routerLink="profile">Perfil</a>
-    <a  *ngIf="existeSession" mat-button routerLink="dashboard">Tablero</a>
-    <a *ngIf="!existeSession" mat-button routerLink="crearUsuario">Crear Usuario</a>
-    
-    <a *ngIf="existeSession" mat-button routerLink="editProfile">Editar Perfil</a>
-    <a mat-button >Nosotros</a>
-    <a *ngIf="!existeSession" mat-raised-button color="accent" routerLink="login">Iniciar Sesion</a>
-    <a  *ngIf="existeSession" mat-raised-button color="gray" routerLink="login" (click)="logOut()">Cerrar Sesion</a>
+    <div class="conten">
+        <mat-form-field>
+            <mat-select [(value)]="selectedCategory" placeholder="Categoria" [formControl]="category" panelClass="testClass">
+                <mat-option *ngFor="let cat of categoryList" [value]="cat">{{cat}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div style="margin: 5px;">
+        <form class="example-form">
+            <input type="text" [(ngModel)]="searchInput" (keyup)="onKey($event)" style="margin: 5px;font-size: medium;"
+                placeholder="Buscar..." [formControl]="control" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option (click)="selectUser(reslt)" *ngFor="let reslt of resultListSearch" [value]="reslt.value">
+                    {{reslt.viewValue}}
+                </mat-option>
+            </mat-autocomplete>
+        </form>
+    </div>
+    <!-- <button  mat-mini-fab color="yellow">
+        <mat-icon>search</mat-icon>
+    </button> -->
+
+    <div>
+        <a mat-button routerLink="inicio">Inicio</a>
+        <a *ngIf="existeSession" mat-button routerLink="profile">Perfil</a>
+        <a *ngIf="existeSession" mat-button routerLink="dashboard">Tablero</a>
+        <a *ngIf="!existeSession" mat-button routerLink="crearUsuario">Crear Usuario</a>
+
+        <a *ngIf="existeSession" mat-button routerLink="editProfile">Editar Perfil</a>
+        <a mat-button>Nosotros</a>
+        <a *ngIf="!existeSession" mat-raised-button color="accent" routerLink="login">Iniciar Sesion</a>
+        <a *ngIf="existeSession" mat-raised-button color="gray" routerLink="login" (click)="logOut()">Cerrar Sesion</a>
+    </div>
 
 </mat-toolbar>
