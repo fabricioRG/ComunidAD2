@@ -43,6 +43,8 @@ import { ChangePasswordComponent } from './views/change-password/change-password
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveModalComponent } from './components/active-modal/active-modal.component';
 import { CreateComunityComponent } from './comunity/create-comunity/create-comunity.component';
+import { StateUserAdminComponent } from './views/state-user-admin/state-user-admin.component';
+
 import { LoadComunitysComponent } from './comunity/load-comunitys/load-comunitys.component';
 //Layout
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -108,6 +110,10 @@ const rutas: Routes = [
       {
         path: 'changePassword',
         component: ChangePasswordComponent
+      },
+      {
+        path: 'stateUserAdmin',
+        component: StateUserAdminComponent
       }
     ]
   },
@@ -129,6 +135,7 @@ const rutas: Routes = [
     ActiveModalComponent,
     ChangePasswordComponent,
     CreateComunityComponent,
+    StateUserAdminComponent,
     LoadComunitysComponent,
     ViewComunityComponent
     ],
@@ -148,6 +155,7 @@ const rutas: Routes = [
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule,
+    MatSelectModule,
     MatFormFieldModule,
     MatSelectModule,
     FlexLayoutModule,

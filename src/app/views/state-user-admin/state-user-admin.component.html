@@ -1,0 +1,40 @@
+<p>state-user-admin works!</p>
+
+<form [formGroup]="filtrosForm"  (ngSubmit)="filtrarUsuarios(filtrosForm.value)">
+<mat-form-field appearance="fill">
+    <mat-label>Numero Carnet: </mat-label>
+    <input matInput  class="ng-scope ng-pristine ng-valid"  formControlName="numeroCarnet" type="number">
+</mat-form-field>
+
+<div class="example-button-row">
+    <button mat-flat-button color="primary"   type="submit">Buscar Usuario<mat-icon>done</mat-icon></button>          
+  </div>
+  </form>
+
+
+
+  <table mat-table [dataSource]="usrs" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Position Column -->
+    <ng-container matColumnDef="registroAcademico">
+      <th mat-header-cell *matHeaderCellDef> Registro Academico. </th>
+      <td mat-cell *matCellDef="let element"> {{element.registroAcademico}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="nombreCompleto">
+      <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
+      <td mat-cell *matCellDef="let element"> {{element.nombreCompleto}} </td>
+    </ng-container>
+    <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef> Estado actual </th>
+        <td mat-cell *matCellDef="let element"> {{element.estado}}  <br> <button (click)="cambiarEstadoUsuario(element,ESTADO_ACTIVO)"> Activar </button> <button (click)="cambiarEstadoUsuario(element,ESTADO_INACTIVO)"> Desactivar </button>  </td>
+      </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+  

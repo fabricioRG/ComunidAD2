@@ -22,7 +22,7 @@ export class InicioComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.token = localStorage.getItem('token');
+    //this.token = localStorage.getItem('token');
   }
 
 }

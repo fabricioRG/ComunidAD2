@@ -223,6 +223,11 @@ export class DataService {
     return this._http.post(this.userUpdateUrl, user, this.controllHeader.obtenerHeaderConToken(user.token));
   }
 
+  updateAnyUser(user: any, token:string){
+    return this._http.post(this.userUpdateUrl,user,this.controllHeader.obtenerHeaderConToken(token));
+  }
 
+
+  
 
 }
