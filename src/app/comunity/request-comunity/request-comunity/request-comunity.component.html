@@ -1,0 +1,60 @@
+<p>request-comunity works!</p>
+
+<div class = "container"*ngIf="this.comunidadEsDelUsuarioLogueado ; else elseBlock">
+<mat-label>*Filtros</mat-label><br>
+<mat-form-field appearance="fill">
+    <mat-label>*Numero Carnet: </mat-label>
+    <input matInput  minlength="4" [(ngModel)]="registroAcademico"  type="number">
+  </mat-form-field>  <br>
+<mat-form-field appearance="fill">
+    <mat-label>*Fecha inicial:</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaInicial">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field> 
+  <mat-form-field appearance="fill">
+    <mat-label>*Fecha final:</mat-label>
+    <input matInput [matDatepicker]="picker2" [(ngModel)]="fechaFinal">
+    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+    <mat-datepicker #picker2></mat-datepicker>
+  </mat-form-field>
+  <div class="example-button-row">
+    <button mat-flat-button color="secondary" (click) = "this.buscarPorFiltros()"type="primary">Buscar por filtros<mat-icon>done</mat-icon></button>          
+  </div>    
+  
+  <table mat-table [dataSource]="comunityAssignList" class="mat-elevation-z6">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Position Column -->
+    <ng-container matColumnDef="registroAcademico">
+      <th mat-header-cell *matHeaderCellDef> Registro Academico. </th>
+      <td mat-cell *matCellDef="let element"> {{element.user?.registroAcademico}} </td>
+    </ng-container>
+  
+          <!-- Name Column -->
+
+    <ng-container matColumnDef="nombreCompleto">
+
+        <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
+        <td mat-cell *matCellDef="let element"> {{element.user?.nombreCompleto}} </td>
+      </ng-container>
+              <!-- fecha creacion -->
+
+    <ng-container matColumnDef="fechaCreacion">
+        <th mat-header-cell *matHeaderCellDef> Fecha Creacion </th>
+        <td mat-cell *matCellDef="let element"> {{element.fechaCreacion}} </td>
+      </ng-container>
+    <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef> Estado Solicitud </th>
+        <td mat-cell *matCellDef="let element"> {{element.estado}}  <br> 
+            <button (click)="aprobarSolicitud(element)"> Activar </button> 
+            <button (click)="denegarSolicitud(element)"> Desactivar </button>  </td>
+      </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+</div>
+<ng-template #elseBlock>No puedes aprobar solicitudes que no son tuyas</ng-template>

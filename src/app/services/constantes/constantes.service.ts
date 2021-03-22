@@ -19,6 +19,11 @@ export class ConstantesService {
   public static PRIVACIDAD_PRIVADA = 'PRIVADO';
   public static PRIVACIDAD_PUBLICA = 'PUBLICA';
 
+  //CONSTANTES DE COMUNITY ASIGN
+  public static COMUNITY_ASIGN_ESPERA = 'ESPERA';
+  public static COMUNITY_ASIGN_ACTIVO = 'ACTIVO';
+  public static COMUNITY_ASIGN_DENEGADO = 'DENEGADO';
+  
   
 
 }

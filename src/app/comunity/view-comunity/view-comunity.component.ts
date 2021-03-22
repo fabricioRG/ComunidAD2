@@ -37,7 +37,7 @@ export class ViewComunityComponent implements OnInit {
     this.user = new User();
     var idComunidad:string | null=this.route.snapshot.paramMap.get('id')
     console.log("ID COMUNIDAD ESCOGIDA",idComunidad)
-    //Ver si hay una sesion, de no haber sesion mandarlo a la pinga
+    //Ver si hay una sesion, de no haber sesion mandarlo al inicio
     //Si hay sesion buscar el usuario
     //Ver si la comunidad es del usuario(Dependiendo si es del usuario o no apareceran ciertos botones
     if(this.sessionService.exitSession() && idComunidad){
@@ -74,6 +74,10 @@ export class ViewComunityComponent implements OnInit {
 
   dibujarImagen(){
     return this.encabezadoFoto+this.comunity.datosFoto;
+  }
+
+  verSolicitudes(){
+    this.redirection.navigate(['comunityRequest',this.comunity.id]);
   }
 
 }
