@@ -9,6 +9,7 @@ export class ConstantesService {
 
 
   public static ESTADO_USUARIO_ACTIVO = 'ACTIVO';
+  public static ESTADO_USUARIO_INACTIVO = 'INACTIVO';
   public static ROL_USUARIO_NORMAL = 'COMUNIDAD';
   public static TOKEN_NULO = null;
   public static PRIVACIDAD_INICIAL = 'PUBLICO';
