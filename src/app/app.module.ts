@@ -48,6 +48,7 @@ import { LoadComunitysComponent } from './comunity/load-comunitys/load-comunitys
 //Layout
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ViewComunityComponent } from './comunity/view-comunity/view-comunity.component';
+import { UserProfileComponent } from './views/user-profile/user-profile.component';
 
 
 const rutas: Routes = [
@@ -61,10 +62,12 @@ const rutas: Routes = [
     component: InicioComponent,
     
     
-  },{
+  },
+  {
     path: 'editProfile',
     component: EditProfileComponent}
-  ,{
+  ,
+  {
     path: 'crearUsuario',
     component: CrearUsuarioComponent
 
@@ -80,6 +83,10 @@ const rutas: Routes = [
   {
     path: 'viewComunity/:id',
     component : ViewComunityComponent
+  },
+  {
+    path: 'userProfile/:id',
+    component: UserProfileComponent
   },
   {
     path: 'dashboard',
@@ -119,6 +126,7 @@ const rutas: Routes = [
     AppComponent,
     ProfileComponent,
     DashboardComponent,
+    UserProfileComponent,
     HeaderComponent,
     InicioComponent,
     NavbarComponent,
@@ -131,7 +139,8 @@ const rutas: Routes = [
     ChangePasswordComponent,
     CreateComunityComponent,
     LoadComunitysComponent,
-    ViewComunityComponent
+    ViewComunityComponent,
+    UserProfileComponent
     ],
   imports: [
     BrowserModule,

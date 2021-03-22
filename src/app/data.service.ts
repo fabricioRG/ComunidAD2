@@ -26,6 +26,7 @@ export class DataService {
   findComunityByIdURL = '/api/users/findComunityById';
   saveComunityAssignURL ='/api/users/assignComunity';
   getUsersBySearchURL = '/api/users/search';
+  findUserByIdURL = '/api/users/find/byId';
 
   changePasswordUserURL = '/api/users/changePassword';
 
@@ -204,6 +205,14 @@ export class DataService {
     });
     let options = { headers: headers };
     return this._http.post<ComunityAssign>(this.findComunityByIdURL, comunity, options);
+  }
+
+  findUserById(searchUsr: User, token: User){
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<User>(this.findUserByIdURL, searchUsr, options);
   }
 
   public getLoggedIn() {

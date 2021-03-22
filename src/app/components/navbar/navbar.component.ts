@@ -7,6 +7,7 @@ import {startWith, map} from 'rxjs/operators';
 import {MatAutocompleteModule} from '@angular/material/autocomplete'; 
 import { User } from 'src/app/user.model';
 import { OrdinaryObject } from 'src/app/helpers/ordinary-object.model';
+import { Router } from '@angular/router';
 
 interface option {
   value?: string,
@@ -38,7 +39,7 @@ export class NavbarComponent implements OnInit {
   selectedCategory = this.categoryList[0];
 
 
-  constructor(private dataService: DataService, private sesionService: SesionService) {
+  constructor(private dataService: DataService, private sesionService: SesionService, private router: Router) {
     // console.log("CONSTRUCTOR" + dataService.getLoggedIn());
     this.existeSession = sesionService.exitSession();
     this.token = localStorage.getItem('token');
@@ -116,10 +117,9 @@ export class NavbarComponent implements OnInit {
   }
 
   selectUser(rst: option){
-    // console.log(rst);
-    // console.log(this.selectedCategory, " - ", rst)
-    let mesg = "Tipo: " + this.selectedCategory + "\nNombre: " + rst.viewValue + "\nID: " + rst.value;
-    alert(mesg);
+    if(this.selectedCategory == this.categoryList[0]){
+      this.router.navigate(['userProfile',rst.value]);
+    }
   }
 
   onKey(event: any) { 
