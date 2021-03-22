@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from './user.model';
 import { HeadersService } from './services/headers/headers.service';
 import { Observable, Subject } from 'rxjs';
+import { Comunity } from './models/comunity.model';
+import { ComunityAssign } from './models/comunityAssign.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,21 +13,24 @@ export class DataService {
   postAdminCreationUrl = '/api/users/adminCreation';
   apiUrl2 = '/api/users/accounts'
   apiUrl = 'http://localhost:8080/api/users/987654333'
-  apiUrlAuthentication='http://localhost:8080/api/users/authentication';
-  apiUrlObtenerToken='http://localhost:8080/token';
+  apiUrlAuthentication = 'http://localhost:8080/api/users/authentication';
+  apiUrlObtenerToken = 'http://localhost:8080/token';
   addUserUrl = '/creation/users';
   userByTokenUrl = '/api/users/findbytoken';
   userUpdateUrl = '/api/update/user';
   coursesUrl = '/api/users/getCourses';
   usersURL = '/api/users/accounts';
   addComunityUrl = '/api/users/creationComunity';
-  
+  findComunytyByRegistroAcademicoUrl = '/api/users/findComunityByRegistroAcademico';
+  findComunityByIdURL = '/api/users/findComunityById';
+  saveComunityAssignURL ='/api/users/assignComunity';
+
   changePasswordUserURL = '/api/users/changePassword';
 
   private logger$ = new Subject<boolean>();//Va a emitir un evento
   private loggedIn: boolean;
 
-  constructor(private _http: HttpClient, private controllHeader: HeadersService) { 
+  constructor(private _http: HttpClient, private controllHeader: HeadersService) {
     if (localStorage.getItem('token') === null) {//No hay session
       this.loggedIn = false;
     } else {
@@ -90,7 +95,7 @@ export class DataService {
     return this._http.post<number>(this.postAdminCreationUrl, { registroAcademico: registroAcadem }, options);
   }
 
-  postChangePasswordUser(usr: User, token:User){
+  postChangePasswordUser(usr: User, token: User) {
     let headers = new HttpHeaders({
       'Authorization': 'Bearer ' + token.token,
     });
@@ -102,13 +107,13 @@ export class DataService {
     console.log('llegue a addNewUser')
     console.log(user)
     let headers = new HttpHeaders({
-        
+
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'POST',
       'Access-Control-Allow-Origin': '*'
     });
-  let options = { headers: headers };
-    return this._http.post<any>(this.addUserUrl,user,options);
+    let options = { headers: headers };
+    return this._http.post<any>(this.addUserUrl, user, options);
   }
 
   getToken(user: any) {
@@ -157,20 +162,54 @@ export class DataService {
     return this._http.post(this.addComunityUrl, comunity, options);
   }
 
+  saveComunityAssign(communityAssign :ComunityAssign, user : User){
+    console.log("COMMUNITY ASSIGN POST:",communityAssign)
+    console.log("USER TOKEN EN POST",user)
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token,
+    });
+    let options = { headers: headers };
+    return this._http.post(this.saveComunityAssignURL, communityAssign, options);
+  }
+  /**
+   * 
+   * @param user Devuelve todas las comunidades que un usuario halla creado
+   */
+  findComunytyByRegistroAcademico(user: User) {
+    console.log('En save comunity: ' + user.registroAcademico)
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<ComunityAssign[]>(this.findComunytyByRegistroAcademicoUrl, user, options)
+  }
+  /**
+   * Devulve la comunidad que coincida con el id, si esta existe
+   * @param comunity ,se necesita el id de la comunidad
+   */
+  findComunityById(comunity: Comunity, user: User) {
+    console.log('En save comunity: ' + comunity.nombre)
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<ComunityAssign>(this.findComunityByIdURL, comunity, options);
+  }
+
   public getLoggedIn() {
     return this.loggedIn;
   }
 
-  public trueLoggedIn(){
-    this.loggedIn=true;
+  public trueLoggedIn() {
+    this.loggedIn = true;
   }
 
   public getTokenSession() {
 
   }
 
-  updateUser(user: any){
-    return this._http.post(this.userUpdateUrl,user,this.controllHeader.obtenerHeaderConToken(user.token));
+  updateUser(user: any) {
+    return this._http.post(this.userUpdateUrl, user, this.controllHeader.obtenerHeaderConToken(user.token));
   }
 
   updateAnyUser(user: any, token:string){

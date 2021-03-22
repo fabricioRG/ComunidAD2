@@ -18,18 +18,22 @@ export class NavigationBarComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver,private sesionService : SesionService) {}
+  constructor(private breakpointObserver: BreakpointObserver, private sesionService: SesionService) { }
 
-    //Roles
-    verificarSesion(): boolean {
-     
-
-      if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeComunidad()) {//Si no hay session que redirija
-        return false;
-      }
-      return true;
+  //Roles
+  verificarSesionSuperUsuario(): boolean {
+     if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeSistema()) {//Si no hay session que redirija
+      return false;
     }
+    return true;
+  }
 
+  verificarSesionUsuarioComunidad(): boolean {
+    if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeComunidad()) {//Si no hay session que redirija
+      return false;
+    }
+    return true;
+  }
 
     verificarSesionAndAdminSistema():boolean {
       if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeSistema()){//Si no hay session que redirija

@@ -45,6 +45,10 @@ import { ActiveModalComponent } from './components/active-modal/active-modal.com
 import { CreateComunityComponent } from './comunity/create-comunity/create-comunity.component';
 import { StateUserAdminComponent } from './views/state-user-admin/state-user-admin.component';
 
+import { LoadComunitysComponent } from './comunity/load-comunitys/load-comunitys.component';
+//Layout
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ViewComunityComponent } from './comunity/view-comunity/view-comunity.component';
 
 
 const rutas: Routes = [
@@ -75,6 +79,10 @@ const rutas: Routes = [
     component: ProfileComponent
   },
   {
+    path: 'viewComunity/:id',
+    component : ViewComunityComponent
+  },
+  {
     path: 'dashboard',
     component: DashboardComponent,
     children: [
@@ -90,6 +98,10 @@ const rutas: Routes = [
       {
         path: 'createComunity',
         component: CreateComunityComponent
+      },
+      {
+        path: 'showComunitys',
+        component : LoadComunitysComponent
       },
       {
         path: 'petitions',
@@ -123,7 +135,9 @@ const rutas: Routes = [
     ActiveModalComponent,
     ChangePasswordComponent,
     CreateComunityComponent,
-    StateUserAdminComponent
+    StateUserAdminComponent,
+    LoadComunitysComponent,
+    ViewComunityComponent
     ],
   imports: [
     BrowserModule,
@@ -144,6 +158,7 @@ const rutas: Routes = [
     MatSelectModule,
     MatFormFieldModule,
     MatSelectModule,
+    FlexLayoutModule,
     RouterModule.forRoot(rutas, {
       useHash: true
     }),
