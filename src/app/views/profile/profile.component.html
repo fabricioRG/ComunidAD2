@@ -1,6 +1,6 @@
 <p>profile works!</p>
 
-<div  *ngIf="this.validacionURL.pruebaRuta()" class="row d-flex justify-content-center">
+<div  *ngIf="this.sessionService.exitSession()" class="row d-flex justify-content-center">
     <br>
     <div class="col-md-3">  <h1 style="align-self: center;"><b><mat-label>CAMBIAR ESTADO DE USUARIO</mat-label></b></h1></div>
     <h2 style="align-self: center;"><mat-label>Registro Academico: {{usuario.registroAcademico}} </mat-label></h2>
