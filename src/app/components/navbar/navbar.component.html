@@ -8,14 +8,14 @@
 
     <div class="spacer"></div>
 
-    <div class="conten">
+    <div *ngIf="existeSession" class="conten">
         <mat-form-field>
             <mat-select [(value)]="selectedCategory" placeholder="Categoria" [formControl]="category" panelClass="testClass">
                 <mat-option *ngFor="let cat of categoryList" [value]="cat">{{cat}}</mat-option>
             </mat-select>
         </mat-form-field>
     </div>
-    <div style="margin: 5px;">
+    <div *ngIf="existeSession" style="margin: 5px;">
         <form class="example-form">
             <input type="text" [(ngModel)]="searchInput" (keyup)="onKey($event)" style="margin: 5px;font-size: medium;"
                 placeholder="Buscar..." [formControl]="control" [matAutocomplete]="auto">
