@@ -10,7 +10,7 @@ describe('ModalService', () => {
     service = TestBed.inject(ModalService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+  // it('should be created', () => {
+  //   expect(service).toBeTruthy();
+  // });
 });
