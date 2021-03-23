@@ -1,0 +1,76 @@
+.main-body {
+    border-radius: 10px;
+    margin: 10px;
+    padding: 20px;
+    background-color: rgb(219, 234, 253);
+}
+
+.gutters-sm {
+    margin-right: -8px;
+    margin-left: -8px;
+}
+
+.gutters-sm>.col, .gutters-sm>[class*=col-] {
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.mb-3, .my-3 {
+    margin-bottom: 1rem!important;
+}
+
+.bg-gray-300 {
+    background-color: #e2e8f0;
+}
+
+.h-100 {
+    height: 100%!important;
+}
+
+.shadow-none {
+    box-shadow: none!important;
+}
+
+.mat-list-item-content {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.thumb {
+    background-color: #ffffff;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    width: 100%;
+}
+
+.thumb-img {
+    border-radius: 2px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.gal-detail h4 {
+    margin: 16px auto 10px auto;
+    width: 80%;
+    white-space: nowrap;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gal-detail .ga-border {
+    height: 3px;
+    width: 40px;
+    background-color: #228bdf;
+    margin: 10px auto;
+}
+
+mat-card {
+    border-radius: 10px;
+}

@@ -5,6 +5,7 @@ import { HeadersService } from './services/headers/headers.service';
 import { Observable, Subject } from 'rxjs';
 import { Comunity } from './models/comunity.model';
 import { ComunityAssign } from './models/comunityAssign.model';
+import { OrdinaryObject } from './helpers/ordinary-object.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,9 @@ export class DataService {
   findComunytyByRegistroAcademicoUrl = '/api/users/findComunityByRegistroAcademico';
   findComunityByIdURL = '/api/users/findComunityById';
   saveComunityAssignURL ='/api/users/assignComunity';
+  getUsersBySearchURL = '/api/users/search';
+  findUserByIdURL = '/api/users/find/byId';
+  getCommunitiesBySearchURL = '/api/communities/search';
   findSuscriptionComunityURL='/api/users/findMemberComunityById';
 
   changePasswordUserURL = '/api/users/changePassword';
@@ -146,6 +150,22 @@ export class DataService {
     return this._http.post<User>(this.userByTokenUrl, token, options);
   }
 
+  getUsersBySearch(search: OrdinaryObject, token: User){
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<User[]>(this.getUsersBySearchURL, search, options);
+  }
+
+  getCommunitiesBySearch(search: OrdinaryObject, token: User){
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<Comunity[]>(this.getCommunitiesBySearchURL, search, options);
+  }
+
   postAuthentication(user: any) {
     return this._http.post(this.apiUrlAuthentication, user);
   }
@@ -206,6 +226,14 @@ export class DataService {
     return this._http.post<ComunityAssign>(this.findComunityByIdURL, comunity, options);
   }
 
+  findUserById(searchUsr: User, token: User){
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<User>(this.findUserByIdURL, searchUsr, options);
+  }
+  
   findSuscriptionComunity(comunityAssign: ComunityAssign,user : User){
     //console.log('En save comunity: ' + comunity.nombre)
     let headers = new HttpHeaders({
