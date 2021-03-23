@@ -35,6 +35,10 @@ export class NavigationBarComponent {
     return true;
   }
 
-
-
+    verificarSesionAndAdminSistema():boolean {
+      if (!this.sesionService.exitSession() || !this.sesionService.usuarioEsAdministradorDeSistema()){//Si no hay session que redirija
+        return false;
+      }
+      return true;
+    }
 }

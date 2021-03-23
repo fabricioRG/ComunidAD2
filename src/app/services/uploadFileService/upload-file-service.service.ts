@@ -11,8 +11,6 @@ export class UploadFileServiceService {
 
 
   uploadImageCreateComunityURL = '/api/users/uploadImageComunity';
-  loadImageComunityURL = '/api/users/pruebaCargarImagen';
-  deleteImageComunityURL = '/api/users/pruebaImagen';
 
 
   constructor(private _http: HttpClient) {
@@ -28,27 +26,6 @@ export class UploadFileServiceService {
     let options = { headers: headers };
     return this._http.post(this.uploadImageCreateComunityURL, file, options);
   }
-  /**
-   * 
-   * @param comunity Por ahora con que la comuniad lleve la ruta de la foto basta
-   */
-  load(comunity : Comunity,token : User){
-    let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
-    });
-    let options = { headers: headers };
-    return this._http.post(this.loadImageComunityURL, comunity, options);
-  }
 
 
-
-
-
-   getFiles(){
-    //return this.http.get()
-   }
-
-   deleteFiles(){
-
-   }
 }

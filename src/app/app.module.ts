@@ -44,11 +44,14 @@ import { ChangePasswordComponent } from './views/change-password/change-password
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveModalComponent } from './components/active-modal/active-modal.component';
 import { CreateComunityComponent } from './comunity/create-comunity/create-comunity.component';
+import { StateUserAdminComponent } from './views/state-user-admin/state-user-admin.component';
+
 import { LoadComunitysComponent } from './comunity/load-comunitys/load-comunitys.component';
 //Layout
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ViewComunityComponent } from './comunity/view-comunity/view-comunity.component';
 import { UserProfileComponent } from './views/user-profile/user-profile.component';
+import { RequestComunityComponent } from './comunity/request-comunity/request-comunity/request-comunity.component';
 
 
 const rutas: Routes = [
@@ -89,6 +92,10 @@ const rutas: Routes = [
     component: UserProfileComponent
   },
   {
+    path: 'comunityRequest/:id',
+    component: RequestComunityComponent
+  },  
+  {
     path: 'dashboard',
     component: DashboardComponent,
     children: [
@@ -116,6 +123,10 @@ const rutas: Routes = [
       {
         path: 'changePassword',
         component: ChangePasswordComponent
+      },
+      {
+        path: 'stateUserAdmin',
+        component: StateUserAdminComponent
       }
     ]
   },
@@ -138,9 +149,11 @@ const rutas: Routes = [
     ActiveModalComponent,
     ChangePasswordComponent,
     CreateComunityComponent,
+    StateUserAdminComponent,
     LoadComunitysComponent,
     ViewComunityComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    RequestComunityComponent
     ],
   imports: [
     BrowserModule,
@@ -159,6 +172,7 @@ const rutas: Routes = [
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule,
+    MatSelectModule,
     MatFormFieldModule,
     MatSelectModule,
     FlexLayoutModule,
