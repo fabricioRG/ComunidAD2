@@ -37,12 +37,19 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MatRadioModule} from '@angular/material/radio'; 
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
 import { EditProfileComponent } from './views/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './views/change-password/change-password.component'; 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveModalComponent } from './components/active-modal/active-modal.component';
 import { CreateComunityComponent } from './comunity/create-comunity/create-comunity.component';
+import { StateUserAdminComponent } from './views/state-user-admin/state-user-admin.component';
 
+import { LoadComunitysComponent } from './comunity/load-comunitys/load-comunitys.component';
+//Layout
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ViewComunityComponent } from './comunity/view-comunity/view-comunity.component';
+import { RequestComunityComponent } from './comunity/request-comunity/request-comunity/request-comunity.component';
 
 
 const rutas: Routes = [
@@ -54,12 +61,7 @@ const rutas: Routes = [
   {
     path: 'inicio',
     component: InicioComponent,
-    children:[
-      {
-        path: 'editProfile',
-        component: EditProfileComponent
-      }
-    ]
+    
     
   },{
     path: 'editProfile',
@@ -78,6 +80,14 @@ const rutas: Routes = [
     component: ProfileComponent
   },
   {
+    path: 'viewComunity/:id',
+    component : ViewComunityComponent
+  },
+  {
+    path: 'comunityRequest/:id',
+    component: RequestComunityComponent
+  },  
+  {
     path: 'dashboard',
     component: DashboardComponent,
     children: [
@@ -95,12 +105,20 @@ const rutas: Routes = [
         component: CreateComunityComponent
       },
       {
+        path: 'showComunitys',
+        component : LoadComunitysComponent
+      },
+      {
         path: 'petitions',
         component: PetitionsComponent
       },
       {
         path: 'changePassword',
         component: ChangePasswordComponent
+      },
+      {
+        path: 'stateUserAdmin',
+        component: StateUserAdminComponent
       }
     ]
   },
@@ -121,7 +139,11 @@ const rutas: Routes = [
     EditProfileComponent,
     ActiveModalComponent,
     ChangePasswordComponent,
-    CreateComunityComponent
+    CreateComunityComponent,
+    StateUserAdminComponent,
+    LoadComunitysComponent,
+    ViewComunityComponent,
+    RequestComunityComponent
     ],
   imports: [
     BrowserModule,
@@ -139,7 +161,10 @@ const rutas: Routes = [
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule,
+    MatSelectModule,
     MatFormFieldModule,
+    MatSelectModule,
+    FlexLayoutModule,
     RouterModule.forRoot(rutas, {
       useHash: true
     }),

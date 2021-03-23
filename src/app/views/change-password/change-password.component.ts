@@ -12,6 +12,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActiveModalComponent } from '../../components/active-modal/active-modal.component'
 import { MustMatch } from '../../helpers/must-match.validator';
 import { DataService } from 'src/app/data.service';
+import { ConstantesService } from 'src/app/services/constantes/constantes.service';
 
 const USRS: User[] = [
   {
@@ -94,7 +95,7 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit() {
     this.registerForm = this.formBuilder
       .group({
-        password: ['', [Validators.required, Validators.minLength(6)]],
+        password: ['', [Validators.required, Validators.minLength(6),Validators.maxLength(30),Validators.pattern(ConstantesService.REGEX_PASSWORD)]],
         confirmPassword: ['', Validators.required]
       },
         {

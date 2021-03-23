@@ -1,1 +1,84 @@
-<p>edit-profile works! aaaaaaa</p>
+
+<div  *ngIf="existeSesion()" class="row d-flex justify-content-center">
+  <br>
+  <div class="col-md-3">  <h1 style="align-self: center;"><b><mat-label>EDITAR USUARIO</mat-label></b></h1></div>
+  <h2 style="align-self: center;"><mat-label>Registro Academico: {{usuario.registroAcademico}} </mat-label></h2>
+  <h2 style="align-self: center;"><mat-label> Estado del perfil: {{usuario.estado}} </mat-label></h2>
+  <h2 style="align-self: center;"><mat-label> Rol del usuario: {{usuario.rolUsuario}} </mat-label></h2>
+  <!-- <h2 style="align-self: center;"><mat-label> Foto de perfil: {{usuario.fotoDePerfil}} </mat-label></h2> -->
+
+  <div class="col-md-3">  <h2 style="align-self: center;"><mat-label>Estos son los datos que puedes cambiar</mat-label></h2></div>
+    <form [formGroup]="signupForm"  (ngSubmit)="enviar(signupForm.value)">
+        <mat-form-field appearance="fill">
+          <mat-label>*Departamento: </mat-label>
+          <input matInput required formControlName="departamento" type="text">
+        </mat-form-field>  
+        <br>
+        <mat-label *ngIf="signupForm.get('departamento')!.touched && signupForm.get('departamento')!.hasError('required')"> Es necesario introducir el departamento </mat-label>
+        <mat-label  *ngIf="signupForm.get('departamento')!.hasError('maxlength')"> Maximo 45 caracteres </mat-label>
+        <br/>
+        <mat-form-field appearance="fill">
+          <mat-label>*Correo Electronico: </mat-label>
+          <input matInput required formControlName="correoElectronico" type="email">
+        </mat-form-field>  
+        <br>
+        <mat-label  *ngIf="signupForm.get('correoElectronico')!.touched && signupForm.get('correoElectronico')!.hasError('required')"> Es necesario introducir el correo  </mat-label>
+        <mat-label  *ngIf="signupForm.get('correoElectronico')!.hasError('email')"> Debe de cumplir la estructura de un correo electronico  </mat-label>
+        <mat-label  *ngIf="signupForm.get('correoElectronico')!.hasError('maxlength')"> Maximo 255 caracteres  </mat-label>
+        <br/>
+        <mat-form-field appearance="fill">
+          <mat-label>*Fecha nacimiento:</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>        
+        <mat-label  *ngIf="signupForm.get('fechaNacimiento')!.touched && signupForm.get('fechaNacimiento')!.hasError('required')"> Es necesario introducir la fecha de nacimiento </mat-label>
+        <br/>
+        <br>
+        <mat-label>*Selecciona el genero: </mat-label>
+        <mat-radio-group aria-label="*Selecciona el genero: " formControlName="genero"  >
+          <br>
+          <mat-radio-button  value="M">M</mat-radio-button>
+          <mat-radio-button  value="F">F</mat-radio-button>
+          <mat-radio-button  value="N">N</mat-radio-button>
+        </mat-radio-group>
+        
+        
+        <br/>
+        <mat-form-field appearance="fill">
+          <mat-label>*Nombre Completo: </mat-label>
+          <input matInput required formControlName="nombreCompleto" type="text">
+        </mat-form-field>  
+        
+        <br>
+        <mat-label *ngIf="signupForm.get('nombreCompleto')!.touched && signupForm.get('nombreCompleto')!.hasError('required')"> Es necesario introducir el nombre completo </mat-label>
+        <mat-label *ngIf="signupForm.get('nombreCompleto')!.hasError('maxlength')"> Maximo caracteres 200 </mat-label>
+        <br/>
+        
+        <mat-label>*Selecciona el tipo de privacidad que quieres tener: </mat-label>
+        <mat-radio-group aria-label="*Selecciona la privacidad: " formControlName="privacidad" >
+          <br>
+          <mat-radio-button  value="{{PRIVACIDAD_PUBLICA}}">{{MENSAJE_PERFIL_PUBLICO}}</mat-radio-button>
+          <mat-radio-button  value="{{PRIVACIDAD_PRIVADA}}">{{MENSAJE_PERFIL_PRIVADO}}</mat-radio-button>
+        </mat-radio-group>
+        
+        
+        <br/>
+      
+        <br/>
+        <div class="example-button-row">
+          <button mat-flat-button color="secondary" [disabled]="signupForm.invalid" type="submit">Actualizar Informacion<mat-icon>done</mat-icon></button>          
+        </div>
+        
+        
+       
+    </form>
+
+
+
+
+  </div>
+
+
+
+

@@ -3,39 +3,57 @@
     <h2 style="align-self: center;"><mat-label>FORMULARIO DE CREACION DE USUARIO</mat-label></h2>
     <form [formGroup]="signupForm"  (ngSubmit)="enviar(signupForm.value)">
       <mat-form-field appearance="fill">
-        <mat-label>*Numero Carnet: </mat-label>
+        <mat-label>*Numero Carnet: </mat-label><br>
         <input matInput required minlength="4" formControlName="numeroCarnet"  type="number">
-      </mat-form-field>  
-        <br><mat-label  *ngIf="signupForm.get('numeroCarnet')!.touched && signupForm.get('numeroCarnet')!.hasError('required')"> Es necesario introducir el numero de Carnet </mat-label>
-        <mat-label  *ngIf="signupForm.get('numeroCarnet')!.hasError('max')"> El numero de carnet debe de tener 9 digitos unicamente </mat-label>
-        <mat-label  *ngIf="signupForm.get('numeroCarnet')!.hasError('min')"> El numero de carnet debe de tener 9 digitos como minimo </mat-label>
+        
+        <mat-label  *ngIf="signupForm.get('numeroCarnet')!.touched && signupForm.get('numeroCarnet')!.hasError('required')"><br> Es necesario introducir el numero de Carnet </mat-label>
+        <mat-label  *ngIf="signupForm.get('numeroCarnet')!.hasError('max')"><br> El numero de carnet debe de tener 9 digitos unicamente </mat-label>
+        <mat-label  *ngIf="signupForm.get('numeroCarnet')!.hasError('min')"><br> El numero de carnet debe de tener 9 digitos como minimo </mat-label>
+      
+      </mat-form-field>
         <br/>
         <mat-form-field appearance="fill">
-          <mat-label>*Departamento: </mat-label>
-          <input matInput required formControlName="departamento" type="text">
-        </mat-form-field>  
-        <br>
-        <mat-label *ngIf="signupForm.get('departamento')!.touched && signupForm.get('departamento')!.hasError('required')"> Es necesario introducir el departamento </mat-label>
-        <mat-label  *ngIf="signupForm.get('departamento')!.hasError('maxlength')"> Maximo 45 caracteres </mat-label>
+            
+            
+              
+              
+              
+            
+          
+          <mat-label>*Departamento: </mat-label><br>
+          <mat-select   formControlName="departamento" matInput required>
+            <mat-option [value]="data.nombre" *ngFor="let data of courses">
+                  {{data.idDepartamento}}
+                  {{data.nombre}}
+              </mat-option>
+            </mat-select>
+          
+           <!-- <input matInput required formControlName="departamento" type="text">  -->
+        
+        <mat-label *ngIf="signupForm.get('departamento')!.touched && signupForm.get('departamento')!.hasError('required')"><br> Es necesario introducir el departamento </mat-label>
+        <mat-label  *ngIf="signupForm.get('departamento')!.hasError('maxlength')"><br> Maximo 45 caracteres </mat-label>
+      </mat-form-field>  
+
         <br/>
         <mat-form-field appearance="fill">
           <mat-label>*Correo Electronico: </mat-label>
           <input matInput required formControlName="correoElectronico" type="email">
-        </mat-form-field>  
         
         <br>
-        <mat-label  *ngIf="signupForm.get('correoElectronico')!.touched && signupForm.get('correoElectronico')!.hasError('required')"> Es necesario introducir el correo  </mat-label>
-        <mat-label  *ngIf="signupForm.get('correoElectronico')!.hasError('email')"> Debe de cumplir la estructura de un correo electronico  </mat-label>
-        <mat-label  *ngIf="signupForm.get('correoElectronico')!.hasError('maxlength')"> Maximo 255 caracteres  </mat-label>
+        <mat-label  *ngIf="signupForm.get('correoElectronico')!.touched && signupForm.get('correoElectronico')!.hasError('required')"><br> Es necesario introducir el correo  </mat-label>
+        <mat-label  *ngIf="signupForm.get('correoElectronico')!.hasError('email')"><br> Debe de cumplir la estructura de un correo electronico  </mat-label>
+        <mat-label  *ngIf="signupForm.get('correoElectronico')!.hasError('maxlength')"><br> Maximo 255 caracteres  </mat-label>
         <br/>
+      </mat-form-field>  
 
         <mat-form-field appearance="fill">
           <mat-label>*Fecha nacimiento:</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>        
-        <mat-label  *ngIf="signupForm.get('fechaNacimiento')!.touched && signupForm.get('fechaNacimiento')!.hasError('required')"> Es necesario introducir la fecha de nacimiento </mat-label>
+        <mat-label  *ngIf="signupForm.get('fechaNacimiento')!.touched && signupForm.get('fechaNacimiento')!.hasError('required')"> <br>Es necesario introducir la fecha de nacimiento </mat-label>
+      </mat-form-field>  
+
         <br/>
         <br>
         <mat-label>*Selecciona el genero: </mat-label>
@@ -51,32 +69,35 @@
         <mat-form-field appearance="fill">
           <mat-label>*Nombre Completo: </mat-label>
           <input matInput required formControlName="nombreCompleto" type="text">
-        </mat-form-field>  
         
         <br>
-        <mat-label *ngIf="signupForm.get('nombreCompleto')!.touched && signupForm.get('nombreCompleto')!.hasError('required')"> Es necesario introducir el nombre completo </mat-label>
-        <mat-label *ngIf="signupForm.get('nombreCompleto')!.hasError('maxlength')"> Maximo caracteres 200 </mat-label>
+        <mat-label *ngIf="signupForm.get('nombreCompleto')!.touched && signupForm.get('nombreCompleto')!.hasError('required')"> <br>Es necesario introducir el nombre completo </mat-label>
+        <mat-label *ngIf="signupForm.get('nombreCompleto')!.hasError('maxlength')"> <br>Maximo caracteres 200 </mat-label>
         <br/>
+      </mat-form-field>  
+
         <mat-form-field appearance="fill">
           <mat-label>*Contrasena: </mat-label>
           <input matInput required formControlName="contrasena" type="password">
-        </mat-form-field>  
         <br>
-        <mat-label  *ngIf="signupForm.get('contrasena')!.touched && signupForm.get('contrasena')!.hasError('required')"> Es necesario introducir la contrasena  </mat-label>
-        <mat-label  *ngIf="signupForm.get('contrasena')!.hasError('minlength')"> Minimo de caracteres: 6  </mat-label>
-        <mat-label  *ngIf="signupForm.get('contrasena')!.hasError('maxlength')"> Maximo de caracteres: 30  </mat-label>
-        <mat-label  *ngIf="signupForm.get('contrasena')!.hasError('pattern')"> Debes de tener minimo, una mayuscula, una minuscula, un simbolo y un digito  </mat-label>
+        <mat-label  *ngIf="signupForm.get('contrasena')!.touched && signupForm.get('contrasena')!.hasError('required')"><br> Es necesario introducir la contrasena  </mat-label>
+        <mat-label  *ngIf="signupForm.get('contrasena')!.hasError('minlength')"> <br>Minimo de caracteres: 6  </mat-label>
+        <mat-label  *ngIf="signupForm.get('contrasena')!.hasError('maxlength')"> <br>Maximo de caracteres: 30  </mat-label>
+        <mat-label  *ngIf="signupForm.get('contrasena')!.hasError('pattern')"> <br>Debes de tener minimo, una mayuscula, una minuscula, un simbolo y un digito  </mat-label>
         <br/>
+      </mat-form-field>  
+
         <mat-form-field appearance="fill">
           <mat-label>*Repetir Contrasena: </mat-label>
           <input matInput required formControlName="repetirContrasena" type="password">
-        </mat-form-field>  
         <br>
-        <mat-label  *ngIf="signupForm.get('repetirContrasena')!.touched && signupForm.get('repetirContrasena')!.hasError('required')"> Es necesario introducir la contrasena repetida  </mat-label>
-        <mat-label  *ngIf="signupForm.get('repetirContrasena')!.hasError('minlength')"> Minimo de caracteres: 6  </mat-label>
-        <mat-label  *ngIf="signupForm.get('repetirContrasena')!.hasError('maxlength')"> Maximo de caracteres: 30  </mat-label>
-        <mat-label  *ngIf="signupForm.get('repetirContrasena')!.hasError('pattern')"> Debes de tener minimo, una mayuscula, una minuscula, un simbolo y un digito  </mat-label>
+        <mat-label  *ngIf="signupForm.get('repetirContrasena')!.touched && signupForm.get('repetirContrasena')!.hasError('required')"> <br>Es necesario introducir la contrasena repetida  </mat-label>
+        <mat-label  *ngIf="signupForm.get('repetirContrasena')!.hasError('minlength')"> <br>Minimo de caracteres: 6  </mat-label>
+        <mat-label  *ngIf="signupForm.get('repetirContrasena')!.hasError('maxlength')"><br> Maximo de caracteres: 30  </mat-label>
+        <mat-label  *ngIf="signupForm.get('repetirContrasena')!.hasError('pattern')"> <br>Debes de tener minimo, una mayuscula, una minuscula, un simbolo y un digito  </mat-label>
         <br/>
+      </mat-form-field>  
+
         <mat-label>*Selecciona el tipo de usuario: </mat-label>
         <mat-radio-group aria-label="*Selecciona el genero: " formControlName="rolUsuario" >
           <br>
@@ -89,6 +110,9 @@
         <br/>
       
         <br/>
+
+
+    
         <!-- <div  *ngIf="signupForm.get('sexo')!.touched && signupForm.get('sexo')!.hasError('required')"> Es necesario introducir el genero </div>-->
         <div class="example-button-row">
           <button mat-flat-button color="primary" [disabled]="signupForm.invalid" type="submit">Registrarse<mat-icon>done</mat-icon></button>          
@@ -97,6 +121,8 @@
         
        
     </form>
+
+
 
 
 
