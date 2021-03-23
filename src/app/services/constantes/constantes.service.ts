@@ -9,6 +9,7 @@ export class ConstantesService {
 
 
   public static ESTADO_USUARIO_ACTIVO = 'ACTIVO';
+  public static ESTADO_USUARIO_INACTIVO = 'INACTIVO';
   public static ROL_USUARIO_NORMAL = 'COMUNIDAD';
   public static TOKEN_NULO = null;
   public static PRIVACIDAD_INICIAL = 'PUBLICO';
@@ -19,6 +20,11 @@ export class ConstantesService {
   public static PRIVACIDAD_PRIVADA = 'PRIVADO';
   public static PRIVACIDAD_PUBLICA = 'PUBLICA';
 
+  //CONSTANTES DE COMUNITY ASIGN
+  public static COMUNITY_ASIGN_ESPERA = 'ESPERA';
+  public static COMUNITY_ASIGN_ACTIVO = 'ACTIVO';
+  public static COMUNITY_ASIGN_DENEGADO = 'DENEGADO';
+  
   
 
 }

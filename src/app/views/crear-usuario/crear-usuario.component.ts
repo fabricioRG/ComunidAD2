@@ -6,7 +6,9 @@ import {
   Validators,
   FormControl,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DataService } from 'src/app/data.service';
+import { DepartamentoService } from 'src/app/services/departamento/departamento.service';
 import { User } from 'src/app/user.model';
 
 @Component({
@@ -23,11 +25,16 @@ export class CrearUsuarioComponent implements OnInit {
   PRIVACIDAD = 'PUBLICO';
   FOTO_PERFIL = 'FOTO';
   REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,30}/;
+  courses : any;
 
   constructor(
     private _builder: FormBuilder,
-    private dataService: DataService
-  ) {}
+    private dataService: DataService,
+    private router:Router,
+    private departamentosService:DepartamentoService
+  ) {
+    this.buscarCursos()
+  }
 
   ngOnInit() {
     this.signupForm = this._builder.group({
@@ -128,6 +135,8 @@ export class CrearUsuarioComponent implements OnInit {
       this.dataService.addNewUser(usuario).subscribe(
         (user) => {
           alert('USUARIO ' + user.nombreCompleto + ' CREADO CON EXITO');
+          this.signupForm.reset()
+          this.router.navigate(['inicio']);
         },
         (error) => {
           alert('ERROR: ' + error.error);
@@ -190,5 +199,25 @@ export class CrearUsuarioComponent implements OnInit {
 
   imprimirValor() {
     console.log(this.users$);
+  }
+  get f() { return this.signupForm.controls; }
+
+  buscarCursos(){
+      //Tipo de usuario
+      this.departamentosService.getDepartamentos().subscribe(
+        (courses: any) => {
+          console.log(courses)
+          this.courses=courses;
+          //alert(user);
+        },
+        (error: any) => {
+          //alert('ERROR: ' + error);
+          console.log(error);
+          
+        }
+      );
+
+
+    
   }
 }

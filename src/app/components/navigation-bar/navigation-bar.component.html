@@ -7,8 +7,13 @@
     <mat-nav-list>
       <a mat-list-item routerLink="petitions">Solicitudes</a>
       <a mat-list-item routerLink="users">Usuarios</a>
-      <a *ngIf="verificarSesion()" mat-list-item routerLink="createComunity">Crear Comunidad</a>
-      <a *ngIf="verificarSesion()" mat-list-item routerLink="changePassword">Contraseñas</a>
+      <a *ngIf="verificarSesionUsuarioComunidad()" mat-list-item routerLink="createComunity">Crear Comunidad</a>
+      <a *ngIf="verificarSesionSuperUsuario()" mat-list-item routerLink="changePassword">Contraseñas</a>
+      <a *ngIf="verificarSesionUsuarioComunidad()" mat-list-item routerLink="showComunitys">Ver mis comunidades</a>
+      <a *ngIf="verificarSesionAndAdminSistema()" mat-list-item   routerLink="stateUserAdmin">Cambiar estado de Usuarios</a>
+
+      
+      
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

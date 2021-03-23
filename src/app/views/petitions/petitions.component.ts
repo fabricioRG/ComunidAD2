@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import {SelectionModel} from '@angular/cdk/collections';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
 import { User } from 'src/app/user.model';
 import { DataService } from '../../data.service';
-import {MatTableDataSource} from '@angular/material/table';
-import {MatButtonModule} from '@angular/material/button'; 
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { ActiveModalComponent } from 'src/app/components/active-modal/active-modal.component'
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MatPaginator } from '@angular/material/paginator';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-petitions',
@@ -13,44 +16,34 @@ import {MatButtonModule} from '@angular/material/button';
 
 export class PetitionsComponent implements OnInit {
 
+  @ViewChild(MatTable) tableUsers: MatTable<any>;
 
   /*DEFINITIONS */
   enableButtonAcceptarSolicitud = false;
   users: User[] = [];
-  usersArray: User[] = [
-    { nombreCompleto: "Jesfrin", password: "Jess" },
-    { nombreCompleto: "Bryan", password: "bryan" },
-    { nombreCompleto: "Carlos", password: "carlos" },
-  ];
 
-  displayedColumns: string[] = ['select','registroAcademico','nombreCompleto','correoElectronico','genero','ciudad','estado','rolUsuario'];
-  dataSource = new MatTableDataSource<User>(this.users);
+  displayedColumns: string[] = ['select', 'registroAcademico', 'nombreCompleto', 'correoElectronico', 'genero', 'ciudad', 'estado', 'rolUsuario'];
+  dataSource = new MatTableDataSource<User>([]);
   selection = new SelectionModel<User>(true, []);
 
   response: number | undefined;
   token: any;
 
+  numErrors: number = 0;
+  numSuccess: number = 0;
 
   /* CONSTRUCTOR */
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private _modalService: NgbModal, private cdRef:ChangeDetectorRef) {
     this.token = localStorage.getItem('token');
     this.token = JSON.parse(this.token).token;
   }
 
-
   /* FUNCTIONS */
-  printUsers(){
-    // console.log(this.users);
-    this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {
-      return !user.estado?.localeCompare("EN_ESPERA");
-    }))
-  }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
-    // console.log("numSelected: ", numSelected, "numRows: ", numRows);
-    if(numSelected > 0){
+    if (numSelected > 0) {
       this.setStateButtonAcceptarSolicitud(true);
     } else {
       this.setStateButtonAcceptarSolicitud(false);
@@ -60,65 +53,128 @@ export class PetitionsComponent implements OnInit {
 
   masterToggle() {
     this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   checkboxLabel(row?: User): string {
-    // console.log("row",row);
-    // console.log("pressed: ", this.selection.selected)
-    // console.log("Selections: ",this.selection.selected);
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row}`;
   }
 
-  setStateButtonAcceptarSolicitud(state: boolean){
+  setStateButtonAcceptarSolicitud(state: boolean) {
     this.enableButtonAcceptarSolicitud = state;
   }
 
-  aceptarSolicitudPressedButton(){
+  aceptarSolicitudPressedButton() {
     const numSelected = this.selection.selected.length;
-    if(numSelected > 0){
-      this.selection.selected.forEach(row => this.postAdminCreation(row.registroAcademico!))
-      console.log("Printing")
+    if (numSelected > 0) {
+      this.openModalConfirm();
+      this.selection.selected.forEach(
+        row => this.postAdminCreation(row.registroAcademico!))
     } else {
       console.log("Not enough")
     }
-    //  setTimeout(function(){location.reload()}, 500);
   }
 
-  postAdminCreation(registroAcademico: string){
+  acceptAdminRequest() {
+    this.selection.selected.forEach(
+      (row) => {
+        this.postAdminCreation(row.registroAcademico!)
+      });
+  }
+
+  postAdminCreation(registroAcademico: string) {
     var aux = new User();
     aux.token = this.token;
     this.dataService.postAdminCreation(registroAcademico, aux)
-    .subscribe(
-      (data) => {
-        this.response = data
-        console.log("Data:: ", data)
-      },
-      (error) => {
-        console.log("Error: ", error)
-      }
+      .subscribe(
+        (data) => {
+          this.response = data
+          // console.log("Data:: ", data)
+        },
+        (error) => {
+          this.numErrors++;
+          // console.log("Error: ", error)
+        }
       )
   }
 
-  updateUsers(){
+  updateUsers() {
     var aux = new User();
     aux.token = this.token;
-    console.log(aux.token);
-    return this.dataService.getAllUsers(aux)
-    .subscribe(data => {
-      this.users = data;
-      this.dataSource = new MatTableDataSource<User>(this.users.filter(function (user) {
-        return !user.estado?.localeCompare("EN_ESPERA");
-      }))
-    });
+    this.dataService.getAllUsers(aux)
+      .subscribe((data) => {
+
+        this.dataSource.data = data.filter(function (user) {
+          return !user.estado?.localeCompare("EN_ESPERA");
+        });
+      });
+      this.tableUsers.renderRows();
+      this.selection.clear()
   }
 
   ngOnInit() {
     return this.updateUsers();
   }
+
+  openModalConfirm() {
+    const modal = this._modalService.open(ActiveModalComponent);
+
+    modal.componentInstance.modalHeader = 'Aceptar Solicitud';
+    modal.componentInstance.modalBodyTitle = '¿Estás seguro que deseas cambiar la contraseña?';
+    modal.componentInstance.modalBody = 'Si aceptas se cambiara de manera permanente, no habrá forma de revertir los cambios';
+    modal.componentInstance.confirmModal = true;
+
+    modal.result.then((result) => {
+      this.acceptAdminRequest();
+      if(this.numErrors > 0){
+        this.errorMessage();
+      } else {
+        this.confirmModal();
+      }
+      this.numErrors = 0;
+    }, (reason) => {
+    });
+  }
+
+  confirmModal() {
+    
+    this.updateUsers();
+    const modal = this._modalService.open(ActiveModalComponent);
+
+    modal.componentInstance.modalHeader = 'Proceso exitoso';
+    modal.componentInstance.modalBodyTitle = 'Cambio de contraseña exitoso';
+    modal.componentInstance.modalBody = 'Se ha cambiado la contraseña de manera correcta. Para acceder al usuario deberá utilizar la nueva contraseña';
+    modal.componentInstance.infoModal = true;
+
+    modal.result.then((result) => {
+      // console.log("Result: ", result);
+    }, (reason) => {
+      // console.log("Reason: ", reason);
+    });
+  }
+
+  errorMessage(){
+    const modal = this._modalService.open(ActiveModalComponent);
+
+    modal.componentInstance.modalHeader = 'Proceso erroneo';
+    modal.componentInstance.modalBodyTitle = 'No se ha realizado ningun cambio';
+    modal.componentInstance.modalBody = 'Ha ocurrido un error inesperado. No se ha realizado ningun cambio solicitado';
+    modal.componentInstance.infoModal = true;
+
+    modal.result.then((result) => {
+      // console.log("Result: ", result);
+    }, (reason) => {
+      // console.log("Reason: ", reason);
+    });
+  }
+
+  ngAfterViewChecked()
+{
+  this.cdRef.detectChanges();
+}
 
 }
