@@ -52,6 +52,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ViewComunityComponent } from './comunity/view-comunity/view-comunity.component';
 import { UserProfileComponent } from './views/user-profile/user-profile.component';
 import { RequestComunityComponent } from './comunity/request-comunity/request-comunity/request-comunity.component';
+import { UnsuscribeMembersComponent } from './comunity/unsuscribe-members/unsuscribe-members.component';
 
 
 const rutas: Routes = [
@@ -94,6 +95,10 @@ const rutas: Routes = [
   {
     path: 'comunityRequest/:id',
     component: RequestComunityComponent
+  },
+  {
+    path : 'unsuscribeMembers/:id',
+    component : UnsuscribeMembersComponent
   },  
   {
     path: 'dashboard',
@@ -153,7 +158,8 @@ const rutas: Routes = [
     LoadComunitysComponent,
     ViewComunityComponent,
     UserProfileComponent,
-    RequestComunityComponent
+    RequestComunityComponent,
+    UnsuscribeMembersComponent
     ],
   imports: [
     BrowserModule,

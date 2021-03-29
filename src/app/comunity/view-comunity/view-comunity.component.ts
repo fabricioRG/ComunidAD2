@@ -191,4 +191,8 @@ export class ViewComunityComponent implements OnInit {
     this.redirection.navigate(['comunityRequest',this.comunity.id]);
   }
 
+
+  verMiembrosDeComunidad(){
+    this.redirection.navigate(['unsuscribeMembers',this.comunity.id])
+  }
 }

@@ -38,10 +38,13 @@
                                 <p *ngIf="solicitudEstaActiva" class="text-success">Eres miembro de la comunidad</p>
                                 <p *ngIf="solicitudEstaEnEspera"class="text-warning">Solicitud Enviada :)</p>
                                 <p *ngIf="solicitudEstaDenegada" class="text-danger">.Tu solicitud ha sido rechazada</p>
-                                <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-success">Crear publicacion</button> <br> <br>
-                                <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-success" (click)="verSolicitudes()">Ver solicitudes</button>
-                                <button *ngIf='puedeEnviarSolicitud' (click)="solicitarUnionAComunidad()" type="button" class="btn btn-warning">Unirse a la Comunidad</button>
-
+                                <div class="btn-group">
+                                    <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-outline-success">Crear publicacion</button> 
+                                    <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-outline-warning" (click)="verSolicitudes()">Ver solicitudes</button>
+                                    <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-outline-danger" (click)="verMiembrosDeComunidad()">Eliminar Miembros</button>
+                                    <button *ngIf='puedeEnviarSolicitud' (click)="solicitarUnionAComunidad()" type="button" class="btn btn-warning">Unirse a la Comunidad</button>    
+                                </div>
+                       
                             </a>
                         </div>
 
