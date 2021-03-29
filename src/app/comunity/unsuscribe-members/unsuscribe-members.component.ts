@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActiveModalComponent } from 'src/app/components/active-modal/active-modal.component';
 import { DataService } from 'src/app/data.service';
 import { Comunity } from 'src/app/models/comunity.model';
 import { ComunityAssign } from 'src/app/models/comunityAssign.model';
+import { IdComunityAssign } from 'src/app/models/idComunityAssign.model';
+import { FiltrarSolicitudesComunidadService } from 'src/app/services/filtrar-solicitudes-comunidad/filtrar-solicitudes-comunidad.service';
 import { SesionService } from 'src/app/services/sesion/sesion.service';
 import { User } from 'src/app/user.model';
 
@@ -26,7 +30,9 @@ export class UnsuscribeMembersComponent implements OnInit {
   comunityAssignList : any;
 
   constructor(private dataService: DataService, private sessionService: SesionService,
-    private route: ActivatedRoute, private redirection: Router) {
+    private route: ActivatedRoute, private redirection: Router,
+    private filtrarAsignacionesComunidad: FiltrarSolicitudesComunidadService,
+    private _modalService: NgbModal) {
       this.cargarDatos()
       this.filtroForm=this.createFormGroup()
      }
@@ -93,9 +99,51 @@ export class UnsuscribeMembersComponent implements OnInit {
     }
   }
 
-  eliminarUsuario(element : any){
-    
+  buscarPorFiltros(){
+    var registroFilter=this.filtroForm.get('registroAcademico')?.value;
+    if(!registroFilter){
+      registroFilter='';
+    }
+    let filtrosEnviar = new IdComunityAssign();
+    filtrosEnviar.idComunidad = this.comunity.id;
+    filtrosEnviar.registroAcademico = registroFilter
+    return this.filtrarAsignacionesComunidad.getMiembrosActivosDeComunidad(this.sessionService.getUserWithToken().token,filtrosEnviar)
+    .subscribe(
+      (data)=>{
+        console.log("asignaciones: ", data)
+        this.comunityAssignList = data;
+      }
+    )
   }
+
+  eliminarUsuario(element : ComunityAssign){
+    const modal = this._modalService.open(ActiveModalComponent);
+    modal.componentInstance.modalHeader = "Eliminar usuario"
+    modal.componentInstance.modalBodyTitle = '¿Estás seguro que deseas eliminar al usuario: ' + element.user?.registroAcademico + '?';
+    modal.componentInstance.modalBody = 'El usuario podra enviar una solicitud de union nuevamente aunque sea eliminado:';
+    modal.componentInstance.confirmModal = true;
+    modal.result.then((result)=>{
+      console.log("Usuario a eliminar:",element)
+      this.filtrarAsignacionesComunidad.removeUserFromComunity(this.sessionService.getUserWithToken().token,element)
+      .subscribe(
+        (response)=>{
+          console.log("ESTO RESPONDIO:",response)
+          this.mostrarMensaje("Actualizacion correcta ", "Se completo correctamente la eliminacion del usuario con registro Academico: " , element.user?.registroAcademico);
+          this.buscarPorFiltros()
+      })
+    })
+
+  }
+
+
+  mostrarMensaje(modalHeader: string, modalBodyTitle: string, mensaje: any): void {
+    const modal = this._modalService.open(ActiveModalComponent);
+    modal.componentInstance.modalHeader = modalHeader;
+    modal.componentInstance.modalBodyTitle = modalBodyTitle
+    modal.componentInstance.modalBody = mensaje;
+    modal.componentInstance.infoModal = true;
+  }
+
 
   get f (){
     return this.filtroForm.controls;

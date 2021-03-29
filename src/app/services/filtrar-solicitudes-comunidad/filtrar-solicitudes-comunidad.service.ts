@@ -10,6 +10,9 @@ export class FiltrarSolicitudesComunidadService {
 
   filtrarSolicitudesComunidadURL = '/api/comunity/filtrarSolicitudesComunidades';
   actualizarEstadoSolicitudesComunidadURL = '/api/users/updateStateComunityRequest';
+  //Eliminacion de usuarios de comunidad
+  filtrarMiembrosActivosDeComunidadURL='/api/users/filtrarMiembrosActivosDeComunidad';
+  removeUserFromComunityURL='/api/users/removeUserFromComunity';
 
   constructor(private _http: HttpClient,private controllHeader: HeadersService) { }
 
@@ -18,5 +21,14 @@ export class FiltrarSolicitudesComunidadService {
   }
   actualizarEstadoAsignacionesComunidad(token: any,datos: ComunityAssign){
     return this._http.post<ComunityAssign>(this.actualizarEstadoSolicitudesComunidadURL,datos,this.controllHeader.obtenerHeaderConToken(token));
+  }
+
+  //Eliminacion de usuarios de una comunidad
+  getMiembrosActivosDeComunidad(token:any,filtros:any){
+    return this._http.post<ComunityAssign[]>(this.filtrarMiembrosActivosDeComunidadURL,filtros,this.controllHeader.obtenerHeaderConToken(token))
+  }
+
+  removeUserFromComunity(token:any,comunityAssign: ComunityAssign){
+    return this._http.post<ComunityAssign>(this.removeUserFromComunityURL,comunityAssign,this.controllHeader.obtenerHeaderConToken(token))
   }
 }
