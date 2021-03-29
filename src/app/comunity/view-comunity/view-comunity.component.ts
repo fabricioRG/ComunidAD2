@@ -191,4 +191,5 @@ export class ViewComunityComponent implements OnInit {
     this.redirection.navigate(['comunityRequest',this.comunity.id]);
   }
 
+  
 }
