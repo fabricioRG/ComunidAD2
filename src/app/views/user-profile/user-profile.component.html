@@ -1,0 +1,154 @@
+<div class="container">
+    <div class="main-body">
+        <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+                <mat-card>
+                    <mat-card-content>
+                        <div class="d-flex flex-column align-items-center text-center">
+                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin"
+                                class="rounded-circle" width="150">
+                            <div class="mt-3">
+                                <h2>{{actualUser.nombreCompleto}}</h2>
+                                <p class="text-muted font-size-sm">{{actualUser.registroAcademico}}</p>
+                                <p class="text-secondary mb-1">{{actualUser.correoElectronico}}</p>
+                                <p class="text-muted font-size-sm">{{actualUser.ciudad}}</p>
+                                <button class="btn btn-primary" style="margin: 5px;">Seguir</button>
+                                <button class="btn btn-outline-primary" style="margin: 5px;">Mensaje</button>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+                <div class="mt-3">
+                    <mat-card>
+                        <mat-card-title>
+                            <h2>Acerca del Usuario</h2>
+                        </mat-card-title>
+                        <mat-card-content>
+                            Breve descripcion del perfil del usuario
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <mat-card>
+                        <mat-card-content>
+                            <!-- <mat-list>
+                                <mat-list-item>
+                                    <h5 class="mb-1">Creador de la comunidad</h5>
+                                <p class="mb-1">Nombre</p>
+                                </mat-list-item>
+                            </mat-list> -->
+                            <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Genero</h5>
+                                </div>
+                                <p class="mb-1">{{actualUser.genero}}</p>
+                            </a>
+                            <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Tipo de Usuario</h5>
+                                </div>
+                                <p class="mb-1">{{actualUser.rolUsuario}}</p>
+                            </a>
+                            <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Fecha de Nacimiento</h5>
+                                </div>
+                                <p class="mb-1">{{actualUser.fechaDeNacimiento}}</p>
+                            </a>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="row gutters-sm">
+                    <div>
+                        <mat-card>
+                            <mat-card-title>
+                                <div class="row justify-content-sm-center">
+                                    <div class="col-sm-3">
+                                        <p class="text-center" style="color: lightslategrey;">Comunidades</p>
+                                    </div>
+                                </div>
+                            </mat-card-title>
+                            <mat-card-content>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="gal-detail thumb">
+                                            <a class="image-popup" title="Screenshot-2">
+                                                <img src="https://via.placeholder.com/400x300/FFB6C1" class="thumb-img"
+                                                    alt="work-thumbnail">
+                                            </a>
+                                            <h4 class="text-center">Comunidad 1</h4>
+                                            <div class="ga-border"></div>
+                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="gal-detail thumb">
+                                            <a class="image-popup" title="Screenshot-2">
+                                                <img src="https://via.placeholder.com/400x300/87CEFA" class="thumb-img"
+                                                    alt="work-thumbnail">
+                                            </a>
+                                            <h4 class="text-center">Comunidad 2</h4>
+                                            <div class="ga-border"></div>
+                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="gal-detail thumb">
+                                            <a class="image-popup" title="Screenshot-2">
+                                                <img src="https://via.placeholder.com/400x300/B0C4DE" class="thumb-img"
+                                                    alt="work-thumbnail">
+                                            </a>
+                                            <h4 class="text-center">Comunidad 3</h4>
+                                            <div class="ga-border"></div>
+                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="gal-detail thumb">
+                                            <a class="image-popup" title="Screenshot-2">
+                                                <img src="https://via.placeholder.com/400x300/ADD8E6" class="thumb-img"
+                                                    alt="work-thumbnail">
+                                            </a>
+                                            <h4 class="text-center">Comunidad 4</h4>
+                                            <div class="ga-border"></div>
+                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="gal-detail thumb">
+                                            <a class="image-popup" title="Screenshot-2">
+                                                <img src="https://via.placeholder.com/400x300/D3D3D3" class="thumb-img"
+                                                    alt="work-thumbnail">
+                                            </a>
+                                            <h4 class="text-center">Comunidad 5</h4>
+                                            <div class="ga-border"></div>
+                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="gal-detail thumb">
+                                            <a class="image-popup" title="Screenshot-2">
+                                                <img src="https://via.placeholder.com/400x300/48D1CC" class="thumb-img"
+                                                    alt="work-thumbnail">
+                                            </a>
+                                            <h4 class="text-center">Comunidad 6</h4>
+                                            <div class="ga-border"></div>
+                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

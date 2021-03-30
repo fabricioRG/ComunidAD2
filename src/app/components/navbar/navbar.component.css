@@ -1,3 +1,25 @@
 .spacer {
-    flex:1 1 auto;
+    flex: 1 1 auto;
+}
+
+.cdk-overlay-container .cdk-overlay-pane .testClass {
+    width: 20px;
+}
+
+::ng-deep .mat-select-content {
+    width: 2000px;
+    background-color: red;
+    font-size: 10px;
+}
+
+.conten>* {
+    margin-top: 10px;
+    font-size: small;
+    font-weight: bold;
+    width: 80px;
+}
+
+.mat-mini-fab.mat-yellow {
+    background-color: rgb(255, 183, 0);
+    color: #fff;
 }

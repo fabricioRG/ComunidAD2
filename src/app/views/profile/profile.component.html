@@ -1,25 +1,78 @@
-<p>profile works!</p>
+<div
+  *ngIf="this.sessionService.exitSession()"
+  class="row d-flex justify-content-center"
+  class="container"
+>
+  <mat-card class="card border-info mb-3" style="margin: 20px">
+    <mat-card-title
+      ><mat-label class="row justify-content-sm-center"
+        >CAMBIAR ESTADO DE USUARIO</mat-label
+      >
+    </mat-card-title>
 
-<div  *ngIf="this.validacionURL.pruebaRuta()" class="row d-flex justify-content-center">
-    <br>
-    <div class="col-md-3">  <h1 style="align-self: center;"><b><mat-label>CAMBIAR ESTADO DE USUARIO</mat-label></b></h1></div>
-    <h2 style="align-self: center;"><mat-label>Registro Academico: {{usuario.registroAcademico}} </mat-label></h2>
-    <h2 style="align-self: center;"><mat-label> Estado del perfil: {{usuario.estado}} </mat-label></h2>
-    <h2 style="align-self: center;"><mat-label> Rol del usuario: {{usuario.rolUsuario}} </mat-label></h2>
-    <h2 style="align-self: center;"><mat-label> Departamento: {{usuario.ciudad}} </mat-label></h2>
-    <h2 style="align-self: center;"><mat-label> Correo Electronico: {{usuario.correoElectronico}} </mat-label></h2>
-    <h2 style="align-self: center;"><mat-label> Fecha de Nacimiento: {{usuario.fechaDeNacimiento}} </mat-label></h2>
-    <h2 style="align-self: center;"><mat-label> Genero: {{usuario.genero}} </mat-label></h2>
-    <h2 style="align-self: center;"><mat-label> Nombre Completo: {{usuario.nombreCompleto}} </mat-label></h2>
-    <h2 style="align-self: center;"><mat-label> Privacidad: {{usuario.privacidad}} </mat-label></h2>
-
-    <div class="example-button-row">
-        <button mat-flat-button color="primary"  (click)="cambiarEstado()"  >CAMBIAR ESTADO DEL USUARIO A: {{this.mensajeEstadoBoton()}}<mat-icon>done</mat-icon></button>          
+    <mat-card-content>
+      <div class="row justify-content-sm-center">
+        <div class="row justify-content-sm-center">
+          <div class="col-sm-3">
+            <mat-divider></mat-divider>
+            <mat-label
+              >Registro Academico: {{ usuario.registroAcademico }}
+            </mat-label>
+            <mat-divider></mat-divider>
+          </div>
+        </div>
+        <h2 style="align-self: center">
+          <mat-label> Estado del perfil: {{ usuario.estado }} </mat-label>
+          <mat-divider></mat-divider>
+        </h2>
+        <h2 style="align-self: center">
+          <mat-label> Rol del usuario: {{ usuario.rolUsuario }} </mat-label>
+          <mat-divider></mat-divider>
+        </h2>
+        <h2 style="align-self: center">
+          <mat-label> Departamento: {{ usuario.ciudad }} </mat-label>
+          <mat-divider></mat-divider>
+        </h2>
+        <h2 style="align-self: center">
+          <mat-label>
+            Correo Electronico: {{ usuario.correoElectronico }}
+          </mat-label>
+          <mat-divider></mat-divider>
+        </h2>
+        <h2 style="align-self: center">
+          <mat-label>
+            Fecha de Nacimiento: {{ usuario.fechaDeNacimiento }}
+          </mat-label>
+          <mat-divider></mat-divider>
+        </h2>
+        <h2 style="align-self: center">
+          <mat-label> Genero: {{ usuario.genero }} </mat-label>
+          <mat-divider></mat-divider>
+        </h2>
+        <h2 style="align-self: center">
+          <mat-label> Nombre Completo: {{ usuario.nombreCompleto }} </mat-label>
+          
+          <mat-divider></mat-divider>
+        </h2>
+        <h2 style="align-self: center">
+          <mat-label> Privacidad: {{ usuario.privacidad }} </mat-label>
+          <mat-divider></mat-divider>
+        </h2>
+        <div class="row justify-content-sm-center">
+          <div class="col-sm-3">
+              <button mat-flat-button color="primary" (click)="cambiarEstado()">
+                CAMBIAR ESTADO DEL USUARIO A: {{ this.mensajeEstadoBoton()
+                }}<mat-icon>done</mat-icon>
+              </button>
+          </div>
+        </div>
       </div>
-    <!-- <h2 style="align-self: center;"><mat-label> Foto de perfil: {{usuario.fotoDePerfil}} </mat-label></h2> -->
+    </mat-card-content>
+  </mat-card>
 
+  <div class="col-md-3">
+    <h1 style="align-self: center"><b></b></h1>
+  </div>
+
+  <!-- <h2 style="align-self: center;"><mat-label> Foto de perfil: {{usuario.fotoDePerfil}} </mat-label></h2> -->
 </div>
-
-
-
-

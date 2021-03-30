@@ -5,6 +5,7 @@ import { HeadersService } from './services/headers/headers.service';
 import { Observable, Subject } from 'rxjs';
 import { Comunity } from './models/comunity.model';
 import { ComunityAssign } from './models/comunityAssign.model';
+import { OrdinaryObject } from './helpers/ordinary-object.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +19,16 @@ export class DataService {
   addUserUrl = '/creation/users';
   userByTokenUrl = '/api/users/findbytoken';
   userUpdateUrl = '/api/update/user';
+  getUsersByFilteringURL = '/api/users/byFiltering';
   coursesUrl = '/api/users/getCourses';
   usersURL = '/api/users/accounts';
   addComunityUrl = '/api/users/creationComunity';
   findComunytyByRegistroAcademicoUrl = '/api/users/findComunityByRegistroAcademico';
   findComunityByIdURL = '/api/users/findComunityById';
   saveComunityAssignURL ='/api/users/assignComunity';
+  getUsersBySearchURL = '/api/users/search';
+  findUserByIdURL = '/api/users/find/byId';
+  getCommunitiesBySearchURL = '/api/communities/search';
   findSuscriptionComunityURL='/api/users/findMemberComunityById';
 
   changePasswordUserURL = '/api/users/changePassword';
@@ -96,7 +101,15 @@ export class DataService {
     return this._http.post<number>(this.postAdminCreationUrl, { registroAcademico: registroAcadem }, options);
   }
 
-  postChangePasswordUser(usr: User, token: User) {
+  getUsersByFiltering(search: User, token: User){
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<User[]>(this.getUsersByFilteringURL, search, options);
+  }
+
+  postChangePasswordUser(usr: User, token:User){
     let headers = new HttpHeaders({
       'Authorization': 'Bearer ' + token.token,
     });
@@ -135,6 +148,22 @@ export class DataService {
     });
     let options = { headers: headers };
     return this._http.post<User>(this.userByTokenUrl, token, options);
+  }
+
+  getUsersBySearch(search: OrdinaryObject, token: User){
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<User[]>(this.getUsersBySearchURL, search, options);
+  }
+
+  getCommunitiesBySearch(search: OrdinaryObject, token: User){
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<Comunity[]>(this.getCommunitiesBySearchURL, search, options);
   }
 
   postAuthentication(user: any) {
@@ -197,6 +226,14 @@ export class DataService {
     return this._http.post<ComunityAssign>(this.findComunityByIdURL, comunity, options);
   }
 
+  findUserById(searchUsr: User, token: User){
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<User>(this.findUserByIdURL, searchUsr, options);
+  }
+  
   findSuscriptionComunity(comunityAssign: ComunityAssign,user : User){
     //console.log('En save comunity: ' + comunity.nombre)
     let headers = new HttpHeaders({

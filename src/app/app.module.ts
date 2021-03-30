@@ -38,6 +38,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { EditProfileComponent } from './views/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './views/change-password/change-password.component'; 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -49,6 +50,7 @@ import { LoadComunitysComponent } from './comunity/load-comunitys/load-comunitys
 //Layout
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ViewComunityComponent } from './comunity/view-comunity/view-comunity.component';
+import { UserProfileComponent } from './views/user-profile/user-profile.component';
 import { RequestComunityComponent } from './comunity/request-comunity/request-comunity/request-comunity.component';
 
 
@@ -63,10 +65,12 @@ const rutas: Routes = [
     component: InicioComponent,
     
     
-  },{
+  },
+  {
     path: 'editProfile',
     component: EditProfileComponent}
-  ,{
+  ,
+  {
     path: 'crearUsuario',
     component: CrearUsuarioComponent
 
@@ -82,6 +86,10 @@ const rutas: Routes = [
   {
     path: 'viewComunity/:id',
     component : ViewComunityComponent
+  },
+  {
+    path: 'userProfile/:id',
+    component: UserProfileComponent
   },
   {
     path: 'comunityRequest/:id',
@@ -129,6 +137,7 @@ const rutas: Routes = [
     AppComponent,
     ProfileComponent,
     DashboardComponent,
+    UserProfileComponent,
     HeaderComponent,
     InicioComponent,
     NavbarComponent,
@@ -143,6 +152,7 @@ const rutas: Routes = [
     StateUserAdminComponent,
     LoadComunitysComponent,
     ViewComunityComponent,
+    UserProfileComponent,
     RequestComunityComponent
     ],
   imports: [
@@ -155,6 +165,7 @@ const rutas: Routes = [
     MatCardModule,
     MatTableModule,
     MatCheckboxModule,
+    MatAutocompleteModule,
     ReactiveFormsModule,
     FormsModule,
     MatInputModule,
