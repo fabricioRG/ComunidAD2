@@ -34,33 +34,33 @@ describe('CreateComunityComponent', () => {
     fixture.detectChanges();
   });
 
-  it('Probando recuperacion de cursos', ()=>{
-    //arrange
-    var dataService = TestBed.inject(DataService)
+  // it('Probando recuperacion de cursos', ()=>{
+  //   //arrange
+  //   var dataService = TestBed.inject(DataService)
 
-    var course : any =[
-    {
-      codigoCurso:'001',
-      noDeSemestre: 1,
-      nombre: 'Matematica Aplciacada 1' 
-    },
-    {
-      codigoCurso:'002',
-      noDeSemestre: 1,
-      nombre: 'Programacion' 
-    }
-    ];
-    dataService.trueLoggedIn()//Se inicia la sesion
-    var list = of(course)
-    spyOn(dataService,"getCourses").and.returnValue(list);
-    //act
-    component.setDataService(dataService)
-    component.buscarCursos()
-  //assert
-    //console.log("LISTAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:",component.courses)
-    expect(component.courses[0]['codigoCurso']).toEqual('001');
+  //   var course : any =[
+  //   {
+  //     codigoCurso:'001',
+  //     noDeSemestre: 1,
+  //     nombre: 'Matematica Aplciacada 1' 
+  //   },
+  //   {
+  //     codigoCurso:'002',
+  //     noDeSemestre: 1,
+  //     nombre: 'Programacion' 
+  //   }
+  //   ];
+  //   dataService.trueLoggedIn()//Se inicia la sesion
+  //   var list = of(course)
+  //   spyOn(dataService,"getCourses").and.returnValue(list);
+  //   //act
+  //   component.setDataService(dataService)
+  //   component.buscarCursos()
+  // //assert
+  //   //console.log("LISTAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:",component.courses)
+  //   expect(component.courses[0]['codigoCurso']).toEqual('001');
 
-  })
+  // })
 
    
 });
