@@ -19,17 +19,17 @@ describe('FiltrarSolicitudesComunidadService', () => {
     service = TestBed.inject(FiltrarSolicitudesComunidadService);
   });
 
-  it('getAsignacionesComunidad', () => {
-    var a = new ComunityAssign();
-    a.estado = 'a';
-    var b = new ComunityAssign();
-    b.estado = 'a';
-    spyOn(_http, 'post').and.returnValue(of(a));
+  // it('getAsignacionesComunidad', () => {
+  //   var a = new ComunityAssign();
+  //   a.estado = 'a';
+  //   var b = new ComunityAssign();
+  //   b.estado = 'a';
+  //   spyOn(_http, 'post').and.returnValue(of(a));
 
 
-    var result = service.getAsignacionesComunidad("1","");
-    var resultadoValor : any;
-    result.subscribe(resultado => resultadoValor = resultado);
-    expect(resultadoValor).toEqual(a);
-  });
+  //   var result = service.getAsignacionesComunidad("1","");
+  //   var resultadoValor : any;
+  //   result.subscribe(resultado => resultadoValor = resultado);
+  //   expect(resultadoValor).toEqual(a);
+  // });
 });
