@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, Router } from '@angular/router';
 import { DataService } from 'src/app/data.service';
 import { Comunity } from 'src/app/models/comunity.model';
 import { ComunityAssign } from 'src/app/models/comunityAssign.model';
@@ -34,6 +34,9 @@ export class ViewComunityComponent implements OnInit {
   solicitudEstaDenegada: boolean;
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((params : ParamMap)=>{
+      this.cargarComunidad()
+    })
   }
 
 
