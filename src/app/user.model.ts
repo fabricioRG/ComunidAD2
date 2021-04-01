@@ -11,4 +11,5 @@ export class User {
     estado?: string;
     token?: string;
     privacidad?: string;
+    datosFoto?:any;
 }
