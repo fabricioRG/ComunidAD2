@@ -49,9 +49,17 @@
                 <div class="d-flex w-100 justify-content-between">
                   <h5 class="mb-1">Opciones para la comunidad</h5>
                 </div>
-                <p *ngIf="solicitudEstaActiva" class="text-success">
-                  Eres miembro de la comunidad
-                </p>
+                <div *ngIf="solicitudEstaActiva">
+                  <p class="text-success">Eres miembro de la comunidad</p>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="salirDeComunidad()"
+                  >
+                    Quiero salirme de la Comunidad
+                  </button>
+                </div>
+
                 <p *ngIf="solicitudEstaEnEspera" class="text-warning">
                   Solicitud Enviada :)
                 </p>

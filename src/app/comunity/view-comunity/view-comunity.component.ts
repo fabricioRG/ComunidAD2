@@ -253,4 +253,46 @@ export class ViewComunityComponent implements OnInit {
         );
     }
   }
+
+  async salirDeComunidad() {
+    var dato = await this.modal.openModal(
+      'SALIRME DE LA COMUNIDAD PARA SIEMPRE',
+      'ESTAS SEGURO QUE DESEAS SALIRTE DE LA COMUNIDAD: ' +
+        this.comunity.nombre +
+        ', NO PODRAS INTERACTUAR CON NADA DE LA COMUNIDAD EN CUESTION, TENDRAS QUE VOLVER A ENVIAR SOLICITUD PARA UNIRTE SI QUISIERAS',
+      'SE SALDRA DE LA COMUNIDAD UNA VEZ SE CONFIRME',
+      true
+    );
+    if (dato) {
+      let filtrosEnviar = new IdComunityAssign();
+      filtrosEnviar.idComunidad = this.comunity.id;
+      filtrosEnviar.registroAcademico = this.user.registroAcademico;
+
+      this.comunidadService
+        .deleteUserFromComunity(
+          this.sessionService.getUserWithToken().token,
+          filtrosEnviar
+        )
+        .subscribe(
+          (mensaje) => {
+            this.modal.openModal(
+              'Se salio de la comunidad:' + this.comunity.nombre,
+              mensaje.mensaje + '',
+              '',
+              false
+            );
+            this.redirection.navigate(['dashboard']);
+          },
+          (error) => {
+            this.modal.openModal(
+              'Error al salirse de la comunidad:' + this.comunity.nombre,
+              error.error.mensaje + '',
+              '',
+              false
+            );
+            this.redirection.navigate(['dashboard']);
+          }
+        );
+    }
+  }
 }

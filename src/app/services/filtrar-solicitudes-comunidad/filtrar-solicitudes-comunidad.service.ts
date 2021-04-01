@@ -13,6 +13,7 @@ export class FiltrarSolicitudesComunidadService {
   actualizarEstadoSolicitudesComunidadURL =
     '/api/users/updateStateComunityRequest';
   deleteComunityURL = '/api/comunity/deleteComunity';
+  deleteUserFromComunityURL = '/api/comunity/deleteUserFromComunity';
 
   constructor(
     private _http: HttpClient,
@@ -37,6 +38,13 @@ export class FiltrarSolicitudesComunidadService {
   deleteComunity(token: any, filtros: any): Observable<any> {
     return this._http.post<any>(
       this.deleteComunityURL,
+      filtros,
+      this.controllHeader.obtenerHeaderConToken(token)
+    );
+  }
+  deleteUserFromComunity(token: any, filtros: any): Observable<any> {
+    return this._http.post<any>(
+      this.deleteUserFromComunityURL,
       filtros,
       this.controllHeader.obtenerHeaderConToken(token)
     );
