@@ -43,6 +43,11 @@ export class ViewComunityComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params : ParamMap)=>{
+      this.comunidadEsDelUsuarioLogueado=false;
+      this.puedeEnviarSolicitud=false;
+      this.solicitudEstaEnEspera=false;
+      this.solicitudEstaActiva=false;
+      this.solicitudEstaDenegada=false;
       this.cargarComunidad()
     })
   }
