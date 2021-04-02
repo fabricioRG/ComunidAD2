@@ -25,11 +25,12 @@ export class DataService {
   addComunityUrl = '/api/users/creationComunity';
   findComunytyByRegistroAcademicoUrl = '/api/users/findComunityByRegistroAcademico';
   findComunityByIdURL = '/api/users/findComunityById';
-  saveComunityAssignURL ='/api/users/assignComunity';
+  saveComunityAssignURL = '/api/users/assignComunity';
   getUsersBySearchURL = '/api/users/search';
   findUserByIdURL = '/api/users/find/byId';
   getCommunitiesBySearchURL = '/api/communities/search';
-  findSuscriptionComunityURL='/api/users/findMemberComunityById';
+  findSuscriptionComunityURL = '/api/users/findMemberComunityById';
+  findUserComunitysURL = '/api/users/findUserComunitys';
 
   changePasswordUserURL = '/api/users/changePassword';
 
@@ -101,7 +102,7 @@ export class DataService {
     return this._http.post<number>(this.postAdminCreationUrl, { registroAcademico: registroAcadem }, options);
   }
 
-  getUsersByFiltering(search: User, token: User){
+  getUsersByFiltering(search: User, token: User) {
     let headers = new HttpHeaders({
       'Authorization': 'Bearer ' + token.token,
     });
@@ -109,7 +110,7 @@ export class DataService {
     return this._http.post<User[]>(this.getUsersByFilteringURL, search, options);
   }
 
-  postChangePasswordUser(usr: User, token:User){
+  postChangePasswordUser(usr: User, token: User) {
     let headers = new HttpHeaders({
       'Authorization': 'Bearer ' + token.token,
     });
@@ -150,7 +151,7 @@ export class DataService {
     return this._http.post<User>(this.userByTokenUrl, token, options);
   }
 
-  getUsersBySearch(search: OrdinaryObject, token: User){
+  getUsersBySearch(search: OrdinaryObject, token: User) {
     let headers = new HttpHeaders({
       'Authorization': 'Bearer ' + token.token,
     });
@@ -158,7 +159,7 @@ export class DataService {
     return this._http.post<User[]>(this.getUsersBySearchURL, search, options);
   }
 
-  getCommunitiesBySearch(search: OrdinaryObject, token: User){
+  getCommunitiesBySearch(search: OrdinaryObject, token: User) {
     let headers = new HttpHeaders({
       'Authorization': 'Bearer ' + token.token,
     });
@@ -192,9 +193,9 @@ export class DataService {
     return this._http.post(this.addComunityUrl, comunity, options);
   }
 
-  saveComunityAssign(communityAssign :ComunityAssign, user : User){
-    console.log("COMMUNITY ASSIGN POST:",communityAssign)
-    console.log("USER TOKEN EN POST",user)
+  saveComunityAssign(communityAssign: ComunityAssign, user: User) {
+    console.log("COMMUNITY ASSIGN POST:", communityAssign)
+    console.log("USER TOKEN EN POST", user)
     let headers = new HttpHeaders({
       'Authorization': 'Bearer ' + user.token,
     });
@@ -226,15 +227,15 @@ export class DataService {
     return this._http.post<ComunityAssign>(this.findComunityByIdURL, comunity, options);
   }
 
-  findUserById(searchUsr: User, token: User){
+  findUserById(searchUsr: User, token: User) {
     let headers = new HttpHeaders({
       'Authorization': 'Bearer ' + token.token,
     });
     let options = { headers: headers };
     return this._http.post<User>(this.findUserByIdURL, searchUsr, options);
   }
-  
-  findSuscriptionComunity(comunityAssign: ComunityAssign,user : User){
+
+  findSuscriptionComunity(comunityAssign: ComunityAssign, user: User) {
     //console.log('En save comunity: ' + comunity.nombre)
     let headers = new HttpHeaders({
       'Authorization': 'Bearer ' + user.token,
@@ -242,6 +243,19 @@ export class DataService {
     let options = { headers: headers };
     return this._http.post<ComunityAssign>(this.findSuscriptionComunityURL, comunityAssign, options);
 
+  }
+
+  /**
+   * Devuelve las comunidades a las que pertenece un usuario,
+   * Es decir sea MIEMBRO y este ACTIVO
+   * @param user 
+   */
+  findUserComunitys(user: User) {
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<ComunityAssign[]>(this.findUserComunitysURL, user, options);
   }
 
   public getLoggedIn() {
@@ -260,11 +274,11 @@ export class DataService {
     return this._http.post(this.userUpdateUrl, user, this.controllHeader.obtenerHeaderConToken(user.token));
   }
 
-  updateAnyUser(user: any, token:string){
-    return this._http.post(this.userUpdateUrl,user,this.controllHeader.obtenerHeaderConToken(token));
+  updateAnyUser(user: any, token: string) {
+    return this._http.post(this.userUpdateUrl, user, this.controllHeader.obtenerHeaderConToken(token));
   }
 
 
-  
+
 
 }
