@@ -1,53 +1,74 @@
 <!--Grid row-->
+<!-- <p>Juan1!</p> -->
 <div class="row d-flex justify-content-center">
-    <!--Grid column-->
-    <div class="text-center">
-        <h1>Inicio de sesion</h1>
-    </div>
-    <div class="col-md-4 form-container">
-        <form [formGroup]="loginForm" (ngSubmit)="onSaveForm()">
-            <!--Usuario-->
-            <mat-form-field class="col-sm-12" appearance="fill">
-                <mat-label>Numero de registro*</mat-label>
-                <input type="text" formControlName="registroAcademico" matInput
-                    [ngClass]="{ 'is-invalid':f.registroAcademico.errors }">
-                <div class="invalid-feedback" *ngIf="f.registroAcademico.errors">
-                    <div *ngIf="f.registroAcademico.errors.required">El numero de registro es requerido </div>
-                    <div *ngIf="f.registroAcademico.errors.maxlength">El numero de registro debe tener 9 caracteres</div>
-                    <div *ngIf="f.registroAcademico.errors.minlength">El numero de registro debe tener 9 caracteres</div>
-                </div>
-            </mat-form-field>
+  <!--Grid column-->
+  <div class="text-center">
+    <h1>Inicio de sesion</h1>
+  </div>
+  <div class="col-md-4 form-container">
+    <form [formGroup]="loginForm" (ngSubmit)="onSaveForm()">
+      <!--Usuario-->Juan1!
+      <mat-form-field class="col-sm-12" appearance="fill">
+        <mat-label>Numero de registro*</mat-label>
+        <input
+          type="text"
+          formControlName="registroAcademico"
+          matInput
+          [ngClass]="{ 'is-invalid': f.registroAcademico.errors }"
+        />
+        <div class="invalid-feedback" *ngIf="f.registroAcademico.errors">
+          <div *ngIf="f.registroAcademico.errors.required">
+            El numero de registro es requerido
+          </div>
+          <div *ngIf="f.registroAcademico.errors.maxlength">
+            El numero de registro debe tener 9 caracteres
+          </div>
+          <div *ngIf="f.registroAcademico.errors.minlength">
+            El numero de registro debe tener 9 caracteres
+          </div>
+        </div>
+      </mat-form-field>
 
-            <!-- Password -->
-            <mat-form-field class="col-sm-12" appearance="fill">
-                <mat-label>Contraseña</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" #password formControlName="password"
-                    [ngClass]="{ 'is-invalid':f.password.errors }">
-                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                    [attr.aria-pressed]="hide">
-                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
-                <div *ngIf="f.password.errors" class="invalid-feedback">
-                    <div *ngIf="f.password.errors.required">Contraseña requerida</div>
-                </div>
-            </mat-form-field>
+      <!-- Password -->
+      <mat-form-field class="col-sm-12" appearance="fill">
+        <mat-label>Contraseña</mat-label>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          #password
+          formControlName="password"
+          [ngClass]="{ 'is-invalid': f.password.errors }"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="hide = !hide"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide"
+        >
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+        <div *ngIf="f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.required">Contraseña requerida</div>
+        </div>
+      </mat-form-field>
 
-
-            <!--Credenciales incorrectas-->
-            <div class="alert alert-danger" *ngIf="credencialesIncorrectas">
-                Usuario o contraseña incorrecto
-            </div>
-            <!--button-->
-            <div class="text-center">
-                <button type="submit" [disabled]="loginForm.invalid" class="btn btn-success">
-                    Iniciar sesion
-                </button>
-            </div>
-
-
-
-        </form>
-    </div>
-    <!--Grid column-->
+      <!--Credenciales incorrectas-->
+      <div class="alert alert-danger" *ngIf="credencialesIncorrectas">
+        Usuario o contraseña incorrecto
+      </div>
+      <!--button-->
+      <div class="text-center">
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid"
+          class="btn btn-success"
+        >
+          Iniciar sesion
+        </button>
+      </div>
+    </form>
+  </div>
+  <!--Grid column-->
 </div>
 <!--Grid row-->

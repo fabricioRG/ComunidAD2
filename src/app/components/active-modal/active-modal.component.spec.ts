@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ActiveModalComponent } from './active-modal.component';
 
@@ -19,5 +20,14 @@ describe('ActiveModalComponent', () => {
     fixture.detectChanges();
   });
 
+  // it('constructor', () => {
+  //   //arrange
+  //   var activeModal = new ActiveModalComponent(TestBed.inject(NgbActiveModal));
+  //   activeModal.ngOnInit();
+  //   //act
+  //   //assert
+  //   expect(activeModal).toBeTruthy();
+    
+  // });
   
 });

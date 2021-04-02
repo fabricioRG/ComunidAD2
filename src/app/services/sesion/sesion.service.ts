@@ -5,10 +5,9 @@ import { DataService } from 'src/app/data.service';
 import { User } from 'src/app/user.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SesionService {
-
   /**
    * Para poder usuar el servicio, con variables observables hay que:
    *    1)IMportar el servicio
@@ -17,7 +16,7 @@ export class SesionService {
    * Para usarlo para sabr si hay una session se debe
    *    1)Importar el servicio
    *    2)Usar el servicio con su metodo exitSession()
-   *  
+   *
    */
 
   //Tipos de usuario
@@ -25,30 +24,30 @@ export class SesionService {
   private esAdministradorDeComunidad: boolean;
   private esAdministradorDeSitema: boolean;
 
-
-
   //Variables
   token: any;
 
   //Rutas
   apiUrlObtenerToken = 'http://localhost:8080/token';
 
-
   //Varables para el observable
-  private logger$ = new Subject<boolean>();//Va a emitir un evento
+  private logger$ = new Subject<boolean>(); //Va a emitir un evento
   private loggedIn: boolean;
 
   constructor(private _http: HttpClient, private dataService: DataService) {
-    console.log("REINICIANDO EL SERVICIO")
-    if (localStorage.getItem('token') === null) {//No hay session
+    console.log('REINICIANDO EL SERVICIO');
+    if (localStorage.getItem('token') === null) {
+      //No hay session
       this.loggedIn = false;
       //this.asignarTipodeUsuarioSinSesion()
     } else {
       this.loggedIn = true;
-      this.dataService.getUserByToken(this.getUserWithToken()).subscribe(response => {
-        var user = response;
-        this.asignarTipoDeUsuarioConSesion(user);
-      })
+      this.dataService
+        .getUserByToken(this.getUserWithToken())
+        .subscribe((response) => {
+          var user = response;
+          this.asignarTipoDeUsuarioConSesion(user);
+        });
 
       //this.asignarTipoDeUsuarioConSesion()
     }
@@ -63,34 +62,33 @@ export class SesionService {
   //El usuario debe llevar registroAcademico y contrasenia
   logIn(user: User) {
     let headers = new HttpHeaders({
-
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'POST',
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': '*',
     });
     let options = { headers: headers };
-    this._http.post(this.apiUrlObtenerToken, user, options).subscribe(result => {
-      localStorage.setItem('token', JSON.stringify(result));
-      if (result != null) {
-        this.loggedIn = true;
-        this.logger$.next(this.loggedIn);//Avisar a los observadores el cambio del valor de la variable
+    this._http.post(this.apiUrlObtenerToken, user, options).subscribe(
+      (result) => {
+        localStorage.setItem('token', JSON.stringify(result));
+        if (result != null) {
+          this.loggedIn = true;
+          this.logger$.next(this.loggedIn); //Avisar a los observadores el cambio del valor de la variable
+        }
+      },
+      (error) => {
+        console.log(error.error);
+        this.logger$.next(this.loggedIn);
       }
-
-    }, error => {
-
-      console.log(error.error)
-      this.logger$.next(this.loggedIn);
-    });
+    );
   }
 
   //CIerra la sesion, llamarlo cuando se va a cerrar la sesion
   log0ut() {
-    console.log("SESSION LOG OUT")
+    console.log('SESSION LOG OUT');
     this.loggedIn = false;
     localStorage.clear();
-    this.logger$.next(this.loggedIn);//Avisar a los observadores el cambio del valor de la variable
+    this.logger$.next(this.loggedIn); //Avisar a los observadores el cambio del valor de la variable
   }
-
 
   getUserWithToken(): User {
     var user: User = new User();
@@ -102,7 +100,7 @@ export class SesionService {
   getToken(): any {
     this.token = localStorage.getItem('token');
     if (this.token != null) {
-      this.token = JSON.parse(this.token).token
+      this.token = JSON.parse(this.token).token;
     }
     return this.token;
   }
@@ -125,9 +123,9 @@ export class SesionService {
       this.esSuscriptor = true;
     }
 
-    console.log("Es suscriptor:", this.esSuscriptor)
-    console.log("Es admin de sistema:", this.esAdministradorDeSitema)
-    console.log("Es admin de comunidad:", this.esAdministradorDeComunidad)
+    console.log('Es suscriptor:', this.esSuscriptor);
+    console.log('Es admin de sistema:', this.esAdministradorDeSitema);
+    console.log('Es admin de comunidad:', this.esAdministradorDeComunidad);
   }
 
   asignarTipodeUsuarioSinSesion() {
@@ -146,5 +144,9 @@ export class SesionService {
 
   usuarioEsAdministradorDeComunidad(): boolean {
     return this.esAdministradorDeComunidad;
+  }
+
+  public getLogger() {
+    return this.logger$;
   }
 }

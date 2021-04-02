@@ -25,15 +25,15 @@ export class CrearUsuarioComponent implements OnInit {
   PRIVACIDAD = 'PUBLICO';
   FOTO_PERFIL = 'FOTO';
   REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,30}/;
-  courses : any;
+  courses: any;
 
   constructor(
     private _builder: FormBuilder,
     private dataService: DataService,
-    private router:Router,
-    private departamentosService:DepartamentoService
+    private router: Router,
+    private departamentosService: DepartamentoService
   ) {
-    this.buscarCursos()
+    this.buscarCursos();
   }
 
   ngOnInit() {
@@ -101,7 +101,10 @@ export class CrearUsuarioComponent implements OnInit {
     console.log('Fecha nacimiento: ' + values.fechaNacimiento);
     console.log('Fecha actual: ' + new Date());
     if (
-      !this.compararFechas(this.convertirFecha(new Date(values.fechaNacimiento)),this.convertirFecha(new Date()))
+      !this.compararFechas(
+        this.convertirFecha(new Date(values.fechaNacimiento)),
+        this.convertirFecha(new Date())
+      )
     ) {
       contadorErrores++;
       mensajesError = this.agregarMensajeError(
@@ -135,7 +138,7 @@ export class CrearUsuarioComponent implements OnInit {
       this.dataService.addNewUser(usuario).subscribe(
         (user) => {
           alert('USUARIO ' + user.nombreCompleto + ' CREADO CON EXITO');
-          this.signupForm.reset()
+          this.signupForm.reset();
           this.router.navigate(['inicio']);
         },
         (error) => {
@@ -173,24 +176,22 @@ export class CrearUsuarioComponent implements OnInit {
     _mensajes = _mensajes + _contador + '.-' + _error;
     return _mensajes;
   }
- 
-  compararFechas(fechaNacimiento: string, fechaActual: string) {
-    var dateNac = new Date(fechaNacimiento)
-    var dateActual = new Date(fechaActual)
-    dateNac.setTime(dateNac.getTime()+21600000)
-    dateActual.setTime(dateActual.getTime()+21600000)
 
-    21600000
+  compararFechas(fechaNacimiento: string, fechaActual: string) {
+    var dateNac = new Date(fechaNacimiento);
+    var dateActual = new Date(fechaActual);
+    dateNac.setTime(dateNac.getTime() + 21600000);
+    dateActual.setTime(dateActual.getTime() + 21600000);
+
+    21600000;
     console.log('comparandoFechas sin formato: ');
-    console.log('Nacimiento: '+ fechaNacimiento);
-    console.log('Actual'+ fechaActual);
-    
+    console.log('Nacimiento: ' + fechaNacimiento);
+    console.log('Actual' + fechaActual);
+
     console.log('comparandoFechas Con formato: ');
-    console.log('Nacimiento: '+dateNac);
-    console.log('Actual: '+dateActual);
-    if (
-      dateNac.getTime() >= dateActual.getTime()
-    ) {
+    console.log('Nacimiento: ' + dateNac);
+    console.log('Actual: ' + dateActual);
+    if (dateNac.getTime() >= dateActual.getTime()) {
       return false;
     } else {
       return true;
@@ -200,24 +201,22 @@ export class CrearUsuarioComponent implements OnInit {
   imprimirValor() {
     console.log(this.users$);
   }
-  get f() { return this.signupForm.controls; }
+  get f() {
+    return this.signupForm.controls;
+  }
 
-  buscarCursos(){
-      //Tipo de usuario
-      this.departamentosService.getDepartamentos().subscribe(
-        (courses: any) => {
-          console.log(courses)
-          this.courses=courses;
-          //alert(user);
-        },
-        (error: any) => {
-          //alert('ERROR: ' + error);
-          console.log(error);
-          
-        }
-      );
-
-
-    
+  buscarCursos() {
+    //Tipo de usuario
+    this.departamentosService.getDepartamentos().subscribe(
+      (courses: any) => {
+        console.log(courses);
+        this.courses = courses;
+        //alert(user);
+      },
+      (error: any) => {
+        //alert('ERROR: ' + error);
+        console.log(error);
+      }
+    );
   }
 }
