@@ -7,12 +7,15 @@ import { User } from 'src/app/user.model';
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css']
+  styleUrls: ['./user-profile.component.css'],
 })
 export class UserProfileComponent implements OnInit {
-
-  constructor(private redirection: Router, private route: ActivatedRoute, private dataService: DataService, private sessionService: SesionService) {
-  }
+  constructor(
+    private redirection: Router,
+    private route: ActivatedRoute,
+    private dataService: DataService,
+    private sessionService: SesionService
+  ) {}
   user: User;
   actualUser: User;
 
@@ -35,19 +38,19 @@ export class UserProfileComponent implements OnInit {
   }
 
   getUserInfo() {
-    this.dataService.getUserByToken(this.sessionService.getUserWithToken()).subscribe(response => {
-      this.user = response;
-      //Buscando la comunidad para ver si es del usuario
-      this.dataService.findUserById(this.actualUser, this.user)
-        .subscribe(
+    this.dataService
+      .getUserByToken(this.sessionService.getUserWithToken())
+      .subscribe((response) => {
+        this.user = response;
+        //Buscando la comunidad para ver si es del usuario
+        this.dataService.findUserById(this.actualUser, this.user).subscribe(
           (data) => {
             this.actualUser = data;
           },
           (error) => {
             this.redirection.navigate(['inicio']);
           }
-        )
-    })
+        );
+      });
   }
-
 }

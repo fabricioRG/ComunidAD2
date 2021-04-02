@@ -8,12 +8,12 @@ import { ComunityAssign } from './models/comunityAssign.model';
 import { OrdinaryObject } from './helpers/ordinary-object.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataService {
   postAdminCreationUrl = '/api/users/adminCreation';
-  apiUrl2 = '/api/users/accounts'
-  apiUrl = 'http://localhost:8080/api/users/987654333'
+  apiUrl2 = '/api/users/accounts';
+  apiUrl = 'http://localhost:8080/api/users/987654333';
   apiUrlAuthentication = 'http://localhost:8080/api/users/authentication';
   apiUrlObtenerToken = 'http://localhost:8080/token';
   addUserUrl = '/creation/users';
@@ -23,59 +23,61 @@ export class DataService {
   coursesUrl = '/api/users/getCourses';
   usersURL = '/api/users/accounts';
   addComunityUrl = '/api/users/creationComunity';
-  findComunytyByRegistroAcademicoUrl = '/api/users/findComunityByRegistroAcademico';
+  findComunytyByRegistroAcademicoUrl =
+    '/api/users/findComunityByRegistroAcademico';
   findComunityByIdURL = '/api/users/findComunityById';
-  saveComunityAssignURL ='/api/users/assignComunity';
+  saveComunityAssignURL = '/api/users/assignComunity';
   getUsersBySearchURL = '/api/users/search';
   findUserByIdURL = '/api/users/find/byId';
   getCommunitiesBySearchURL = '/api/communities/search';
-  findSuscriptionComunityURL='/api/users/findMemberComunityById';
+  findSuscriptionComunityURL = '/api/users/findMemberComunityById';
 
   changePasswordUserURL = '/api/users/changePassword';
 
-  private logger$ = new Subject<boolean>();//Va a emitir un evento
+  private logger$ = new Subject<boolean>(); //Va a emitir un evento
   private loggedIn: boolean;
 
-  constructor(private _http: HttpClient, private controllHeader: HeadersService) {
-    if (localStorage.getItem('token') === null) {//No hay session
+  constructor(
+    private _http: HttpClient,
+    private controllHeader: HeadersService
+  ) {
+    if (localStorage.getItem('token') === null) {
+      //No hay session
       this.loggedIn = false;
     } else {
       this.loggedIn = true;
     }
-
-
   }
 
-
-  isLoggedIn(): Observable<boolean> {//Crea el Observer
+  isLoggedIn(): Observable<boolean> {
+    //Crea el Observer
     return this.logger$.asObservable();
   }
 
-
   logIn(user: User) {
     let headers = new HttpHeaders({
-
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'POST',
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': '*',
     });
     let options = { headers: headers };
-    this._http.post(this.apiUrlObtenerToken, user, options).subscribe(result => {
-      localStorage.setItem('token', JSON.stringify(result));
-      if (result != null) {
-        this.loggedIn = true;
-        this.logger$.next(this.loggedIn);//Avisar a los observadores si se logueo
+    this._http.post(this.apiUrlObtenerToken, user, options).subscribe(
+      (result) => {
+        localStorage.setItem('token', JSON.stringify(result));
+        if (result != null) {
+          this.loggedIn = true;
+          this.logger$.next(this.loggedIn); //Avisar a los observadores si se logueo
+        }
+      },
+      (error) => {
+        console.log(error.error);
+        this.logger$.next(this.loggedIn);
       }
-
-    }, error => {
-
-      console.log(error.error)
-      this.logger$.next(this.loggedIn);
-    });
+    );
   }
 
   logOut() {
-    console.log("SESSION LOG OUT")
+    console.log('SESSION LOG OUT');
     this.loggedIn = false;
     localStorage.clear();
     this.logger$.next(this.loggedIn);
@@ -87,7 +89,7 @@ export class DataService {
 
   getAllUsers(token: User) {
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
+      Authorization: 'Bearer ' + token.token,
     });
     let options = { headers: headers };
     return this._http.post<User[]>(this.usersURL, token, options);
@@ -95,36 +97,43 @@ export class DataService {
 
   postAdminCreation(registroAcadem: string, token: User) {
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
+      Authorization: 'Bearer ' + token.token,
     });
     let options = { headers: headers };
-    return this._http.post<number>(this.postAdminCreationUrl, { registroAcademico: registroAcadem }, options);
+    return this._http.post<number>(
+      this.postAdminCreationUrl,
+      { registroAcademico: registroAcadem },
+      options
+    );
   }
 
-  getUsersByFiltering(search: User, token: User){
+  getUsersByFiltering(search: User, token: User) {
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
+      Authorization: 'Bearer ' + token.token,
     });
     let options = { headers: headers };
-    return this._http.post<User[]>(this.getUsersByFilteringURL, search, options);
+    return this._http.post<User[]>(
+      this.getUsersByFilteringURL,
+      search,
+      options
+    );
   }
 
-  postChangePasswordUser(usr: User, token:User){
+  postChangePasswordUser(usr: User, token: User) {
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
+      Authorization: 'Bearer ' + token.token,
     });
     let options = { headers: headers };
     return this._http.post<number>(this.changePasswordUserURL, usr, options);
   }
 
   addNewUser(user: User): Observable<any> {
-    console.log('llegue a addNewUser')
-    console.log(user)
+    console.log('llegue a addNewUser');
+    console.log(user);
     let headers = new HttpHeaders({
-
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'POST',
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': '*',
     });
     let options = { headers: headers };
     return this._http.post<any>(this.addUserUrl, user, options);
@@ -134,49 +143,52 @@ export class DataService {
     let headers = new HttpHeaders({
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'POST',
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': '*',
     });
     let options = { headers: headers };
     return this._http.post(this.apiUrlObtenerToken, user, options);
   }
 
   getUserByToken(token: User) {
-    console.log(token)
-    console.log('En data service: ' + token.token)
+    console.log(token);
+    console.log('En data service: ' + token.token);
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
+      Authorization: 'Bearer ' + token.token,
     });
     let options = { headers: headers };
     return this._http.post<User>(this.userByTokenUrl, token, options);
   }
 
-  getUsersBySearch(search: OrdinaryObject, token: User){
+  getUsersBySearch(search: OrdinaryObject, token: User) {
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
+      Authorization: 'Bearer ' + token.token,
     });
     let options = { headers: headers };
     return this._http.post<User[]>(this.getUsersBySearchURL, search, options);
   }
 
-  getCommunitiesBySearch(search: OrdinaryObject, token: User){
+  getCommunitiesBySearch(search: OrdinaryObject, token: User) {
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
+      Authorization: 'Bearer ' + token.token,
     });
     let options = { headers: headers };
-    return this._http.post<Comunity[]>(this.getCommunitiesBySearchURL, search, options);
+    return this._http.post<Comunity[]>(
+      this.getCommunitiesBySearchURL,
+      search,
+      options
+    );
   }
 
   postAuthentication(user: any) {
     return this._http.post(this.apiUrlAuthentication, user);
   }
 
-
   //Post para traer todos los cursos de la base de datos
   getCourses(token: User) {
-    console.log(token)
-    console.log('En data service: ' + token.token)
+    console.log(token);
+    console.log('En data service: ' + token.token);
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
+      Authorization: 'Bearer ' + token.token,
     });
     let options = { headers: headers };
     return this._http.post<any>(this.coursesUrl, token, options);
@@ -184,64 +196,79 @@ export class DataService {
 
   //Posta para agregar comunidad
   saveComunity(comunity: any, token: User) {
-    console.log('En save comunity: ' + comunity.nombre)
+    console.log('En save comunity: ' + comunity.nombre);
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
+      Authorization: 'Bearer ' + token.token,
     });
     let options = { headers: headers };
     return this._http.post(this.addComunityUrl, comunity, options);
   }
 
-  saveComunityAssign(communityAssign :ComunityAssign, user : User){
-    console.log("COMMUNITY ASSIGN POST:",communityAssign)
-    console.log("USER TOKEN EN POST",user)
+  saveComunityAssign(communityAssign: ComunityAssign, user: User) {
+    console.log('COMMUNITY ASSIGN POST:', communityAssign);
+    console.log('USER TOKEN EN POST', user);
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + user.token,
+      Authorization: 'Bearer ' + user.token,
     });
     let options = { headers: headers };
-    return this._http.post(this.saveComunityAssignURL, communityAssign, options);
+    return this._http.post(
+      this.saveComunityAssignURL,
+      communityAssign,
+      options
+    );
   }
   /**
-   * 
+   *
    * @param user Devuelve todas las comunidades que un usuario halla creado
    */
   findComunytyByRegistroAcademico(user: User) {
-    console.log('En save comunity: ' + user.registroAcademico)
+    console.log('En save comunity: ' + user.registroAcademico);
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + user.token,
+      Authorization: 'Bearer ' + user.token,
     });
     let options = { headers: headers };
-    return this._http.post<ComunityAssign[]>(this.findComunytyByRegistroAcademicoUrl, user, options)
+    return this._http.post<ComunityAssign[]>(
+      this.findComunytyByRegistroAcademicoUrl,
+      user,
+      options
+    );
   }
   /**
    * Devulve un ComunityAssign que coincida con el id de la comunidad, si esta existe
    * @param comunity ,se necesita el id de la comunidad
    */
   findComunityById(comunity: Comunity, user: User) {
-    console.log('En save comunity: ' + comunity.nombre)
+    console.log('En save comunity: ' + comunity.nombre);
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + user.token,
+      Authorization: 'Bearer ' + user.token,
     });
     let options = { headers: headers };
-    return this._http.post<ComunityAssign>(this.findComunityByIdURL, comunity, options);
+    return this._http.post<ComunityAssign>(
+      this.findComunityByIdURL,
+      comunity,
+      options
+    );
   }
 
-  findUserById(searchUsr: User, token: User){
+  findUserById(searchUsr: User, token: User) {
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + token.token,
+      Authorization: 'Bearer ' + token.token,
     });
     let options = { headers: headers };
     return this._http.post<User>(this.findUserByIdURL, searchUsr, options);
   }
-  
-  findSuscriptionComunity(comunityAssign: ComunityAssign,user : User){
+
+  findSuscriptionComunity(comunityAssign: ComunityAssign, user: User) {
     //console.log('En save comunity: ' + comunity.nombre)
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + user.token,
+      Authorization: 'Bearer ' + user.token,
     });
     let options = { headers: headers };
-    return this._http.post<ComunityAssign>(this.findSuscriptionComunityURL, comunityAssign, options);
-
+    return this._http.post<ComunityAssign>(
+      this.findSuscriptionComunityURL,
+      comunityAssign,
+      options
+    );
   }
 
   public getLoggedIn() {
@@ -252,19 +279,21 @@ export class DataService {
     this.loggedIn = true;
   }
 
-  public getTokenSession() {
-
-  }
+  public getTokenSession() {}
 
   updateUser(user: any) {
-    return this._http.post(this.userUpdateUrl, user, this.controllHeader.obtenerHeaderConToken(user.token));
+    return this._http.post(
+      this.userUpdateUrl,
+      user,
+      this.controllHeader.obtenerHeaderConToken(user.token)
+    );
   }
 
-  updateAnyUser(user: any, token:string){
-    return this._http.post(this.userUpdateUrl,user,this.controllHeader.obtenerHeaderConToken(token));
+  updateAnyUser(user: any, token: string): any {
+    return this._http.post(
+      this.userUpdateUrl,
+      user,
+      this.controllHeader.obtenerHeaderConToken(token)
+    );
   }
-
-
-  
-
 }

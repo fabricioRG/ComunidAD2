@@ -13,6 +13,7 @@ import { ActiveModalComponent } from '../../components/active-modal/active-modal
 import { MustMatch } from '../../helpers/must-match.validator';
 import { DataService } from 'src/app/data.service';
 import { ConstantesService } from 'src/app/services/constantes/constantes.service';
+import { ModalService } from 'src/app/services/modal/modal.service';
 
 const DEFAULT_POSITION_ROW = 2;
 
@@ -68,7 +69,8 @@ export class ChangePasswordComponent implements OnInit {
     private dataService: DataService,
     pipe: DecimalPipe,
     private _modalService: NgbModal,
-    public formBuilder: FormBuilder
+    public formBuilder: FormBuilder,
+    private modalSS: ModalService
   ) {
     this.token = localStorage.getItem('token');
     this.token = JSON.parse(this.token).token;
@@ -138,26 +140,26 @@ export class ChangePasswordComponent implements OnInit {
     }
   }
 
-  openModalConfirm() {
-    console.log('User Pass: ', this.selectedUserObject.password);
-    const modal = this._modalService.open(ActiveModalComponent);
+  async openModalConfirm() {
+    //console.log('User Pass: ', this.selectedUserObject.password);
+    //    const modal = this._modalService.open(ActiveModalComponent);
 
-    modal.componentInstance.modalHeader = 'Cambiar Contraseña';
-    modal.componentInstance.modalBodyTitle =
-      '¿Estás seguro que deseas cambiar la contraseña?';
-    modal.componentInstance.modalBody =
+    var modalHeader = 'Cambiar Contraseña';
+    var modalBodyTitle = '¿Estás seguro que deseas cambiar la contraseña?';
+    var modalBody =
       'Si aceptas se cambiara de manera permanente, no habrá forma de revertir los cambios';
-    modal.componentInstance.confirmModal = true;
-
-    modal.result.then(
-      (result) => {
-        this.postChangePasswordUser(this.selectedUserObject);
-        console.log('Result: ', result);
-      },
-      (reason) => {
-        console.log('Reason: ', reason);
-      }
+    var esconfirmModal = true;
+    var resultado = await this.modalSS.openModal(
+      modalHeader,
+      modalBody,
+      modalBodyTitle,
+      esconfirmModal
     );
+    if (resultado) {
+      console.log('ACEPTADO EL MODAAL ******************');
+      this.postChangePasswordUser(this.selectedUserObject);
+      //console.log('Result: ', result);
+    }
   }
 
   confirmChangePassword() {
