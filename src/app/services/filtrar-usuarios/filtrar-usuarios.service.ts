@@ -4,15 +4,21 @@ import { User } from 'src/app/user.model';
 import { HeadersService } from '../headers/headers.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FiltrarUsuariosService {
-
   filtrarUsuarios = '/api/users/filtrarUsuarios';
 
-  constructor(private _http: HttpClient,private controllHeader: HeadersService) { }
+  constructor(
+    private _http: HttpClient,
+    private controllHeader: HeadersService
+  ) {}
 
-  getUsuarios(token: any,filtro: any){
-      return this._http.post<User[]>(this.filtrarUsuarios,filtro,this.controllHeader.obtenerHeaderConToken(token));
-    }
+  getUsuarios(token: any, filtro: any): any {
+    return this._http.post<User[]>(
+      this.filtrarUsuarios,
+      filtro,
+      this.controllHeader.obtenerHeaderConToken(token)
+    );
+  }
 }

@@ -60,93 +60,54 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
-                <div class="row gutters-sm">
-                    <div>
-                        <mat-card>
-                            <mat-card-title>
-                                <div class="row justify-content-sm-center">
-                                    <div class="col-sm-3">
-                                        <p class="text-center" style="color: lightslategrey;">Comunidades</p>
-                                    </div>
+
+                <div class="content">
+                    <mat-card>
+                        <div class="row justify-content-sm-center">
+                            <div class="col-sm-12" >
+                                <p *ngIf="!usuarioTieneComunidades" class="text-center" style="color: lightslategrey;">Usuario sin comunidades</p>
+                                <p *ngIf="usuarioTieneComunidades" class="text-center" style="color: lightslategrey;">Comunidades a las que pertenece el usuario</p>
+                            
+                            </div>
+                        </div>
+                        <div fxLayout="row wrap" fxLayoutGap="18px grid">
+                            <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of comunidades">
+                                <mat-card class="mat-elevation-z2">
+                                    <mat-card-header>
+                                        <mat-card-title>{{data.comunity?.nombre}}</mat-card-title>
+                                    </mat-card-header>
+                                    <img mat-card-image *ngIf="data.comunity?.foto"
+                                        [src]='getImage(data.comunity?.datosFoto)' width="100" height="100">
+                                    <mat-card-content>
+                                        <p>
+                                            {{data.comunity?.descripcion}}
+                                        </p>
+                                    </mat-card-content>
+                                    <mat-card-actions>
+                                        <button class="text-center btn btn-success"
+                                            (click)="verComunidad(data.comunity?.id)" mat-button>Ver
+                                            comunidad</button>
+                                        <button mat-button>SHARE</button>
+                                    </mat-card-actions>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+
+
+
+
+                <div class="row gutters-sm" *ngIf="!usuarioTieneComunidades">
+                    <mat-card>
+                        <mat-card-title>
+                            <div class="row justify-content-sm-center">
+                                <div class="col-sm-3">
+                                    <p class="text-center" style="color: lightslategrey;">Usuario sin comunidades</p>
                                 </div>
-                            </mat-card-title>
-                            <mat-card-content>
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <div class="gal-detail thumb">
-                                            <a class="image-popup" title="Screenshot-2">
-                                                <img src="https://via.placeholder.com/400x300/FFB6C1" class="thumb-img"
-                                                    alt="work-thumbnail">
-                                            </a>
-                                            <h4 class="text-center">Comunidad 1</h4>
-                                            <div class="ga-border"></div>
-                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4">
-                                        <div class="gal-detail thumb">
-                                            <a class="image-popup" title="Screenshot-2">
-                                                <img src="https://via.placeholder.com/400x300/87CEFA" class="thumb-img"
-                                                    alt="work-thumbnail">
-                                            </a>
-                                            <h4 class="text-center">Comunidad 2</h4>
-                                            <div class="ga-border"></div>
-                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4">
-                                        <div class="gal-detail thumb">
-                                            <a class="image-popup" title="Screenshot-2">
-                                                <img src="https://via.placeholder.com/400x300/B0C4DE" class="thumb-img"
-                                                    alt="work-thumbnail">
-                                            </a>
-                                            <h4 class="text-center">Comunidad 3</h4>
-                                            <div class="ga-border"></div>
-                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4">
-                                        <div class="gal-detail thumb">
-                                            <a class="image-popup" title="Screenshot-2">
-                                                <img src="https://via.placeholder.com/400x300/ADD8E6" class="thumb-img"
-                                                    alt="work-thumbnail">
-                                            </a>
-                                            <h4 class="text-center">Comunidad 4</h4>
-                                            <div class="ga-border"></div>
-                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4">
-                                        <div class="gal-detail thumb">
-                                            <a class="image-popup" title="Screenshot-2">
-                                                <img src="https://via.placeholder.com/400x300/D3D3D3" class="thumb-img"
-                                                    alt="work-thumbnail">
-                                            </a>
-                                            <h4 class="text-center">Comunidad 5</h4>
-                                            <div class="ga-border"></div>
-                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4">
-                                        <div class="gal-detail thumb">
-                                            <a class="image-popup" title="Screenshot-2">
-                                                <img src="https://via.placeholder.com/400x300/48D1CC" class="thumb-img"
-                                                    alt="work-thumbnail">
-                                            </a>
-                                            <h4 class="text-center">Comunidad 6</h4>
-                                            <div class="ga-border"></div>
-                                            <p class="text-muted text-center"><small>Descripcion de la comunidad</small></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </mat-card-content>
-                        </mat-card>
-                    </div>
+                            </div>
+                        </mat-card-title>
+                    </mat-card>
                 </div>
             </div>
         </div>

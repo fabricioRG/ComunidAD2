@@ -1,10 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DataService } from 'src/app/data.service';
+import { FiltrarSolicitudesComunidadService } from 'src/app/services/filtrar-solicitudes-comunidad/filtrar-solicitudes-comunidad.service';
+import { SesionService } from 'src/app/services/sesion/sesion.service';
 
 import { RequestComunityComponent } from './request-comunity.component';
 
 describe('RequestComunityComponent', () => {
   let component: RequestComunityComponent;
   let fixture: ComponentFixture<RequestComunityComponent>;
+  let dataService: DataService;
+  let sessionService: SesionService;
+  let filtrarAsignacionesComunidad: FiltrarSolicitudesComunidadService;
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -19,7 +26,7 @@ describe('RequestComunityComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  // it('cargarDatos', () => {
+  //   expect(component).toBeTruthy();
+  // });
 });
