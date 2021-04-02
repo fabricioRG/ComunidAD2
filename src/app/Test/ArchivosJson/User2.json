@@ -1,0 +1,16 @@
+
+      {
+        "correoElectronico": "1",
+        "estado": "1",
+        "fechaNacimiento": "2011-01-01",
+        "fotoPerfil": "aa",
+        "genero": "M",
+        "nombreCompleto": "a",
+        "contrasena": "d",
+        "repetirContrasena": "d",
+        "numeroCarnet": "1",
+        "rolUsuario": "a",
+        "token": "a",
+        "privacidad": "a"
+      }
+      

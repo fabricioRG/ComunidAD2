@@ -20,14 +20,17 @@ export class FiltrarSolicitudesComunidadService {
     private controllHeader: HeadersService
   ) {}
 
-  getAsignacionesComunidad(token: any, filtros: any) {
+  getAsignacionesComunidad(token: any, filtros: any): any {
     return this._http.post<ComunityAssign[]>(
       this.filtrarSolicitudesComunidadURL,
       filtros,
       this.controllHeader.obtenerHeaderConToken(token)
     );
   }
-  actualizarEstadoAsignacionesComunidad(token: any, datos: ComunityAssign) {
+  actualizarEstadoAsignacionesComunidad(
+    token: any,
+    datos: ComunityAssign
+  ): any {
     return this._http.post<ComunityAssign>(
       this.actualizarEstadoSolicitudesComunidadURL,
       datos,
