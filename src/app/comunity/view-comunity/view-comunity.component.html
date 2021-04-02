@@ -1,114 +1,62 @@
 <div>
-  <!--Grid row-->
-  <div class="row d-flex justify-content-center">
-    <!--Grid column-->
-    <div class="col-md-11">
-      <mat-card appearance="fill">
-        <h2 class="text-center text-uppercase font-weight-bold">
-          {{ comunity.nombre }}
-        </h2>
-        <div class="row">
-          <div class="col-6">
-            <img
-              *ngIf="comunity.foto"
-              [src]="dibujarImagen()"
-              class="img-fluid left"
-              alt="Responsive image"
-            />
-          </div>
-          <div class="col-6">
-            <!--Informacion Basica de la comunidad-->
-            <div class="list-group">
-              <a
-                class="list-group-item list-group-item-action flex-column align-items-start active"
-              >
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">De que va la comunidad...</h5>
-                </div>
-                <p class="mb-1">{{ comunity.descripcion }}</p>
-              </a>
-              <a
-                class="list-group-item list-group-item-action flex-column align-items-start"
-              >
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">Creador de la comunidad</h5>
-                </div>
-                <p class="mb-1">{{ comunityAssign.user?.nombreCompleto }}</p>
-              </a>
-              <a
-                class="list-group-item list-group-item-action flex-column align-items-start"
-              >
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">Curso de la comunidad</h5>
-                </div>
-                <p class="mb-1">{{ comunity.course?.nombre }}</p>
-              </a>
-              <a
-                class="list-group-item list-group-item-action flex-column align-items-start"
-              >
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">Opciones para la comunidad</h5>
-                </div>
-                <div *ngIf="solicitudEstaActiva">
-                  <p class="text-success">Eres miembro de la comunidad</p>
-                  <button
-                    type="button"
-                    class="btn btn-danger"
-                    (click)="salirDeComunidad()"
-                  >
-                    Quiero salirme de la Comunidad
-                  </button>
-                </div>
+    <!--Grid row-->
+    <div class="row d-flex justify-content-center">
+        <!--Grid column-->
+        <div class="col-md-11">
+            <mat-card appearance="fill">
+                <h2 class="text-center text-uppercase font-weight-bold">{{comunity.nombre}}</h2>
+                <div class="row">
+                    <div class="col-6">
+                        <img *ngIf='comunity.foto' [src]='dibujarImagen()' class="img-fluid left" alt="Responsive image"
+                            >
+                    </div>
+                    <div class="col-6">
+                        <!--Informacion Basica de la comunidad-->
+                        <div class="list-group">
+                            <a class="list-group-item list-group-item-action flex-column align-items-start active">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">De que va la comunidad...</h5>
+                                </div>
+                                <p class="mb-1">{{comunity.descripcion}}</p>
+                            </a>
+                            <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Creador de la comunidad</h5>
+                                </div>
+                                <p class="mb-1">{{comunityAssign.user?.nombreCompleto}}</p>
+                            </a>
+                            <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Curso de la comunidad</h5>
+                                </div>
+                                <p class="mb-1">{{comunity.course?.nombre}}</p>
+                            </a>
+                            <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Opciones para la comunidad</h5>
+                                </div>
+                                <p *ngIf="solicitudEstaActiva" class="text-success">Eres miembro de la comunidad</p>
+                                <p *ngIf="solicitudEstaEnEspera"class="text-warning">Solicitud Enviada :)</p>
+                                <p *ngIf="solicitudEstaDenegada" class="text-danger">.Tu solicitud ha sido rechazada</p>
+                                <div class="btn-group">
+                                  <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-outline-success">Crear publicacion</button> 
+                                  <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-outline-warning" (click)="verSolicitudes()">Ver solicitudes</button>
+                                  <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-outline-danger" (click)="verMiembrosDeComunidad()">Eliminar Miembros</button>
+                                  <button *ngIf='puedeEnviarSolicitud' (click)="solicitarUnionAComunidad()" type="button" class="btn btn-warning">Unirse a la Comunidad</button>    
+                                  <button *ngIf="solicitudEstaActiva" type="button" class="btn btn-outline-danger" (click)="salirDeComunidad()">Quiero salirme de la Comunidad</button>
+                                  <button *ngIf="comunidadEsDelUsuarioLogueado"type="button" class="btn btn-outline-danger" (click)="eliminarComunidad()">Eliminar Comunidad</button> 
+                              </div>
+                       
+                            </a>
+                        </div>
 
-                <p *ngIf="solicitudEstaEnEspera" class="text-warning">
-                  Solicitud Enviada :)
-                </p>
-                <p *ngIf="solicitudEstaDenegada" class="text-danger">
-                  .Tu solicitud ha sido rechazada
-                </p>
-                <button
-                  *ngIf="comunidadEsDelUsuarioLogueado"
-                  type="button"
-                  class="btn btn-success"
-                >
-                  Crear publicacion
-                </button>
-                <br />
-                <br />
-                <button
-                  *ngIf="comunidadEsDelUsuarioLogueado"
-                  type="button"
-                  class="btn btn-success"
-                  (click)="verSolicitudes()"
-                >
-                  Ver solicitudes
-                </button>
-                <br />
-                <br />
-                <button
-                  *ngIf="comunidadEsDelUsuarioLogueado"
-                  type="button"
-                  class="btn btn-danger"
-                  (click)="eliminarComunidad()"
-                >
-                  Eliminar Comunidad
-                </button>
+                    </div>
+                </div>
+            </mat-card>
 
-                <button
-                  *ngIf="puedeEnviarSolicitud"
-                  (click)="solicitarUnionAComunidad()"
-                  type="button"
-                  class="btn btn-warning"
-                >
-                  Unirse a la Comunidad
-                </button>
-              </a>
-            </div>
-          </div>
         </div>
-      </mat-card>
+        <!--Grid column-->
     </div>
-    <!--Grid column-->
-  </div>
-  <!--Grid row-->
+    <!--Grid row-->
 </div>
+

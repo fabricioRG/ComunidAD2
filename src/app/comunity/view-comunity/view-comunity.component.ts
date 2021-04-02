@@ -259,6 +259,11 @@ export class ViewComunityComponent implements OnInit {
     }
   }
 
+
+  verMiembrosDeComunidad(){
+    this.redirection.navigate(['unsuscribeMembers',this.comunity.id])
+  }
+  
   async salirDeComunidad() {
     var dato = await this.modal.openModal(
       'SALIRME DE LA COMUNIDAD PARA SIEMPRE',
