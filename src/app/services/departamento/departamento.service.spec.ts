@@ -5,6 +5,7 @@ import {
   HttpClientTestingModule,
 } from '@angular/common/http/testing';
 import { DepartamentoService } from './departamento.service';
+import dummyPosts from 'src/app/Test/ArchivosJson/Dummy.json';
 
 describe('DepartamentoService', () => {
   let service: DepartamentoService;
@@ -24,17 +25,16 @@ describe('DepartamentoService', () => {
   });
 
   it('should executed', () => {
-    const dummyPosts: any[] = [
-      {
-        userId: '1',
-        nombre: 'a',
-      },
-      {
-        userId: '2',
-        nombre: 'b',
-      },
-    ];
-
+    // const dummyPosts: any[] = [
+    //   {
+    //     userId: '1',
+    //     nombre: 'a',
+    //   },
+    //   {
+    //     userId: '2',
+    //     nombre: 'b',
+    //   },
+    // ];
     service.getDepartamentos().subscribe((departamentos: any[]) => {
       expect(departamentos.length).toBe(2);
     });
