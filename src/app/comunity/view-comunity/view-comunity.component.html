@@ -1,56 +1,169 @@
-<div>
-    <!--Grid row-->
-    <div class="row d-flex justify-content-center">
-        <!--Grid column-->
-        <div class="col-md-11">
-            <mat-card appearance="fill">
-                <h2 class="text-center text-uppercase font-weight-bold">{{comunity.nombre}}</h2>
-                <div class="row">
-                    <div class="col-6">
-                        <img *ngIf='comunity.foto' [src]='dibujarImagen()' class="img-fluid left" alt="Responsive image"
-                            >
-                    </div>
-                    <div class="col-6">
-                        <!--Informacion Basica de la comunidad-->
-                        <div class="list-group">
-                            <a class="list-group-item list-group-item-action flex-column align-items-start active">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">De que va la comunidad...</h5>
-                                </div>
-                                <p class="mb-1">{{comunity.descripcion}}</p>
-                            </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Creador de la comunidad</h5>
-                                </div>
-                                <p class="mb-1">{{comunityAssign.user?.nombreCompleto}}</p>
-                            </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Curso de la comunidad</h5>
-                                </div>
-                                <p class="mb-1">{{comunity.course?.nombre}}</p>
-                            </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Opciones para la comunidad</h5>
-                                </div>
-                                <p *ngIf="solicitudEstaActiva" class="text-success">Eres miembro de la comunidad</p>
-                                <p *ngIf="solicitudEstaEnEspera"class="text-warning">Solicitud Enviada :)</p>
-                                <p *ngIf="solicitudEstaDenegada" class="text-danger">.Tu solicitud ha sido rechazada</p>
-                                <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-success">Crear publicacion</button> <br> <br>
-                                <button *ngIf='comunidadEsDelUsuarioLogueado' type="button" class="btn btn-success" (click)="verSolicitudes()">Ver solicitudes</button>
-                                <button *ngIf='puedeEnviarSolicitud' (click)="solicitarUnionAComunidad()" type="button" class="btn btn-warning">Unirse a la Comunidad</button>
-
-                            </a>
-                        </div>
-
+<div class="container">
+    <div class="main-body">
+        <div class="row gutters-sm">
+            <div class="col-sm-9 mb-3">
+                <div class="genericCard">
+                    <div class="bio-graph-heading" [style.background-image]="this.styleBackgroundImageCommunity">
+                        <h1>{{comunity.nombre}}</h1>
+                        <h3>{{courseName}}</h3>
                     </div>
                 </div>
-            </mat-card>
+                <div class="genericCard">
+                    <mat-card>
+                        <mat-card-content>
+                            
+                            <div class="row justify-content-around">
+                                <div *ngIf="solicitudEstaEnEspera">
+                                    <p class="text-warning">Solicitud Enviada</p>
+                                </div>
+                                <div *ngIf="solicitudEstaDenegada">
+                                    <p class="text-danger">Tu solicitud ha sido rechazada</p>
+                                </div>
+                                <div *ngIf="comunidadEsDelUsuarioLogueado || solicitudEstaActiva" class="col-sm-4">
+                                    <button style="width: 100%;" (click)="disableCreateCommunityPost = !disableCreateCommunityPost" 
+                                    class="btn btn-outline-warning">Crear Publicacion</button>
+                                </div>
+                                <div *ngIf='puedeEnviarSolicitud' class="col-sm-4">
+                                    <button (click)="solicitarUnionAComunidad()" type="button"
+                                        class="btn btn-outline-warning">Unirse a la Comunidad</button>
+                                </div>
+                                <div *ngIf='comunidadEsDelUsuarioLogueado' class="col-sm-4">
+                                    <button style="width: 100%;" type="button" class="btn btn-outline-primary"
+                                        (click)="verSolicitudes()">Ver solicitudes</button>
+                                </div>
+                            </div>
+                            <div *ngIf="disableCreateCommunityPost">
+                                <mat-card-title>
+                                    <div style="margin-top: 20px;">
+                                        <p style="text-align: center;">Nueva Publicacion</p>
+                                    </div>
+                                </mat-card-title>
+                                <form class="example-form" [formGroup]="postForm"
+                                    (ngSubmit)="onSubmit(title.value, message.value)"
+                                    style="padding-left: 15px;padding-right: 15px;">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Titulo de la publicacion</mat-label>
+                                        <input matInput maxlength="100" #title formControlName="title"
+                                            [ngClass]="{ 'is-invalid':f.title.errors }" placeholder="Ejemplo: Mi comunidad">
+                                        <mat-hint align="end">{{title.value.length}} / 100</mat-hint>
+                                        <div *ngIf="f.title.errors" class="invalid-feedback">
+                                            <div *ngIf="f.title.errors.required">Titulo requerido</div>
+                                        </div>
+                                    </mat-form-field>
+    
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Mensaje de la publicacion</mat-label>
+                                        <textarea matInput #message formControlName="message"
+                                            [ngClass]="{ 'is-invalid':f.message.errors }"
+                                            placeholder="Ejemplo: Mensaje sobre la comunidad"></textarea>
+                                        <div *ngIf="f.message.errors" class="invalid-feedback">
+                                            <div *ngIf="f.message.errors.required">Mensaje requerido</div>
+                                        </div>
+                                    </mat-form-field>
+                                    <div class="row justify-content-between">
+                                        <div class="custom-file col-sm-6">
+                                            <input #image formControlName="image" style="margin-left: 15px;"
+                                                (change)="onSelectFile($event)" type="file" accept="image/*"
+                                                class="custom-file-input" id="customFileLang" lang="es">
+                                            <label style="margin-left: 15px;" class="custom-file-label"
+                                                for="customFileLang">{{(imagenCargada)? imagenCargada : 'Seleccionar
+                                                imagen'}}</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button *ngIf="imagenCargada" (click)="quitarFoto()" style="width: 100%;"
+                                                class="btn btn-danger float-right">Quitar</button>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <button style="width: 100%;" type="submit"
+                                                class="btn btn-warning float-right">Publicar</button>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 20px;">
+                                        <ngb-alert type="danger" *ngIf="alertClosedDanger"
+                                            (closed)="alertClosedDanger = false">
+                                            <strong>Error: </strong> Debe cumplir con los requisitos previos
+                                        </ngb-alert>
+                                        <ngb-alert type="success" *ngIf="alertClosedSuccess"
+                                            (closed)="alertClosedSuccess = false">
+                                            Se ha agregado una nueva publicacion en la comunidad
+                                        </ngb-alert>
+                                    </div>
+                                </form>
+                            </div>
 
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="genericCard" *ngFor="let post of communityPostList">
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>
+                                {{post.title}}
+                            </mat-card-title>
+                            <mat-card-subtitle>
+                                Publicado: {{getFormatedTime(post.createdAt)}}
+                            </mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <div class="row" style="margin-right: 0px;">
+                                <div class="col-sm-1">
+                                    <span class="material-icons" style="font-size: 2rem;">
+                                        arrow_drop_up
+                                    </span>
+                                    <p style="text-align: center; margin: 0px; padding: 0px;">{{post.rated}}</p>
+                                    <span class="material-icons" style="font-size: 2rem; ">
+                                        arrow_drop_down
+                                    </span>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div>
+                                        {{post.message}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-sm-center">
+                                <div class="col-sm-10" style="margin-top: 10px;">
+                                    <img style="width: 100%;" *ngIf="post.datosFoto" [src]="getImage(post.datosFoto)">
+                                </div>
+                            </div>
+                        </mat-card-content>
+                        <mat-card-footer>
+                            <mat-card-subtitle>
+                                <div style="padding-left: 30px;">
+                                    Autor: {{userName(post.user)}}
+                                </div>
+                            </mat-card-subtitle>
+                        </mat-card-footer>
+                    </mat-card>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="mb-3">
+                    <mat-card>
+                        <h2>
+                            Descripcion de la comunidad
+                        </h2>
+                        <mat-card-content>
+                            {{comunity.descripcion}}
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="mb-3">
+                    <mat-card>
+                        <h2>
+                            Usuarios en la comunidad
+                        </h2>
+                        <mat-card-content>
+                            <mat-list role="list">
+                                <div *ngFor="let usr of usersInCommunityList">
+                                    <mat-list-item role="listitem"> {{usr.nombreCompleto}}</mat-list-item>
+                                </div>
+                            </mat-list>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
         </div>
-        <!--Grid column-->
     </div>
-    <!--Grid row-->
 </div>
