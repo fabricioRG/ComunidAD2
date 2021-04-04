@@ -55,6 +55,12 @@ export class NavbarComponent implements OnInit {
           var user = response;
           this.sesionService.asignarTipoDeUsuarioConSesion(user);
           this.existeSession = true;
+          ////////////
+
+          this.token = localStorage.getItem('token');
+          this.token = JSON.parse(this.token).token;
+          
+          ///////////
         })
         //POST->Usuario
       } else {
@@ -134,8 +140,8 @@ export class NavbarComponent implements OnInit {
   selectUser(rst: option) {
     if (this.selectedCategory == this.categoryList[0]) {
       this.router.navigate(['userProfile', rst.value]);
-    } else if (this.selectedCategory == this.categoryList[1]){
-      this.router.navigate(['viewComunity',rst.value]);
+    } else if (this.selectedCategory == this.categoryList[1]) {
+      this.router.navigate(['viewComunity', rst.value]);
     }
   }
 

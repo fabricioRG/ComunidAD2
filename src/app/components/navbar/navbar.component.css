@@ -23,3 +23,8 @@
     background-color: rgb(255, 183, 0);
     color: #fff;
 }
+
+.nav-link:hover {
+    color: #fff;
+    background-color: #ff7b00;
+}
