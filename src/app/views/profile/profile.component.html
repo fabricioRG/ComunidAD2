@@ -10,14 +10,15 @@
                 <span>Cambiar Imagen</span>
                 <input type="file" accept="image/*" id="wizard-picture" (change)="onSelectFile($event)" class="">
               </div>
-              
+
               <div class="mt-3">
                 <h2>{{usuario.nombreCompleto}}</h2>
                 <p class="text-muted font-size-sm">{{usuario.registroAcademico}}</p>
                 <p class="text-secondary mb-1">{{usuario.correoElectronico}}</p>
                 <p class="text-muted font-size-sm">{{usuario.ciudad}}</p>
-                <button class="btn btn-primary" style="margin: 5px;">Seguir</button>
-                <button class="btn btn-outline-primary" style="margin: 5px;">Mensaje</button>
+                <button class="btn btn-outline-primary" (click)="cambiarEstado()" style="margin: 5px;">
+                  Cambiar a: {{ this.mensajeEstadoBoton()}}
+                </button>
               </div>
             </div>
           </mat-card-content>
