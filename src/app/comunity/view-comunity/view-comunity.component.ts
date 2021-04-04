@@ -27,7 +27,7 @@ const defaultPicture = "";
 export class ViewComunityComponent implements OnInit {
 
   constructor(private redirection: Router, private route: ActivatedRoute, private uploadFileService: UploadFileServiceService,
-    private dataService: DataService, private sessionService: SesionService, private formBuilder: FormBuilder,private modal: ModalService,private comunidadService: FiltrarSolicitudesComunidadService) {
+    private dataService: DataService, private sessionService: SesionService, private formBuilder: FormBuilder, private modal: ModalService, private comunidadService: FiltrarSolicitudesComunidadService) {
     this.cargarComunidad();
   }
 
@@ -42,7 +42,7 @@ export class ViewComunityComponent implements OnInit {
   postForm: FormGroup;
   newCommunityPost: CommunityPost;
   fileList: FileList | null;
-  imagenCargada : string |ArrayBuffer| null;
+  imagenCargada: string | ArrayBuffer | null;
 
   //Constante para la imagen
   encabezadoFoto: string = 'data:image/jpeg;base64,';
@@ -61,14 +61,14 @@ export class ViewComunityComponent implements OnInit {
       .group({
         title: ['', Validators.required],
         message: ['', Validators.required],
-        image: ['', Validators.required]
+        image: ['']
       });
-    this.route.paramMap.subscribe((params : ParamMap)=>{
-      this.comunidadEsDelUsuarioLogueado=false;
-      this.puedeEnviarSolicitud=false;
-      this.solicitudEstaEnEspera=false;
-      this.solicitudEstaActiva=false;
-      this.solicitudEstaDenegada=false;
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.comunidadEsDelUsuarioLogueado = false;
+      this.puedeEnviarSolicitud = false;
+      this.solicitudEstaEnEspera = false;
+      this.solicitudEstaActiva = false;
+      this.solicitudEstaDenegada = false;
       this.cargarComunidad()
     })
   }
@@ -124,13 +124,13 @@ export class ViewComunityComponent implements OnInit {
               },
               (error) => {
                 console.log("PUEDO ENVIAR UNA SOLICITUD EN ERROR")
-                      this.puedeEnviarSolicitud = true;
-                    }
-                  );
+                this.puedeEnviarSolicitud = true;
               }
-            }
-          });
+            );
+          }
+        }
       });
+    });
   }
 
   asignarEstadoDeSolicitud(comunityAssign: ComunityAssign) {
@@ -163,7 +163,7 @@ export class ViewComunityComponent implements OnInit {
     return this.encabezadoFoto + this.comunity.datosFoto;
   }
 
-  getImage(image: string){
+  getImage(image: string) {
     return this.encabezadoFoto + image;
   }
 
@@ -230,8 +230,8 @@ export class ViewComunityComponent implements OnInit {
     var dato = await this.modal.openModal(
       'ELIMINAR COMUNIDAD PARA SIEMPRE',
       'ESTAS SEGURO QUE DESEAS ELIMINAR LA COMUNIDAD: ' +
-        this.comunity.nombre +
-        ', NO PODRAS RECUPERARLA NUNCA MAS',
+      this.comunity.nombre +
+      ', NO PODRAS RECUPERARLA NUNCA MAS',
       'ELIMINACION PERMANENTE UNA VEZ SE CONFIRME',
       true
     );
@@ -297,7 +297,7 @@ export class ViewComunityComponent implements OnInit {
       });
   }
 
-  getAllUsersInCommunity(){
+  getAllUsersInCommunity() {
     let search: OrdinaryObject = {
       numberParam: this.comunity.id
     }
@@ -336,29 +336,33 @@ export class ViewComunityComponent implements OnInit {
   persistCommunityPost() {
     this.newCommunityPost.comunity = this.comunity;
     this.newCommunityPost.user = this.user;
-    if(this.fileList){
+    if (this.fileList) {
       const data = new FormData()
       data.append('file', this.fileList[0])
       this.uploadFileService.uploadCommunityPostImage(data, this.user)
-      .subscribe((response)=> {
-        this.newCommunityPost.photo = response.photo;
-        this.restoreForm();
-        // console.log("post::: ", this.newCommunityPost);
-        this.dataService.persistCommunityPost(this.newCommunityPost, this.user)
-          .subscribe((response) => {
-            this.getAllCommunityPost();
-            this.alertClosedSuccess = true;
-            this.restoreForm();
-          }, (reason) => {
-            this.alertClosedDanger = true;
-          });
-      }, (reason) => {
-        this.alertClosedDanger = true;
-      })
+        .subscribe((response) => {
+          this.newCommunityPost.photo = response.photo;
+          this.uploadCommunityPost();
+        })
+    } else {
+      this.uploadCommunityPost();
     }
   }
 
-  restoreForm(){
+  uploadCommunityPost() {
+    this.restoreForm();
+    // console.log("post::: ", this.newCommunityPost);
+    this.dataService.persistCommunityPost(this.newCommunityPost, this.user)
+      .subscribe((response) => {
+        this.getAllCommunityPost();
+        this.alertClosedSuccess = true;
+        this.restoreForm();
+      }, (reason) => {
+        this.alertClosedDanger = true;
+      });
+  }
+
+  restoreForm() {
     this.postForm.reset();
     this.quitarFoto();
   }
@@ -367,7 +371,7 @@ export class ViewComunityComponent implements OnInit {
     if (event.target.files && event.target.files[0]) {
       this.fileList = event.target.files;
 
-      const file: File= event.target.files[0];
+      const file: File = event.target.files[0];
       const reader = new FileReader()
       this.imagenCargada = file.name;
       reader.readAsDataURL(file)
@@ -375,22 +379,22 @@ export class ViewComunityComponent implements OnInit {
     }
   }
 
-  quitarFoto(){
+  quitarFoto() {
     this.imagenCargada = '';
     this.f.image.reset();
     this.fileList = null;
   }
 
-  verMiembrosDeComunidad(){
-    this.redirection.navigate(['unsuscribeMembers',this.comunity.id])
+  verMiembrosDeComunidad() {
+    this.redirection.navigate(['unsuscribeMembers', this.comunity.id])
   }
-  
+
   async salirDeComunidad() {
     var dato = await this.modal.openModal(
       'SALIRME DE LA COMUNIDAD PARA SIEMPRE',
       'ESTAS SEGURO QUE DESEAS SALIRTE DE LA COMUNIDAD: ' +
-        this.comunity.nombre +
-        ', NO PODRAS INTERACTUAR CON NADA DE LA COMUNIDAD EN CUESTION, TENDRAS QUE VOLVER A ENVIAR SOLICITUD PARA UNIRTE SI QUISIERAS',
+      this.comunity.nombre +
+      ', NO PODRAS INTERACTUAR CON NADA DE LA COMUNIDAD EN CUESTION, TENDRAS QUE VOLVER A ENVIAR SOLICITUD PARA UNIRTE SI QUISIERAS',
       'SE SALDRA DE LA COMUNIDAD UNA VEZ SE CONFIRME',
       true
     );
