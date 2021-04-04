@@ -21,6 +21,7 @@ import { User } from 'src/app/user.model';
 
 import { CreateComunityComponent } from './create-comunity.component';
 import { UploadFileServiceService } from 'src/app/services/uploadFileService/upload-file-service.service';
+import { Router } from '@angular/router';
 
 
 class SesionServiceMock {
@@ -46,6 +47,7 @@ describe('CreateComunityComponent', () => {
   let sesionServiceMock: SesionServiceMock;
   let dataServiceMock: DataServiceMock;
   let uploadFileServiceMock : UploadFileServiceMock;
+  const spyRouter = jasmine.createSpyObj('Router', ['navigate'])
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -59,9 +61,14 @@ describe('CreateComunityComponent', () => {
         {
           provide: SesionService,
           useClass: SesionServiceMock
-        },{
+        },
+        {
           provide : UploadFileServiceService,
           useClass : UploadFileServiceMock
+        },
+        {
+          provide: Router,
+          useValue: spyRouter
         }
       ]//Para servicios
 
@@ -237,6 +244,8 @@ describe('CreateComunityComponent', () => {
     //Arrange
     sesionServiceMock.exitSession.and.returnValue(true)
     sesionServiceMock.usuarioEsAdministradorDeComunidad.and.returnValue(true)
+    spyRouter.navigate.and.returnValue('YES')
+
     //Act
     var expResult = true;
     var result = component.verificarSesion();

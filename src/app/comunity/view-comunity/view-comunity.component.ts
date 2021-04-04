@@ -58,6 +58,8 @@ export class ViewComunityComponent implements OnInit {
     this.comunity = new Comunity();
     this.user = new User();
     var idComunidad: string | null = this.route.snapshot.paramMap.get('id');
+    //var idComunidad="20"
+    console.log("JAXD",this.route.snapshot.paramMap.get('id'))
     console.log('ID COMUNIDAD ESCOGIDA', idComunidad);
     //Ver si hay una sesion, de no haber sesion mandarlo al inicio
     //Si hay sesion buscar el usuario
@@ -70,11 +72,13 @@ export class ViewComunityComponent implements OnInit {
         this.verificarOpcionesParaComunidad();
       }
     } else {
+      console.log("VOY A REDIRIGIR")
       this.redirection.navigate(['inicio']);
     }
+    
   }
 
-  verificarOpcionesParaComunidad() {
+  verificarOpcionesParaComunidad() : boolean{
     this.dataService
       .getUserByToken(this.sessionService.getUserWithToken())
       .subscribe((response) => {
@@ -89,6 +93,8 @@ export class ViewComunityComponent implements OnInit {
               this.comunity = response.comunity;
             }
             //Siel registroAcadmico de la comunidad que se recibio es igual al registroAcademico de usuario, es su comunidad
+            console.log("VER Comunidad registro academico",this.comunityAssign.user?.registroAcademico)
+            console.log("VER Usuario registro academico",this.user.registroAcademico)
             if (
               this.comunityAssign.user?.registroAcademico ===
               this.user.registroAcademico
@@ -123,6 +129,7 @@ export class ViewComunityComponent implements OnInit {
             }
           });
       });
+      return true;
   }
 
   asignarEstadoDeSolicitud(comunityAssign: ComunityAssign) {
@@ -199,20 +206,6 @@ export class ViewComunityComponent implements OnInit {
     return comunityAssign;
   }
 
-  opcionParaUsuario() {
-    //Si es de tipo ADMINISTRADOR(Es decir un Administrador y es su comunidad)
-    //Solo mostrar el boton de crear Publicacion
-    //Si es de tipo MIEMBRO, Y ESTADO_COMUNIDAD es null | undefined
-    //Mostrar un boton donde permita enviar una solicitud
-    //Posteriormente programar el boton para que envie la solicitud
-    //Es decir cree un comunity_assign, con ESTADO_COMUNIDAD='ESPERA'
-    //Si es de tipo MIEMBRO,Y ESTADO_COMUNIDAD es ACTIVO->
-    //Mostrar un mensaje donde diga que es parte de la comunidad
-    //Si es tipo MIEMBRO, Y ESTADO_COMUNIDAD es DENEGADO->
-    //Mostrar un mensaje donde le diga que no se acepto su solicitud
-    //Si es de tipo Miembro Y ESTADO_COMUNIDAD es ESPERA
-    //Mostrar un mensaje donde diga que su solicitud ha sido enviada
-  }
 
   verSolicitudes() {
     this.redirection.navigate(['comunityRequest', this.comunity.id]);
