@@ -1,5 +1,5 @@
-::ng-deep .mat-card{
+.mat-card{
 
     border-radius: 30px !important;
-    border: 2px solid #778899 
+    border: 2px solid #778899; 
   }

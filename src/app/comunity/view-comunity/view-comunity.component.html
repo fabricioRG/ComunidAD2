@@ -19,17 +19,29 @@
                                 <div *ngIf="solicitudEstaDenegada">
                                     <p class="text-danger">Tu solicitud ha sido rechazada</p>
                                 </div>
-                                <div *ngIf="comunidadEsDelUsuarioLogueado || solicitudEstaActiva" class="col-sm-4">
+                                <div *ngIf="comunidadEsDelUsuarioLogueado || solicitudEstaActiva" class="col-sm-3">
                                     <button style="width: 100%;" (click)="disableCreateCommunityPost = !disableCreateCommunityPost" 
                                     class="btn btn-outline-warning">Crear Publicacion</button>
                                 </div>
-                                <div *ngIf='puedeEnviarSolicitud' class="col-sm-4">
+                                <div *ngIf='puedeEnviarSolicitud' class="col-sm-3">
                                     <button (click)="solicitarUnionAComunidad()" type="button"
                                         class="btn btn-outline-warning">Unirse a la Comunidad</button>
                                 </div>
-                                <div *ngIf='comunidadEsDelUsuarioLogueado' class="col-sm-4">
+                                <div *ngIf='comunidadEsDelUsuarioLogueado' class="col-sm-3">
                                     <button style="width: 100%;" type="button" class="btn btn-outline-primary"
                                         (click)="verSolicitudes()">Ver solicitudes</button>
+                                </div>
+                                <div *ngIf='comunidadEsDelUsuarioLogueado' class="col-sm-3">
+                                    <button type="button" 
+                                    class="btn btn-outline-danger" (click)="verMiembrosDeComunidad()">Eliminar Miembros</button>
+                                </div>
+                                <div *ngIf="solicitudEstaActiva" class="col-sm-3">
+                                    <button  type="button" class="btn btn-outline-danger" 
+                                    (click)="salirDeComunidad()">Quiero salirme de la Comunidad</button>
+                                </div>
+                                <div *ngIf="comunidadEsDelUsuarioLogueado" class="col-sm-3">
+                                    <button type="button" 
+                                    class="btn btn-outline-danger" (click)="eliminarComunidad()">Eliminar Comunidad</button> 
                                 </div>
                             </div>
                             <div *ngIf="disableCreateCommunityPost">

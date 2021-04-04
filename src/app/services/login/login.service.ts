@@ -3,22 +3,18 @@ import { Router } from '@angular/router';
 import { DataService } from 'src/app/data.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoginService {
+  constructor(private dataService: DataService, public router: Router) {}
 
-  constructor(private dataService : DataService,private router:Router) { }
-
-  pruebaRuta(){
-    console.log("PRUEBA RUTAA");
-    if(!this.dataService.getLoggedIn()){//Si no hay session que redirija
+  pruebaRuta() {
+    console.log('PRUEBA RUTAA');
+    if (!this.dataService.getLoggedIn()) {
+      //Si no hay session que redirija
       this.router.navigate(['inicio']);
       return false;
     }
-      return true;
-    
+    return true;
   }
 }
-
-
-

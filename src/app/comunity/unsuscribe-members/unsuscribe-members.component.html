@@ -1,0 +1,53 @@
+<div class="container" *ngIf="comunidadEsDelUsuarioLogueado">
+
+    <div class="col-md-6">
+        <br>
+        <p class="fs-4">Filtros</p>
+        <form [formGroup]="filtroForm" (ngSubmit)="buscarPorFiltros()">
+            <mat-form-field class="col-sm-12" appearance="fill">
+                <mat-label>Registro Academico*</mat-label>
+                <input type="text" formControlName="registroAcademico" matInput
+                    [ngClass]="{ 'is-invalid':f.registroAcademico.errors }">
+                <div class="invalid-feedback" *ngIf="f.registroAcademico.errors">
+                    <div *ngIf="f.registroAcademico.errors.maxlength">El registro academico debe tener un maximo de 9
+                        caracteres</div>
+                </div>
+            </mat-form-field>
+            <!--BOTON-->
+            <div class="example-button-row">
+                <button class="btn btn-outline-success" color="secondary" type="submit" [disabled]="filtroForm.invalid">Buscar por
+                    filtros<mat-icon>done</mat-icon></button>
+            </div>
+            <br>
+            <table mat-table [dataSource]="comunityAssignList" class="mat-elevation-z6">
+
+                <ng-container matColumnDef="registroAcademico">
+                    <th mat-header-cell *matHeaderCellDef> Registro Academico. </th>
+                    <td mat-cell *matCellDef="let element"> {{element.user?.registroAcademico}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombreCompleto">
+                    <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
+                    <td mat-cell *matCellDef="let element"> {{element.user?.nombreCompleto}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaCreacion">
+                    <th mat-header-cell *matHeaderCellDef> Fecha Creacion </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fechaCreacion}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef> Estado Solicitud </th>
+                    <td mat-cell *matCellDef="let element">  <br>
+                        <button class="btn btn-danger" (click)="eliminarUsuario(element)"> Eliminar </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+        </form>
+
+    </div>
+</div>

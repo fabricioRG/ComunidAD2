@@ -1,0 +1,22 @@
+[
+      {
+        "idComunityAssign": "1",
+        "user": "111111111",
+        "comunity": { "id" : 10},
+        "tipo": "1",
+        "fecha_decision" : "2020-01-01",
+        "estado": "ACTIVO",
+        "fechaCreacion" : "2020-01-01"
+
+      },
+      {
+        "idComunityAssign": "2",
+        "user": "111111111",
+        "comunity": { "id" : 10},
+        "tipo": "1",
+        "fecha_decision" : "2020-01-01",
+        "estado": "ACTIVO",
+        "fechaCreacion" : "2020-01-01"
+
+      }
+]
