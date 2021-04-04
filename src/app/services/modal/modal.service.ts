@@ -3,38 +3,40 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveModalComponent } from 'src/app/components/active-modal/active-modal.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ModalService {
+  constructor(private _modalService: NgbModal) {}
 
-  constructor(private _modalService: NgbModal) { }
-
-// tipo mensaje = true -> confirm
-// tipo mensaje = false -> info
-  openModal(msjHeader: string, msjBody: string, msjTitleBody:string, tipoMensaje: boolean):string{
+  // tipo mensaje = true -> confirm
+  // tipo mensaje = false -> info
+  async openModal(
+    msjHeader: any,
+    msjBody: any,
+    msjTitleBody: any,
+    tipoMensaje: boolean
+  ): Promise<boolean> {
+    var resultado = false;
     const modal = this._modalService.open(ActiveModalComponent);
-
     modal.componentInstance.modalHeader = msjHeader;
     modal.componentInstance.modalBodyTitle = msjTitleBody;
     modal.componentInstance.modalBody = msjBody;
-    if(tipoMensaje){
+    if (tipoMensaje) {
       modal.componentInstance.confirmModal = true;
-    }else{
+    } else {
       modal.componentInstance.infoModal = true;
     }
-    
 
-    modal.result.then((result) => {
-        console.log("result: "+result)     
-        return result;
-    }, (reason) => {
-      console.log("reason: "+reason)
-      return reason;
-    }).catch( (error) => {
-      
-    });
-
-    return 'NADA';
-    
+    await modal.result
+      .then(
+        (result) => {
+          resultado = true;
+        },
+        (reason) => {
+          resultado = false;
+        }
+      )
+      .catch((error) => {});
+    return resultado;
   }
 }
