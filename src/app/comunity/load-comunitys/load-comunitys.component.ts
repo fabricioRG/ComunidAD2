@@ -30,7 +30,9 @@ export class LoadComunitysComponent implements OnInit {
 
   cargarComunidades(){
     //Primero recuperamos el usuario de la sesion
+    console.log("Entramos a cargar las comunidades")
     var user: User=this.sesionService.getUserWithToken();
+    console.log("User4",user)
     this.dataService.getUserByToken(user).subscribe(response => {
       user = response;
       //Ahora se recupera las comunidades del usuario

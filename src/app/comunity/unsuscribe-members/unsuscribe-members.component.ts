@@ -67,6 +67,7 @@ export class UnsuscribeMembersComponent implements OnInit {
             if (response.user?.registroAcademico === this.user.registroAcademico) {//Siel registroAcadmico de la comunidad que se recibio es igual al registroAcademico de usuario, es su comunidad
               this.comunidadEsDelUsuarioLogueado = true;
             } else {
+              console.log("ESTOY ACA")
               this.comunidadEsDelUsuarioLogueado = false;
               console.log("No puedes ver esto")
               this.redirection.navigate(['inicio']);
@@ -89,7 +90,7 @@ export class UnsuscribeMembersComponent implements OnInit {
     })
   }
 
-  onSaveForm(){
+  /*onSaveForm(){
 
     var registroFilter=this.filtroForm.get('registroAcademico')?.value;
     if(registroFilter){
@@ -97,7 +98,7 @@ export class UnsuscribeMembersComponent implements OnInit {
     }else{
       console.log("No hay registro academico:o")
     }
-  }
+  }*/
 
   buscarPorFiltros(){
     var registroFilter=this.filtroForm.get('registroAcademico')?.value;
