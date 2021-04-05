@@ -110,6 +110,8 @@ export class ViewComunityComponent implements OnInit {
         if (response.comunity) {
           this.comunity = response.comunity;
         }
+        console.log("JAXDD",this.comunityAssign.user?.registroAcademico)
+        console.log("JAXDDD",this.user.registroAcademico)
         this.loadImageCommunity();
         this.getAllCommunityPost();
         this.getAllUsersInCommunity();
@@ -271,6 +273,7 @@ export class ViewComunityComponent implements OnInit {
   }
 
   loadImageCommunity() {
+    console.log("LOAD",this.comunity)
     if (this.comunity.datosFoto) {
       this.styleBackgroundImageCommunity = encabezadoFoto + this.comunity.datosFoto + finalFoto;
     } else {

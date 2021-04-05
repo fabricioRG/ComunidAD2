@@ -89,7 +89,7 @@ export class UnsuscribeMembersComponent implements OnInit {
     })
   }
 
-  onSaveForm(){
+  /*onSaveForm(){
 
     var registroFilter=this.filtroForm.get('registroAcademico')?.value;
     if(registroFilter){
@@ -97,7 +97,7 @@ export class UnsuscribeMembersComponent implements OnInit {
     }else{
       console.log("No hay registro academico:o")
     }
-  }
+  }*/
 
   buscarPorFiltros(){
     var registroFilter=this.filtroForm.get('registroAcademico')?.value;

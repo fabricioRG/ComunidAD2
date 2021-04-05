@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fn } from '@angular/compiler/src/output/output_ast';
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { ActivatedRoute, convertToParamMap, Data, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -9,6 +10,7 @@ import { from, Observable, of } from 'rxjs';
 import { DataService } from 'src/app/data.service';
 import { Comunity } from 'src/app/models/comunity.model';
 import { ComunityAssign } from 'src/app/models/comunityAssign.model';
+import { CommunityPost } from 'src/app/models/comunityPost.model';
 import { FiltrarSolicitudesComunidadService } from 'src/app/services/filtrar-solicitudes-comunidad/filtrar-solicitudes-comunidad.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { SesionService } from 'src/app/services/sesion/sesion.service';
@@ -26,19 +28,21 @@ describe('ViewComunityComponents', () => {
   const sesionServiceMock = jasmine.createSpyObj('SesionService',
     ['exitSession', 'getToken', 'getUserWithToken', 'usuarioEsAdministradorDeComunidad'])
   const dataServiceMock = jasmine.createSpyObj('DataService',
-    ['getUserByToken', 'findComunityById', 'findSuscriptionComunity', 'saveComunityAssign']);
+    ['getUserByToken', 'findComunityById', 'findSuscriptionComunity', 'saveComunityAssign',
+      'getAllCommunityPostByCommunity', 'getAllUsersInCommunity', 'persistCommunityPost']);
   const filtrarSolicitudesComunidadServiceMock = jasmine.createSpyObj('FiltrarSolicitudesComunidadService',
     ['deleteComunity', 'deleteUserFromComunity'])
   const modalServiceMock = jasmine.createSpyObj('ModalService',
     ['openModal'])
   const spyRouter = jasmine.createSpyObj('Router', ['navigate'])
-
+  const uploadFileServiceServiceMock = jasmine.createSpyObj('UploadFileServiceService',
+    ['uploadCommunityPostImage'])
 
 
   beforeEach(async () => {
     console.log("BEFORE EACH EN VIEW COMUNITY COMPONENT")
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, BrowserDynamicTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, BrowserDynamicTestingModule, ReactiveFormsModule],
       declarations: [ViewComunityComponent],
       providers: [ViewComunityComponent,
         {
@@ -72,6 +76,10 @@ describe('ViewComunityComponents', () => {
         {
           provide: ModalService,
           useValue: modalServiceMock
+        },
+        {
+          provide: UploadFileServiceService,
+          useValue: uploadFileServiceServiceMock
         }
 
       ]
@@ -107,7 +115,10 @@ describe('ViewComunityComponents', () => {
     comunityAssign.comunity = comunity
     comunityAssign.user = user
 
-    spyOn(component, 'generarComunidad')
+    spyOn(component, 'generarComunidad').and.stub()
+    spyOn(component, 'loadImageCommunity').and.stub()
+    spyOn(component, 'getAllCommunityPost').and.stub()
+    spyOn(component, 'getAllUsersInCommunity').and.stub()
     sesionServiceMock.getUserWithToken.and.returnValue(user)
     dataServiceMock.getUserByToken.and.returnValue(of(user))
     dataServiceMock.findComunityById.and.returnValue(of(comunityAssign))//
@@ -131,15 +142,19 @@ describe('ViewComunityComponents', () => {
 
 
     var comunity: Comunity = new Comunity()
-
+    comunity.datosFoto = 'datos_foto'
     var comunityAssign: ComunityAssign = new ComunityAssign()
     comunityAssign.comunity = comunity
     comunityAssign.user = user
+    component.comunity = comunity
 
-    spyOn(component, 'generarComunidad')
+    spyOn(component, 'generarComunidad').and.stub()
+    spyOn(component, 'getAllCommunityPost').and.stub()
+    spyOn(component, 'getAllUsersInCommunity').and.stub()
     sesionServiceMock.getUserWithToken.and.returnValue(user2)
     dataServiceMock.getUserByToken.and.returnValue(of(user2))
     dataServiceMock.findComunityById.and.returnValue(of(comunityAssign))//
+    dataServiceMock.findSuscriptionComunity.and.returnValue(of(comunityAssign))
     component.verificarOpcionesParaComunidad()
     //Act
     var expResult = false;
@@ -250,26 +265,207 @@ describe('ViewComunityComponents', () => {
 
   it('eliminarComunidad', () => {
     //Arrange
+    var user: User = new User()
+    user.registroAcademico = '123456789'
+    user.token = '1234'
 
     var comunity: Comunity = new Comunity()
     comunity.id = 5;
     component.comunity = comunity
     modalServiceMock.openModal.and.returnValue('YES')
+    sesionServiceMock.getUserWithToken.and.returnValue(user)
     filtrarSolicitudesComunidadServiceMock.deleteComunity.and.returnValue(of('OK'))
+    
     expect(component.eliminarComunidad()).toBeInstanceOf(Object)
   })
 
   it('salir de comunidad', () => {
     var user: User = new User()
     user.registroAcademico = '123456789'
+    user.token = '1234'
 
     var comunity: Comunity = new Comunity()
-    comunity.id=5;
-    component.comunity=comunity
-    component.user=user
+    comunity.id = 5;
+    component.comunity = comunity
+    component.user = user
     modalServiceMock.openModal.and.returnValue('YES')
+    sesionServiceMock.getUserWithToken.and.returnValue(user)
     filtrarSolicitudesComunidadServiceMock.deleteUserFromComunity.and.returnValue(of('OK'))
     expect(component.salirDeComunidad()).toBeInstanceOf(Object)
   })
+
+  it('datos foto,existiendo foto', () => {
+    //Arrange
+    var datosFoto = 'dato_de_foto';
+    //Act
+    var expResult = component.encabezadoFoto + datosFoto;
+    var result = component.getImage(datosFoto);
+    //Assert
+    expect(expResult).toEqual(result)
+  })
+
+
+
+
+  it('loadImageCommunity sin imagen', () => {
+    //Arrange
+    var expResult = ''
+    var result = component.styleBackgroundImageCommunity
+    component.loadImageCommunity()
+    //Assert
+    expect(expResult).toEqual(result)
+  })
+
+  it('get all Comunity Post', () => {
+    //Arrange
+    var listaComunityPost: CommunityPost[] = [{ 'id': 0 }]
+    dataServiceMock.getAllCommunityPostByCommunity.and.returnValue(of(listaComunityPost))
+    component.getAllCommunityPost()
+    //Assert
+    expect(listaComunityPost).toEqual(component.communityPostList)
+  })
+
+  it('get all usesrs in community', () => {
+    var listaUsersInCommunity: User[] = [{ 'registroAcademico': '12345678' }]
+    dataServiceMock.getAllUsersInCommunity.and.returnValue(of(listaUsersInCommunity))
+    component.getAllUsersInCommunity()
+    //Assert
+    expect(listaUsersInCommunity[0]['registroAcademico']).toEqual(component.usersInCommunityList[0]['registroAcademico'])
+  })
+
+  it('user name', () => {
+    var user: User | undefined = new User()
+    user.nombreCompleto = 'Jose Perez'
+
+    var expResult = component.userName(user)
+    //Assert 1
+    if (expResult) {
+      expect(user.nombreCompleto).toEqual(expResult)
+    }
+    //Assert 2
+    user = undefined;
+    expect(component.userName(user)).toBeNull()
+
+  })
+
+  it('Obtener formulario', () => {
+    expect(component.f).toBeTruthy()
+  })
+
+  it('get formated Time', () => {
+    //Arrange
+    var time: string = "2021-03-20 03:09:02.710000";
+    //Act
+    var expResult = "20/3/2021 3:9"
+    var result = component.getFormatedTime(time)
+    //Assert
+    expect(expResult).toEqual(result)
+  })
+
+  it('on Submit', () => {
+    //Arrange
+    var title: string = "El titulo"
+    var mesage: string = "El mensaje"
+    spyOn(component, 'saveCommunityPost').and.stub()
+    component.newCommunityPost = new CommunityPost()
+    component.onSubmit(title, mesage)
+    //Act
+    var expResult = "El titulo"
+    var result = component.newCommunityPost.title
+    if (result) expect(expResult).toEqual(result)
+  })
+
+  it('saveCommunityPost', () => {
+    //Arrange
+    spyOn(component, 'persistCommunityPost').and.stub()
+    component.saveCommunityPost()
+    //Act
+    var result = true;
+    var expResult = component.alertClosedDanger;
+    //Assert
+    expect(result).toEqual(expResult)
+
+  })
+
+
+
+  it('persist comunity post', () => {
+    var fileList = createMockFileList([
+      {
+        body: 'test',
+        mimeType: 'text/plain',
+        name: 'test.txt'
+      }
+    ]);
+    var comunityPost: CommunityPost = new CommunityPost()
+    comunityPost.photo = 'la foto'
+    component.fileList = fileList
+    component.newCommunityPost = new CommunityPost()
+    spyOn(component, 'uploadCommunityPost').and.stub()
+    uploadFileServiceServiceMock.uploadCommunityPostImage.and.returnValue(of(comunityPost))
+    component.persistCommunityPost()
+    //Act
+    var expResult = 'la foto'
+    var result = component.newCommunityPost.photo
+    //Assert
+    if (result) {
+      expect(expResult).toEqual(result)
+    }
+
+  })
+
+  it('restoreForm', () => {
+    spyOn(component, 'quitarFoto').and.stub
+    expect(component.restoreForm()).toBeUndefined()
+
+  })
+
+  it('uploadCommunityPost', () => {
+    var comunityPost: CommunityPost = new CommunityPost()
+    comunityPost.photo = 'la foto'
+    spyOn(component, 'restoreForm').and.stub()
+    spyOn(component, 'getAllCommunityPost').and.stub()
+    dataServiceMock.persistCommunityPost.and.returnValue(of(comunityPost))
+    component.uploadCommunityPost()
+    //Act
+    var expResult = true;
+    var result = component.alertClosedSuccess;
+    //Assert
+    expect(expResult).toEqual(result)
+
+  })
+
+  it('quitar foto', () => {
+    component.quitarFoto()
+    expect(component.fileList).toBeNull
+
+  })
+
+
+  interface MockFile {
+    name: string;
+    body: string;
+    mimeType: string;
+  }
+
+  const createFileFromMockFile = (file: MockFile): File => {
+    const blob = new Blob([file.body], { type: file.mimeType }) as any;
+    blob['lastModifiedDate'] = new Date();
+    blob['name'] = file.name;
+    return blob as File;
+  };
+
+  const createMockFileList = (files: MockFile[]) => {
+    const fileList: FileList = {
+      length: files.length,
+      item(index: number): File {
+        return fileList[index];
+      }
+    };
+    files.forEach((file, index) => fileList[index] = createFileFromMockFile(file));
+
+    return fileList;
+  };
+
 
 });
