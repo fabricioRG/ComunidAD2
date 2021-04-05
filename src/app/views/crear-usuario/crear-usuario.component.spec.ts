@@ -66,6 +66,7 @@ describe('CrearUsuarioComponent', () => {
       TestBed.inject(Router),
       departmentService
     );
+    component.ngOnInit();
   });
 
   beforeEach(() => {
