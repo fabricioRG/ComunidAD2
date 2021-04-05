@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { ActivatedRoute, convertToParamMap, Data, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { of } from 'rxjs';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { ActiveModalComponent } from 'src/app/components/active-modal/active-modal.component';
@@ -20,9 +20,19 @@ import { InicioComponent } from 'src/app/views/inicio/inicio.component';
 
 import { RequestComunityComponent } from './request-comunity.component';
 
+class MockNgbModalRef {
+  componentInstance = {
+    prompt: undefined,
+    title: undefined
+  };
+  result: Promise<any> = new Promise((resolve, reject) => resolve(true));
+}
+
 describe('RequestComunityComponent', () => {
   let component: RequestComunityComponent;
   let fixture: ComponentFixture<RequestComunityComponent>;
+  let modalService: NgbModal;
+  let modalRef: MockNgbModalRef = new MockNgbModalRef();
 
 
   const sessionServiceMock = jasmine.createSpyObj('SesionService',
@@ -32,7 +42,7 @@ describe('RequestComunityComponent', () => {
     ['getUserByToken', 'findComunityById'])
 
   const filtrarSolicitudesComunidadServiceMock = jasmine.createSpyObj('FiltrarSolicitudesComunidadService',
-    ['getAsignacionesComunidad'])
+    ['getAsignacionesComunidad','actualizarEstadoAsignacionesComunidad'])
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -40,7 +50,7 @@ describe('RequestComunityComponent', () => {
         { path: 'inicio', component: InicioComponent }
       ])],
       declarations: [RequestComunityComponent, InicioComponent],
-      providers: [RequestComunityComponent,ModalService,NgbModal,FormBuilder,
+      providers: [NgbModal, NgbModule, ModalService, RequestComunityComponent, FormBuilder,
         {
           provide: SesionService,
           useValue: sessionServiceMock
@@ -64,6 +74,10 @@ describe('RequestComunityComponent', () => {
               }),
             }
           }
+        },
+        {
+          provide: NgbModalRef,
+          useClass: MockNgbModalRef
         }
 
       ]
@@ -72,6 +86,7 @@ describe('RequestComunityComponent', () => {
   });
 
   beforeEach(() => {
+    modalService = TestBed.get(NgbModal)
     sessionServiceMock.exitSession.and.returnValue(false)
     fixture = TestBed.createComponent(RequestComunityComponent);
     component = fixture.componentInstance;
@@ -139,20 +154,55 @@ describe('RequestComunityComponent', () => {
     expect(expResult).toEqual(result)
   })
 
-  /*it('aprobar solicitud', () => {
+  it('mostrarMensaje', () => {
+    expect(component.mostrarMensaje('Header', 'Tittle', 'Mensaje')).toBeTruthy
+  })
+
+  it('aprobar solicitud', () => {
     //Arrange
     var user: User = new User()
     user.registroAcademico = '123456789'
+    user.token = 'abc'
 
     var comunity: Comunity = new Comunity()
     comunity.id = 50
     component.comunity = comunity
-
     var comunityAssign: ComunityAssign = new ComunityAssign()
     comunityAssign.comunity = comunity
     comunityAssign.user = user
-    component.aprobarSolicitud(comunityAssign)
-  })*/
 
-  
+    var spy = spyOn(modalService, "open").and.returnValue(modalRef as any)
+    spyOn(component, 'buscarPorFiltros').and.stub()
+    sessionServiceMock.getUserWithToken.and.returnValue(user)
+    filtrarSolicitudesComunidadServiceMock.actualizarEstadoAsignacionesComunidad.and.returnValue(of(comunityAssign))
+
+    component.aprobarSolicitud(comunityAssign)
+    //Assert
+    expect(spy).toHaveBeenCalled();
+
+  })
+
+  it('denegar solicitud',()=>{
+
+    var user: User = new User()
+    user.registroAcademico = '123456789'
+    user.token = 'abc'
+
+    var comunity: Comunity = new Comunity()
+    comunity.id = 50
+    component.comunity = comunity
+    var comunityAssign: ComunityAssign = new ComunityAssign()
+    comunityAssign.comunity = comunity
+    comunityAssign.user = user
+
+    var spy = spyOn(modalService, "open").and.returnValue(modalRef as any)
+    spyOn(component, 'buscarPorFiltros').and.stub()
+    sessionServiceMock.getUserWithToken.and.returnValue(user)
+    filtrarSolicitudesComunidadServiceMock.actualizarEstadoAsignacionesComunidad.and.returnValue(of(comunityAssign))
+    component.denegarSolicitud(comunityAssign)
+    //Assert
+    expect(spy).toHaveBeenCalled();
+
+  })
+
 });
