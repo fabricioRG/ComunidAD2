@@ -27,9 +27,9 @@ describe('NavbarComponent', () => {
 
 
   let sesionServiceMock = jasmine.createSpyObj('SesionService',
-    ['loggedIn$', 'log0ut', 'exitSession', 'usuarioEsSuscriptor', 'usuarioEsAdministradorDeSistema', 'usuarioEsAdministradorDeComunidad'])
+    ['asignarTipoDeUsuarioConSesion','getUserWithToken','loggedIn$', 'log0ut', 'exitSession', 'usuarioEsSuscriptor', 'usuarioEsAdministradorDeSistema', 'usuarioEsAdministradorDeComunidad'])
   let dataServiceMock = jasmine.createSpyObj('DataService',
-    ['getUsersBySearch', 'getCommunitiesBySearch'])
+    ['getUserByToken','getUsersBySearch', 'getCommunitiesBySearch'])
 
 
   beforeEach(async () => {
@@ -55,8 +55,15 @@ describe('NavbarComponent', () => {
   });
 
   beforeEach(() => {
+    var user: User = new User()
+    user.registroAcademico = '123456789'
+    spyOn(localStorage,'getItem').and.returnValue(JSON.stringify('token'))
     sesionServiceMock.loggedIn$.and.returnValue(logger$.asObservable())
-    //sesionServiceMock.loggedIn.and.returnValue(of(true))
+    logger$.next(true)
+    sesionServiceMock.getUserWithToken.and.returnValue(user)
+    dataServiceMock.getUserByToken.and.returnValue(of(user))
+    sesionServiceMock.asignarTipoDeUsuarioConSesion.and.returnValue()
+
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -138,7 +145,7 @@ describe('NavbarComponent', () => {
 
   it('on key',()=>{
 //    localStorage.getItem('token');
-    spyOn(localStorage,'getItem').and.returnValue(JSON.stringify('token'))
+    //spyOn(localStorage,'getItem').and.returnValue(JSON.stringify('token'))
     spyOn(component,'updateResultList').and.stub()
     const event = new Event('click');
     expect(component.onKey(event)).toBeUndefined()
