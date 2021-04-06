@@ -6,6 +6,7 @@ import { Observable, Subject } from 'rxjs';
 import { Comunity } from './models/comunity.model';
 import { ComunityAssign } from './models/comunityAssign.model';
 import { OrdinaryObject } from './helpers/ordinary-object.model';
+import { CommunityPost } from './models/comunityPost.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,11 @@ export class DataService {
   findUserByIdURL = '/api/users/find/byId';
   getCommunitiesBySearchURL = '/api/communities/search';
   findSuscriptionComunityURL = '/api/users/findMemberComunityById';
+
+  communityPostCreateURL = '/api/community/post/create';
+  findAllCommunityPostByCommunityURL = '/api/community/post/get/allByCommunity';
+  findAllUsersInCommunityURL = '/api/comunity/users';
+  findUserComunitysURL = '/api/users/findUserComunitys';
 
   changePasswordUserURL = '/api/users/changePassword';
 
@@ -271,6 +277,23 @@ export class DataService {
     );
   }
 
+  /**
+   * Devuelve las comunidades a las que pertenece un usuario,
+   * Es decir sea MIEMBRO y este ACTIVO
+   * @param user
+   */
+  findUserComunitys(user: User) {
+    let headers = new HttpHeaders({
+      Authorization: 'Bearer ' + user.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<ComunityAssign[]>(
+      this.findUserComunitysURL,
+      user,
+      options
+    );
+  }
+
   public getLoggedIn() {
     return this.loggedIn;
   }
@@ -294,6 +317,42 @@ export class DataService {
       this.userUpdateUrl,
       user,
       this.controllHeader.obtenerHeaderConToken(token)
+    );
+  }
+
+  persistCommunityPost(post: CommunityPost, token: User) {
+    let headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<CommunityPost>(
+      this.communityPostCreateURL,
+      post,
+      options
+    );
+  }
+
+  getAllCommunityPostByCommunity(params: OrdinaryObject, token: User) {
+    let headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<CommunityPost[]>(
+      this.findAllCommunityPostByCommunityURL,
+      params,
+      options
+    );
+  }
+
+  getAllUsersInCommunity(params: OrdinaryObject, token: User) {
+    let headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<User[]>(
+      this.findAllUsersInCommunityURL,
+      params,
+      options
     );
   }
 }
