@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { DataService } from 'src/app/data.service';
 import { ComunityAssign } from 'src/app/models/comunityAssign.model';
 import { SesionService } from 'src/app/services/sesion/sesion.service';
@@ -16,7 +16,7 @@ export class UserProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private dataService: DataService,
     private sessionService: SesionService
-  ) {}
+  ) { }
   user: User;
   actualUser: User;
 
@@ -26,7 +26,9 @@ export class UserProfileComponent implements OnInit {
   usuarioTieneComunidades: boolean;
 
   ngOnInit(): void {
-    this.loadUser();
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.loadUser();
+    })
   }
 
   loadUser() {

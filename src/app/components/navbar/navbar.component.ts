@@ -139,8 +139,10 @@ export class NavbarComponent implements OnInit {
 
   selectUser(rst: option) {
     if (this.selectedCategory == this.categoryList[0]) {
+      this.searchInput = rst.viewValue!;
       this.router.navigate(['userProfile', rst.value]);
     } else if (this.selectedCategory == this.categoryList[1]) {
+      this.searchInput = rst.viewValue!;
       this.router.navigate(['viewComunity', rst.value]);
     }
   }
