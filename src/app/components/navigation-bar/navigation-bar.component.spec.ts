@@ -8,6 +8,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { NavigationBarComponent } from './navigation-bar.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('NavigationBarComponent', () => {
   let component: NavigationBarComponent;
@@ -15,8 +16,9 @@ describe('NavigationBarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NavigationBarComponent],
+
       imports: [
+        HttpClientTestingModule,
         NoopAnimationsModule,
         LayoutModule,
         MatButtonModule,
@@ -24,7 +26,9 @@ describe('NavigationBarComponent', () => {
         MatListModule,
         MatSidenavModule,
         MatToolbarModule,
-      ]
+      ],
+      declarations: [NavigationBarComponent],
+      providers :[NavigationBarComponent]
     }).compileComponents();
   }));
 
@@ -34,7 +38,7 @@ describe('NavigationBarComponent', () => {
     fixture.detectChanges();
   });
 
-  // it('should compile', () => {
-  //   expect(component).toBeTruthy();
-  // });
+   it('should compile', () => {
+     expect(component).toBeTruthy();
+   });
 });
