@@ -1,4 +1,8 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { NavbarComponent } from './navbar.component';
 
@@ -8,7 +12,9 @@ describe('NavbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NavbarComponent ]
+      imports:[RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule, BrowserDynamicTestingModule],
+      declarations: [ NavbarComponent ],
+      providers :[NavbarComponent]
     })
     .compileComponents();
   });
@@ -19,5 +25,9 @@ describe('NavbarComponent', () => {
     fixture.detectChanges();
   });
 
-   
+  it('should create',()=>{
+    expect(component).toBeTruthy
+  })
+
+
 });
