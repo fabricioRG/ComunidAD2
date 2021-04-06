@@ -10,6 +10,13 @@ import { SesionService } from 'src/app/services/sesion/sesion.service';
 
 import { UserProfileComponent } from './user-profile.component';
 import dataUser from 'src/app/Test/ArchivosJson/User3.json';
+import user from 'src/app/Test/ArchivosJson/User3.json';
+import arregloUsers from 'src/app/Test/ArchivosJson/Users.json';
+import arregloComunities from 'src/app/Test/ArchivosJson/ArregloComunitys.json';
+import curso from 'src/app/Test/ArchivosJson/course.json';
+import arregloAsigns from 'src/app/Test/ArchivosJson/AsignacionesComunidad.json';
+import arregloPosts from 'src/app/Test/ArchivosJson/comunityPosts.json';
+import { ComunityAssign } from 'src/app/models/comunityAssign.model';
 describe('UserProfileComponent', () => {
   let component: UserProfileComponent;
   let fixture: ComponentFixture<UserProfileComponent>;
@@ -97,7 +104,7 @@ describe('UserProfileComponent', () => {
     expect(spy2).toHaveBeenCalled();
     expect(component.actualUser).toBe(dataUser);
   });
-  it('getUserInfo', () => {
+  it('getUserInfoBad', () => {
     var spy1 = spyOn(dataService, 'getUserByToken').and.returnValue(
       of(dataUser)
     );
@@ -110,5 +117,68 @@ describe('UserProfileComponent', () => {
     expect(spy2).toHaveBeenCalled();
     //expect(component.actualUser).toBe(dataUser);
     expect(mockRouter.navigate).toHaveBeenCalledWith(['inicio']);
+  });
+  it('getComunitysWithLenght>0', () => {
+    component.actualUser = user;
+    var spy1 = spyOn(dataService, 'findUserComunitys').and.returnValue(
+      of(arregloAsigns)
+    );
+
+    component.getCommunitys();
+    expect(spy1).toHaveBeenCalled();
+    expect(component.usuarioTieneComunidades).toBeTruthy();
+  });
+  it('getComunitysWithLenght=0', () => {
+    component.actualUser = user;
+
+    var spy1 = spyOn(dataService, 'findUserComunitys').and.returnValue(of([]));
+
+    component.getCommunitys();
+    expect(spy1).toHaveBeenCalled();
+    expect(component.usuarioTieneComunidades).toBeFalsy();
+  });
+  it('getComunitysWithLenghtWhenError', () => {
+    component.actualUser = user;
+
+    var spy1 = spyOn(dataService, 'findUserComunitys').and.returnValue(
+      throwError('a')
+    );
+    var spy2 = spyOn(console, 'log');
+    component.getCommunitys();
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+  });
+  it('verComunidadWithId', () => {
+    var comunidad = 1;
+    component.verComunidad(comunidad);
+    expect(mockRouter.navigate).toHaveBeenCalledWith([
+      'viewComunity',
+      comunidad,
+    ]);
+  });
+  it('verComunidadWithoutId', () => {
+    var comunidad = undefined;
+    var spy2 = spyOn(console, 'log');
+    component.verComunidad(comunidad);
+    expect(mockRouter.navigate).not.toHaveBeenCalledWith([
+      'viewComunity',
+      comunidad,
+    ]);
+    expect(spy2).toHaveBeenCalled();
+  });
+
+  it('getImage', () => {
+    var datos = 'aaa';
+    var encabezado = 'b';
+    component.encabezadoFoto = encabezado;
+    var result = component.getImage(datos);
+    expect(result).toEqual(encabezado + datos);
+  });
+  it('getImage', () => {
+    var datos = null;
+    var encabezado = 'b';
+    component.encabezadoFoto = encabezado;
+    var result = component.getImage(datos);
+    expect(result).toEqual(encabezado + datos);
   });
 });
