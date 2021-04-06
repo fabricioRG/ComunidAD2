@@ -28,7 +28,7 @@ export class CrearUsuarioComponent implements OnInit {
   courses: any;
 
   constructor(
-    private _builder: FormBuilder,
+    public _builder: FormBuilder,
     private dataService: DataService,
     private router: Router,
     private departamentosService: DepartamentoService

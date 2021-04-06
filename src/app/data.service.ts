@@ -297,6 +297,9 @@ export class DataService {
   public getLoggedIn() {
     return this.loggedIn;
   }
+  public setLoggedIn(a: boolean) {
+    this.loggedIn = a;
+  }
 
   public trueLoggedIn() {
     this.loggedIn = true;
@@ -354,5 +357,12 @@ export class DataService {
       params,
       options
     );
+  }
+
+  public getLogger$(): Subject<boolean> {
+    return this.logger$;
+  }
+  public setLogger$(a: Subject<boolean>) {
+    this.logger$ = a;
   }
 }
