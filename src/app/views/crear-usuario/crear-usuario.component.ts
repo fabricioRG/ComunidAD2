@@ -52,7 +52,7 @@ export class CrearUsuarioComponent implements OnInit {
         [Validators.required, Validators.email, Validators.maxLength(255)],
       ],
       estado: [this.ESTADO_USUARIO_ACTIVO],
-      fechaNacimiento: ['2000-01-01', [Validators.required]],
+      fechaNacimiento: [new Date('2000-01-01'), [Validators.required]],
       fotoPerfil: [this.FOTO_PERFIL],
       genero: ['M', [Validators.required]],
       nombreCompleto: ['', [Validators.required, Validators.maxLength(200)]],
