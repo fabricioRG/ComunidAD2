@@ -112,6 +112,7 @@ export class SesionService {
 
   //Seasigna el tipo de usaio
   asignarTipoDeUsuarioConSesion(user: User) {
+    console.log('USER:',user)
     if (user.rolUsuario === 'SUPER') {
       this.esSuscriptor = true;
       this.esAdministradorDeComunidad = true;
