@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Data, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
 import { DataService } from 'src/app/data.service';
@@ -38,20 +38,14 @@ describe('UserProfileComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
-              paramMap: {
-                get: (key: string) => {
-                  switch (key) {
-                    case 'id':
-                      return '2';
-                    default:
-                      return '2';
-                  }
-                },
-              },
+              paramMap: convertToParamMap({ id: '50' }),
             },
-          },
+            paramMap: {
+              subscribe: (fn: (value: Data) => void) => fn({
+              }),
+            }
+          }
         },
-
         DataService,
         HeadersService,
         HttpClient,
@@ -77,6 +71,7 @@ describe('UserProfileComponent', () => {
   });
 
   it('should create', () => {
+    // spyOn(component,'loadUser').and.stub();
     expect(component).toBeTruthy();
   });
   it('load userCorrect', () => {

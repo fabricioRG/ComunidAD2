@@ -49,6 +49,7 @@ export class PetitionsComponent implements OnInit {
   ) {
     this.token = localStorage.getItem('token');
     this.token = JSON.parse(this.token).token;
+    // this.tableUsers = new MatTable<any>();
   }
 
   /* FUNCTIONS */
@@ -127,7 +128,7 @@ export class PetitionsComponent implements OnInit {
         return !user.estado?.localeCompare('EN_ESPERA');
       });
     });
-    this.tableUsers.renderRows();
+    // this.tableUsers.renderRows();
     this.selection.clear();
   }
 
