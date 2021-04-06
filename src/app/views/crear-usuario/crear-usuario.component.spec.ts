@@ -1,6 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 import { CrearUsuarioComponent } from './crear-usuario.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -67,6 +72,47 @@ describe('CrearUsuarioComponent', () => {
       departmentService
     );
     component.ngOnInit();
+    component.signupForm = component._builder.group({
+      numeroCarnet: [
+        '',
+        [
+          Validators.required,
+          Validators.max(999999999),
+          Validators.min(100000000),
+        ],
+      ],
+      departamento: ['', [Validators.required, Validators.maxLength(45)]],
+      correoElectronico: [
+        '',
+        [Validators.required, Validators.email, Validators.maxLength(255)],
+      ],
+      estado: [component.ESTADO_USUARIO_ACTIVO],
+      fechaNacimiento: [new Date('2000-01-01'), [Validators.required]],
+      fotoPerfil: [component.FOTO_PERFIL],
+      genero: ['M', [Validators.required]],
+      nombreCompleto: ['', [Validators.required, Validators.maxLength(200)]],
+      contrasena: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(30),
+          Validators.pattern(component.REGEX_PASSWORD),
+        ],
+      ],
+      repetirContrasena: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(30),
+          Validators.pattern(component.REGEX_PASSWORD),
+        ],
+      ],
+      rolUsuario: [component.ROL_USUARIO_NORMAL],
+      token: [component.TOKEN_NULO],
+      privacidad: [component.PRIVACIDAD],
+    });
   });
 
   beforeEach(() => {
@@ -185,7 +231,47 @@ describe('CrearUsuarioComponent', () => {
     };
     var spy = spyOn(component, 'agregarMensajeError').and.stub();
     var spy2 = spyOn(dataService, 'addNewUser');
-
+    component.signupForm = component._builder.group({
+      numeroCarnet: [
+        '',
+        [
+          Validators.required,
+          Validators.max(999999999),
+          Validators.min(100000000),
+        ],
+      ],
+      departamento: ['', [Validators.required, Validators.maxLength(45)]],
+      correoElectronico: [
+        '',
+        [Validators.required, Validators.email, Validators.maxLength(255)],
+      ],
+      estado: [component.ESTADO_USUARIO_ACTIVO],
+      fechaNacimiento: [new Date('2000-01-01'), [Validators.required]],
+      fotoPerfil: [component.FOTO_PERFIL],
+      genero: ['M', [Validators.required]],
+      nombreCompleto: ['', [Validators.required, Validators.maxLength(200)]],
+      contrasena: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(30),
+          Validators.pattern(component.REGEX_PASSWORD),
+        ],
+      ],
+      repetirContrasena: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(30),
+          Validators.pattern(component.REGEX_PASSWORD),
+        ],
+      ],
+      rolUsuario: [component.ROL_USUARIO_NORMAL],
+      token: [component.TOKEN_NULO],
+      privacidad: [component.PRIVACIDAD],
+    });
     //act
 
     var fechaFormateada = component.enviar(values);
@@ -202,7 +288,47 @@ describe('CrearUsuarioComponent', () => {
     var spy3 = spyOn(dataService, 'addNewUser').and.returnValues(of('data'));
 
     //act
-
+    component.signupForm = component._builder.group({
+      numeroCarnet: [
+        '',
+        [
+          Validators.required,
+          Validators.max(999999999),
+          Validators.min(100000000),
+        ],
+      ],
+      departamento: ['', [Validators.required, Validators.maxLength(45)]],
+      correoElectronico: [
+        '',
+        [Validators.required, Validators.email, Validators.maxLength(255)],
+      ],
+      estado: [component.ESTADO_USUARIO_ACTIVO],
+      fechaNacimiento: [new Date('2000-01-01'), [Validators.required]],
+      fotoPerfil: [component.FOTO_PERFIL],
+      genero: ['M', [Validators.required]],
+      nombreCompleto: ['', [Validators.required, Validators.maxLength(200)]],
+      contrasena: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(30),
+          Validators.pattern(component.REGEX_PASSWORD),
+        ],
+      ],
+      repetirContrasena: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(30),
+          Validators.pattern(component.REGEX_PASSWORD),
+        ],
+      ],
+      rolUsuario: [component.ROL_USUARIO_NORMAL],
+      token: [component.TOKEN_NULO],
+      privacidad: [component.PRIVACIDAD],
+    });
     component.enviar(values);
     //expect(mockRouter.navigate).toHaveBeenCalledWith(['inicio']);
     //assert\
