@@ -7,6 +7,7 @@ import { ActiveModalComponent } from 'src/app/components/active-modal/active-mod
 import { DataService } from 'src/app/data.service';
 import { ConstantesService } from 'src/app/services/constantes/constantes.service';
 import { FiltrarUsuariosService } from 'src/app/services/filtrar-usuarios/filtrar-usuarios.service';
+import { ModalService } from 'src/app/services/modal/modal.service';
 import { User } from 'src/app/user.model';
 
 @Component({
@@ -32,7 +33,8 @@ export class StateUserAdminComponent implements OnInit {
     private _builder: FormBuilder,
     private filtrarService: FiltrarUsuariosService,
     private dataService: DataService,
-    private _modalService: NgbModal
+    private _modalService: NgbModal,
+    private _modal: ModalService
   ) {
     this.ESTADO_ACTIVO = ConstantesService.ESTADO_USUARIO_ACTIVO;
     this.ESTADO_INACTIVO = ConstantesService.ESTADO_USUARIO_INACTIVO;
@@ -60,54 +62,66 @@ export class StateUserAdminComponent implements OnInit {
       });
   }
 
-  cambiarEstadoUsuario(value: any, estado: string) {
-    const modal = this._modalService.open(ActiveModalComponent);
-
-    modal.componentInstance.modalHeader =
-      'Cambiar Estado del usuario: ' + value.nombreCompleto;
-    modal.componentInstance.modalBodyTitle =
+  async cambiarEstadoUsuario(value: any, estado: string) {
+    var modalHeader = 'Cambiar Estado del usuario: ' + value.nombreCompleto;
+    var modalBodyTitle =
       '¿Estás seguro que deseas cambiar el estado del usuario?';
-    modal.componentInstance.modalBody =
-      'Si aceptas se cambiara el estado del usuario a: ' + estado;
-    modal.componentInstance.confirmModal = true;
+    var modalBody = 'Si aceptas se cambiara el estado del usuario a: ' + estado;
+    var confirmModal = true;
 
-    modal.result.then(
-      (result) => {
-        this.estadoAntiguo = value.estado;
-        value.estado = estado;
-        this.dataService.updateAnyUser(value, this.token).subscribe(
-          (user) => {
-            this.mostrarMensaje(
-              'USUARIO ' + value.nombreCompleto + ' ACTUALIZADO CON EXITO'
-            );
-            this.estadoAntiguo = '';
-          },
-          (error) => {
-            value.estado = this.estadoAntiguo;
-            this.mostrarError(error.error, 1);
-          }
-        );
-      },
-      (reason) => {}
+    var resultado = await this._modal.openModal(
+      modalHeader,
+      modalBody,
+      modalBodyTitle,
+      confirmModal
+    );
+    if (resultado) {
+      this.estadoAntiguo = value.estado;
+      value.estado = estado;
+      this.dataService.updateAnyUser(value, this.token).subscribe(
+        (user: any) => {
+          this.mostrarMensaje(
+            'USUARIO ' + value.nombreCompleto + ' ACTUALIZADO CON EXITO'
+          );
+          this.estadoAntiguo = '';
+        },
+        (error: any) => {
+          value.estado = this.estadoAntiguo;
+          this.mostrarError(error.error, 1);
+        }
+      );
+    }
+  }
+
+  async mostrarError(
+    mensajesError: any,
+    contadorErrores: number
+  ): Promise<void> {
+    //const modal = this._modalService.open(ActiveModalComponent);
+    var modalHeader = 'ERROR';
+    var modalBodyTitle = 'Error al cambiar el estado del usuario';
+    var modalBody = mensajesError + '\n TOTAL DE ERRORES: ' + contadorErrores;
+    var confirmModal = false;
+
+    var resultado = await this._modal.openModal(
+      modalHeader,
+      modalBody,
+      modalBodyTitle,
+      confirmModal
     );
   }
 
-  mostrarError(mensajesError: any, contadorErrores: number): void {
-    const modal = this._modalService.open(ActiveModalComponent);
-    modal.componentInstance.modalHeader = 'ERROR';
-    modal.componentInstance.modalBodyTitle =
-      'Error al cambiar el estado del usuario';
-    modal.componentInstance.modalBody =
-      mensajesError + '\n TOTAL DE ERRORES: ' + contadorErrores;
-    modal.componentInstance.infoModal = true;
-  }
-
-  mostrarMensaje(mensaje: any): void {
-    const modal = this._modalService.open(ActiveModalComponent);
-    modal.componentInstance.modalHeader = 'Cambio Exitoso';
-    modal.componentInstance.modalBodyTitle =
-      'Se completo el cambio de estado del usuario';
-    modal.componentInstance.modalBody = mensaje;
-    modal.componentInstance.infoModal = true;
+  async mostrarMensaje(mensaje: any): Promise<void> {
+    //const modal = this._modalService.open(ActiveModalComponent);
+    var modalHeader = 'Cambio Exitoso';
+    var modalBodyTitle = 'Se completo el cambio de estado del usuario';
+    var modalBody = mensaje;
+    var confirmModal = false;
+    var resultado = await this._modal.openModal(
+      modalHeader,
+      modalBody,
+      modalBodyTitle,
+      confirmModal
+    );
   }
 }

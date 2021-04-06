@@ -1,10 +1,12 @@
 [
       {
         "registroAcademico": "1",
-        "nombreCompleto": "Luis"
+        "nombreCompleto": "Luis",
+        "estado": "ACTIVO"
       },
       {
         "registroAcademico": "2",
-        "nombreCompleto": "Juan"
+        "nombreCompleto": "Juan",
+        "estado": "ACTIVO"
       }
 ]

@@ -8,19 +8,22 @@ import { User } from 'src/app/user.model';
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css']
+  styleUrls: ['./user-profile.component.css'],
 })
 export class UserProfileComponent implements OnInit {
-
-  constructor(private redirection: Router, private route: ActivatedRoute, private dataService: DataService, private sessionService: SesionService) {
-  }
+  constructor(
+    private redirection: Router,
+    private route: ActivatedRoute,
+    private dataService: DataService,
+    private sessionService: SesionService
+  ) {}
   user: User;
   actualUser: User;
 
   //Comunidades
   comunidades: ComunityAssign[];
-  encabezadoFoto : string="data:image/jpeg;base64,";
-  usuarioTieneComunidades : boolean;
+  encabezadoFoto: string = 'data:image/jpeg;base64,';
+  usuarioTieneComunidades: boolean;
 
   ngOnInit(): void {
     this.loadUser();
@@ -41,20 +44,21 @@ export class UserProfileComponent implements OnInit {
   }
 
   getUserInfo() {
-    this.dataService.getUserByToken(this.sessionService.getUserWithToken()).subscribe(response => {
-      this.user = response;
-      //Buscando la comunidad para ver si es del usuario
-      this.dataService.findUserById(this.actualUser, this.user)
-        .subscribe(
+    this.dataService
+      .getUserByToken(this.sessionService.getUserWithToken())
+      .subscribe((response) => {
+        this.user = response;
+        //Buscando la comunidad para ver si es del usuario
+        this.dataService.findUserById(this.actualUser, this.user).subscribe(
           (data) => {
             this.actualUser = data;
-            this.getCommunitys()
+            this.getCommunitys();
           },
           (error) => {
             this.redirection.navigate(['inicio']);
           }
-        )
-    })
+        );
+      });
   }
 
   getCommunitys() {
@@ -62,39 +66,33 @@ export class UserProfileComponent implements OnInit {
     user.registroAcademico = this.actualUser.registroAcademico;
     this.dataService.findUserComunitys(this.actualUser).subscribe(
       (response) => {
-        this.comunidades=response;
-        if(this.comunidades.length==0){
-          this.usuarioTieneComunidades=false;
-        }else{
-          this.usuarioTieneComunidades=true;
+        this.comunidades = response;
+        if (this.comunidades.length == 0) {
+          this.usuarioTieneComunidades = false;
+        } else {
+          this.usuarioTieneComunidades = true;
         }
-
       },
       (error) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
-
-  verComunidad(id : number | undefined){
-    if(id){
+  verComunidad(id: number | undefined) {
+    if (id) {
       //this.selectedComunity = comunity;
-      this.redirection.navigate(['viewComunity',id]);
-      console.log("ID ESCOGIDAAAAAAA:",id)
-    }else{
-      console.log("NOU")
+      this.redirection.navigate(['viewComunity', id]);
+      console.log('ID ESCOGIDAAAAAAA:', id);
+    } else {
+      console.log('NOU');
     }
-
   }
 
-
-
-
-  getImage(datosFoto : any):string{
-    if(datosFoto===null){
-      return this.encabezadoFoto+datosFoto;
+  getImage(datosFoto: any): string {
+    if (datosFoto === null) {
+      return this.encabezadoFoto + datosFoto;
     }
-    return this.encabezadoFoto+datosFoto;
+    return this.encabezadoFoto + datosFoto;
   }
 }
