@@ -14,5 +14,7 @@ export class CommunityPost {
     createdAt?: string;
     modifiedAt?: string;
     datosFoto?:any;
+    //Valoracion Usuario
+    valoration?:string;
 
 }

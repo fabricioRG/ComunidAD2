@@ -142,3 +142,22 @@ mat-card {
 .example-full-width {
     width: 100%;
 }
+
+    .vote{
+        cursor : pointer;
+    }
+
+    .vote:hover{
+        color: orange;
+    }
+  
+    .active.up {
+        color: green;
+      }
+  
+    .active.down {
+       color: red;
+     }
+  
+  
+  
