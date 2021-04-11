@@ -291,26 +291,9 @@ export class ViewComunityComponent implements OnInit {
     }
     this.dataService.getAllCommunityPostByCommunity(search, this.user)
       .subscribe(data => {
-        //this.buscarValoracionesDePost(data);
         this.communityPostList = data;
-        console.log("Data:", data)
       });
   }
-
-  /* buscarValoracionesDePost(comunityPostList: CommunityPost[]) {
-     comunityPostList.forEach(element => {
-       var valorationPost: ValorationPost = this.voteService.genereteValorationPostOfUserLogued(element, this.user)
-       var user = this.sessionService.getUserWithToken();
-       this.communityPostList = [{}]
-       this.voteService.getValoration(valorationPost, user).
-         subscribe((data) => {
-           console.log("EL VALORATION,", data)
-           element.valoration = data.valoration
-           this.communityPostList.push(element)
-         })
-     });
-     //    this.communityPostList = comunityPostList;
-   }*/
 
 
 

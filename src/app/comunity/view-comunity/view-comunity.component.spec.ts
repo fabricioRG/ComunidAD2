@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { fn } from '@angular/compiler/src/output/output_ast';
 import { ComponentRef } from '@angular/core';
@@ -15,6 +16,7 @@ import { FiltrarSolicitudesComunidadService } from 'src/app/services/filtrar-sol
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { SesionService } from 'src/app/services/sesion/sesion.service';
 import { UploadFileServiceService } from 'src/app/services/uploadFileService/upload-file-service.service';
+import { VoteService } from 'src/app/services/vote/vote.service';
 import { User } from 'src/app/user.model';
 
 import { ViewComunityComponent } from './view-comunity.component';
@@ -37,6 +39,8 @@ describe('ViewComunityComponents', () => {
   const spyRouter = jasmine.createSpyObj('Router', ['navigate'])
   const uploadFileServiceServiceMock = jasmine.createSpyObj('UploadFileServiceService',
     ['uploadCommunityPostImage'])
+  const voteServiceMock = jasmine.createSpyObj('VoteService',
+    [''])
 
 
   beforeEach(async () => {
@@ -44,7 +48,7 @@ describe('ViewComunityComponents', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule, BrowserDynamicTestingModule, ReactiveFormsModule],
       declarations: [ViewComunityComponent],
-      providers: [ViewComunityComponent,
+      providers: [HttpClient,ViewComunityComponent,
         {
           provide: DataService,
           useValue: dataServiceMock
@@ -56,6 +60,10 @@ describe('ViewComunityComponents', () => {
         {
           provide: FiltrarSolicitudesComunidadService,
           useValue: filtrarSolicitudesComunidadServiceMock
+        },
+        {
+          provide : VoteService,
+          useValue : voteServiceMock
         },
         {
           provide: ActivatedRoute,
@@ -275,7 +283,7 @@ describe('ViewComunityComponents', () => {
     modalServiceMock.openModal.and.returnValue('YES')
     sesionServiceMock.getUserWithToken.and.returnValue(user)
     filtrarSolicitudesComunidadServiceMock.deleteComunity.and.returnValue(of('OK'))
-    
+
     expect(component.eliminarComunidad()).toBeInstanceOf(Object)
   })
 
