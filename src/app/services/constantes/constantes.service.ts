@@ -24,7 +24,15 @@ export class ConstantesService {
   public static COMUNITY_ASIGN_ESPERA = 'ESPERA';
   public static COMUNITY_ASIGN_ACTIVO = 'ACTIVO';
   public static COMUNITY_ASIGN_DENEGADO = 'DENEGADO';
+
+  //USER
+  public static USER_PRIVACY_PRIVADO = 'PRIVADO';
+  public static USER_PRIVACY_PUBLICO = 'PUBLICO';
   
-  
+  //ICONS
+  public static ICON_PUBLIC = 'public';
+  public static ICON_LOCK = 'lock';
+  public static ICON_CHECK_CIRCLE_OUTLINE = 'check_circle_outline';
+  public static ICON_CANCEL = 'cancel';
 
 }

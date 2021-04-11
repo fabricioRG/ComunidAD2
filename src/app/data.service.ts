@@ -76,14 +76,12 @@ export class DataService {
         }
       },
       (error) => {
-        console.log(error.error);
         this.logger$.next(this.loggedIn);
       }
     );
   }
 
   logOut() {
-    console.log('SESSION LOG OUT');
     this.loggedIn = false;
     localStorage.clear();
     this.logger$.next(this.loggedIn);
@@ -134,8 +132,6 @@ export class DataService {
   }
 
   addNewUser(user: User): Observable<any> {
-    console.log('llegue a addNewUser');
-    console.log(user);
     let headers = new HttpHeaders({
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'POST',
@@ -156,8 +152,6 @@ export class DataService {
   }
 
   getUserByToken(token: User) {
-    console.log(token);
-    console.log('En data service: ' + token.token);
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + token.token,
     });
@@ -191,8 +185,6 @@ export class DataService {
 
   //Post para traer todos los cursos de la base de datos
   getCourses(token: User) {
-    console.log(token);
-    console.log('En data service: ' + token.token);
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + token.token,
     });
@@ -202,7 +194,6 @@ export class DataService {
 
   //Posta para agregar comunidad
   saveComunity(comunity: any, token: User) {
-    console.log('En save comunity: ' + comunity.nombre);
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + token.token,
     });
@@ -211,8 +202,6 @@ export class DataService {
   }
 
   saveComunityAssign(communityAssign: ComunityAssign, user: User) {
-    console.log('COMMUNITY ASSIGN POST:', communityAssign);
-    console.log('USER TOKEN EN POST', user);
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + user.token,
     });
@@ -228,7 +217,6 @@ export class DataService {
    * @param user Devuelve todas las comunidades que un usuario halla creado
    */
   findComunytyByRegistroAcademico(user: User) {
-    console.log('En save comunity: ' + user.registroAcademico);
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + user.token,
     });
@@ -244,7 +232,6 @@ export class DataService {
    * @param comunity ,se necesita el id de la comunidad
    */
   findComunityById(comunity: Comunity, user: User) {
-    console.log('En save comunity: ' + comunity.nombre);
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + user.token,
     });
@@ -265,7 +252,6 @@ export class DataService {
   }
 
   findSuscriptionComunity(comunityAssign: ComunityAssign, user: User) {
-    //console.log('En save comunity: ' + comunity.nombre)
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + user.token,
     });

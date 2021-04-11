@@ -40,14 +40,12 @@ export class NavbarComponent implements OnInit {
 
 
   constructor(private dataService: DataService, private sesionService: SesionService, private router: Router) {
-    // console.log("CONSTRUCTOR" + dataService.getLoggedIn());
     this.existeSession = sesionService.exitSession();
   }
 
 
   ngOnInit(): void {
     //Estas acciones solo las realiza cuando ocurre un cambio en la variable
-    // console.log("sdasdf" + this.existeSession);
     this.sesion$ = this.sesionService.loggedIn$();//Lo convertimos en observador
     this.sesion$.subscribe(isSuscribe => {
       if (isSuscribe) {//isSuscribe nos devolvera el valor de la vaeable booleana, es decir la bariable observable
@@ -67,18 +65,11 @@ export class NavbarComponent implements OnInit {
         this.sesionService.asignarTipodeUsuarioSinSesion();
         this.existeSession = false;
       }
-      // console.log("Sucribe:" + isSuscribe);
-      // console.log("LocalStorage:" + localStorage.getItem('token'));
     });
 
     this.filteredResultList = this.control.valueChanges.pipe(
       startWith(''),
-      // map(value => this._filter(value))
     );
-    // this.updateResultList();
-    console.log("REsult List::::", this.resultList);
-    console.log("Result:::: ", this.resultListSearch)
-
   }
 
   logOut() {

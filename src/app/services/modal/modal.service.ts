@@ -6,7 +6,7 @@ import { ActiveModalComponent } from 'src/app/components/active-modal/active-mod
   providedIn: 'root',
 })
 export class ModalService {
-  constructor(private _modalService: NgbModal) {}
+  constructor(private _modalService: NgbModal) { }
 
   // tipo mensaje = true -> confirm
   // tipo mensaje = false -> info
@@ -27,16 +27,17 @@ export class ModalService {
       modal.componentInstance.infoModal = true;
     }
 
-    await modal.result
+    return await modal.result
       .then(
         (result) => {
-          resultado = true;
+          return true;
         },
         (reason) => {
-          resultado = false;
+          return false;
         }
       )
-      .catch((error) => {});
-    return resultado;
+      .catch((error) => {
+        return false;
+      });
   }
 }
