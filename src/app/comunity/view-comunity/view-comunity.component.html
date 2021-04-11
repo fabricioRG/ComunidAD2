@@ -11,7 +11,7 @@
                 <div class="genericCard">
                     <mat-card>
                         <mat-card-content>
-                            
+
                             <div class="row justify-content-around">
                                 <div *ngIf="solicitudEstaEnEspera">
                                     <p class="text-warning">Solicitud Enviada</p>
@@ -20,8 +20,9 @@
                                     <p class="text-danger">Tu solicitud ha sido rechazada</p>
                                 </div>
                                 <div *ngIf="comunidadEsDelUsuarioLogueado || solicitudEstaActiva" class="col-sm-3">
-                                    <button style="width: 100%;" (click)="disableCreateCommunityPost = !disableCreateCommunityPost" 
-                                    class="btn btn-outline-warning">Crear Publicacion</button>
+                                    <button style="width: 100%;"
+                                        (click)="disableCreateCommunityPost = !disableCreateCommunityPost"
+                                        class="btn btn-outline-warning">Crear Publicacion</button>
                                 </div>
                                 <div *ngIf='puedeEnviarSolicitud' class="col-sm-3">
                                     <button (click)="solicitarUnionAComunidad()" type="button"
@@ -32,16 +33,16 @@
                                         (click)="verSolicitudes()">Ver solicitudes</button>
                                 </div>
                                 <div *ngIf='comunidadEsDelUsuarioLogueado' class="col-sm-3">
-                                    <button type="button" 
-                                    class="btn btn-outline-danger" (click)="verMiembrosDeComunidad()">Eliminar Miembros</button>
+                                    <button type="button" class="btn btn-outline-danger"
+                                        (click)="verMiembrosDeComunidad()">Eliminar Miembros</button>
                                 </div>
                                 <div *ngIf="solicitudEstaActiva" class="col-sm-3">
-                                    <button  type="button" class="btn btn-outline-danger" 
-                                    (click)="salirDeComunidad()">Quiero salirme de la Comunidad</button>
+                                    <button type="button" class="btn btn-outline-danger"
+                                        (click)="salirDeComunidad()">Quiero salirme de la Comunidad</button>
                                 </div>
                                 <div *ngIf="comunidadEsDelUsuarioLogueado" class="col-sm-3">
-                                    <button type="button" 
-                                    class="btn btn-outline-danger" (click)="eliminarComunidad()">Eliminar Comunidad</button> 
+                                    <button type="button" class="btn btn-outline-danger"
+                                        (click)="eliminarComunidad()">Eliminar Comunidad</button>
                                 </div>
                             </div>
                             <div *ngIf="disableCreateCommunityPost">
@@ -56,13 +57,14 @@
                                     <mat-form-field class="example-full-width">
                                         <mat-label>Titulo de la publicacion</mat-label>
                                         <input matInput maxlength="100" #title formControlName="title"
-                                            [ngClass]="{ 'is-invalid':f.title.errors }" placeholder="Ejemplo: Mi comunidad">
+                                            [ngClass]="{ 'is-invalid':f.title.errors }"
+                                            placeholder="Ejemplo: Mi comunidad">
                                         <mat-hint align="end">{{title.value.length}} / 100</mat-hint>
                                         <div *ngIf="f.title.errors" class="invalid-feedback">
                                             <div *ngIf="f.title.errors.required">Titulo requerido</div>
                                         </div>
                                     </mat-form-field>
-    
+
                                     <mat-form-field class="example-full-width">
                                         <mat-label>Mensaje de la publicacion</mat-label>
                                         <textarea matInput #message formControlName="message"
@@ -106,7 +108,14 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
+                <div *ngIf='banderaMostrarPosts;else noMostrarPosts'>
+                    Esto lo puedo mostrar
+                </div>
 
+                <ng-template #noMostrarPosts>
+
+                    Esto no lo puedo mostrar
+                </ng-template>
                 <div class="genericCard" *ngFor="let post of communityPostList">
                     <mat-card>
                         <mat-card-header>

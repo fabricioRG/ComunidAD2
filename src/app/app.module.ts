@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {DecimalPipe} from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http'
+import { HttpClientModule } from '@angular/common/http';
 import { DataService } from './data.service';
 
 import { RouterModule, Routes } from '@angular/router';
@@ -15,9 +15,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { MatCardModule} from '@angular/material/card';
-import {MatTableModule} from '@angular/material/table'; 
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { ProfileComponent } from './views/profile/profile.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
@@ -25,22 +25,22 @@ import { DashboardUsersComponent } from './views/dashboard-users/dashboard-users
 import { HeaderComponent } from './views/header/header.component';
 import { InicioComponent } from './views/inicio/inicio.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component'
+import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { PetitionsComponent } from './views/petitions/petitions.component';
 import { LoginComponent } from './sesion/login/login.component';
 //Formularios
-import {ReactiveFormsModule,FormsModule} from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CrearUsuarioComponent } from './views/crear-usuario/crear-usuario.component';
-import {MatDatepickerModule} from '@angular/material/datepicker'; 
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
-import {MatRadioModule} from '@angular/material/radio'; 
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { EditProfileComponent } from './views/edit-profile/edit-profile.component';
-import { ChangePasswordComponent } from './views/change-password/change-password.component'; 
+import { ChangePasswordComponent } from './views/change-password/change-password.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveModalComponent } from './components/active-modal/active-modal.component';
 import { CreateComunityComponent } from './comunity/create-comunity/create-comunity.component';
@@ -53,53 +53,50 @@ import { ViewComunityComponent } from './comunity/view-comunity/view-comunity.co
 import { UserProfileComponent } from './views/user-profile/user-profile.component';
 import { RequestComunityComponent } from './comunity/request-comunity/request-comunity/request-comunity.component';
 import { UnsuscribeMembersComponent } from './comunity/unsuscribe-members/unsuscribe-members.component';
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const rutas: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'inicio'
+    redirectTo: 'inicio',
   },
   {
     path: 'inicio',
     component: InicioComponent,
-    
-    
   },
   {
     path: 'editProfile',
-    component: EditProfileComponent}
-  ,
+    component: EditProfileComponent,
+  },
   {
     path: 'crearUsuario',
-    component: CrearUsuarioComponent
-
+    component: CrearUsuarioComponent,
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: 'profile',
-    component: ProfileComponent
+    component: ProfileComponent,
   },
   {
     path: 'viewComunity/:id',
-    component : ViewComunityComponent
+    component: ViewComunityComponent,
   },
   {
     path: 'userProfile/:id',
-    component: UserProfileComponent
+    component: UserProfileComponent,
   },
   {
     path: 'comunityRequest/:id',
-    component: RequestComunityComponent
+    component: RequestComunityComponent,
   },
   {
-    path : 'unsuscribeMembers/:id',
-    component : UnsuscribeMembersComponent
-  },  
+    path: 'unsuscribeMembers/:id',
+    component: UnsuscribeMembersComponent,
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -111,31 +108,31 @@ const rutas: Routes = [
       // },
       {
         path: 'users',
-        component: DashboardUsersComponent
+        component: DashboardUsersComponent,
       },
       {
         path: 'createComunity',
-        component: CreateComunityComponent
+        component: CreateComunityComponent,
       },
       {
         path: 'showComunitys',
-        component : LoadComunitysComponent
+        component: LoadComunitysComponent,
       },
       {
         path: 'petitions',
-        component: PetitionsComponent
+        component: PetitionsComponent,
       },
       {
         path: 'changePassword',
-        component: ChangePasswordComponent
+        component: ChangePasswordComponent,
       },
       {
         path: 'stateUserAdmin',
-        component: StateUserAdminComponent
-      }
-    ]
+        component: StateUserAdminComponent,
+      },
+    ],
   },
-]
+];
 
 @NgModule({
   declarations: [
@@ -159,8 +156,8 @@ const rutas: Routes = [
     ViewComunityComponent,
     UserProfileComponent,
     RequestComunityComponent,
-    UnsuscribeMembersComponent
-    ],
+    UnsuscribeMembersComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -182,8 +179,9 @@ const rutas: Routes = [
     MatFormFieldModule,
     MatSelectModule,
     FlexLayoutModule,
+    MatSlideToggleModule,
     RouterModule.forRoot(rutas, {
-      useHash: true
+      useHash: true,
     }),
     LayoutModule,
     MatSidenavModule,
@@ -191,9 +189,8 @@ const rutas: Routes = [
     BrowserAnimationsModule,
     NgbModule,
   ],
-  exports: [
-  ],
+  exports: [],
   providers: [DataService, DecimalPipe],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

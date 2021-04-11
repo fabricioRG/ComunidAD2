@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConstantesService {
-
-  constructor() { }
-
+  constructor() {}
 
   public static ESTADO_USUARIO_ACTIVO = 'ACTIVO';
   public static ESTADO_USUARIO_INACTIVO = 'INACTIVO';
@@ -16,7 +14,6 @@ export class ConstantesService {
   public static FOTO_PERFIL = 'FOTO';
   public static REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,30}/;
 
-
   public static PRIVACIDAD_PRIVADA = 'PRIVADO';
   public static PRIVACIDAD_PUBLICA = 'PUBLICA';
 
@@ -24,7 +21,7 @@ export class ConstantesService {
   public static COMUNITY_ASIGN_ESPERA = 'ESPERA';
   public static COMUNITY_ASIGN_ACTIVO = 'ACTIVO';
   public static COMUNITY_ASIGN_DENEGADO = 'DENEGADO';
-  
-  
 
+  public static COMUNITY_PUBLICO = 'PUBLICO';
+  public static COMUNITY_PRIVADO = 'PRIVADO';
 }
