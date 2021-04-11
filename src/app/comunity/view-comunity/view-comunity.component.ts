@@ -99,7 +99,6 @@ export class ViewComunityComponent implements OnInit {
       'Outdent',
       '|',
       'CreateLink',
-      'Image',
       '|',
       'ClearFormat',
       'Print',
@@ -107,6 +106,10 @@ export class ViewComunityComponent implements OnInit {
       '|',
       'FullScreen',
     ],
+  };
+
+  public emptyTools: object = {
+    items: ['Undo', 'Redo'],
   };
   public iframe: object = { enable: true };
   public height: number = 500;
