@@ -16,6 +16,11 @@ export class CommentService {
   ) { }
 
 
+  /**
+   * Crea el comentario para una publicacion
+   * @param commentPost 
+   * @param user 
+   */
   createComment(commentPost: CommentPost, user: User) {
     //console.log('En save comunity: ' + comunity.nombre)
     let headers = new HttpHeaders({

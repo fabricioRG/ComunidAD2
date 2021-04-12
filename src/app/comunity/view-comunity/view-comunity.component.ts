@@ -58,7 +58,7 @@ export class ViewComunityComponent implements OnInit {
   alertClosedDanger = false;
   disableCreateCommunityPost = false;
   disableCreateComment = false;
-
+  comentarioEsValido = true;
 
 
   ngOnInit(): void {
@@ -79,25 +79,36 @@ export class ViewComunityComponent implements OnInit {
     })
   }
 
-  //Elementos para crear un comentario
-
-
+  /**
+   * Evalua si se puede guardar el comentario del usuario
+   * @param post 
+   */
   saveComment(post: CommunityPost) {
-    if (post.nuevoComentario && post.nuevoComentario.length != 0 && post.id
+    if (post.nuevoComentario && post.nuevoComentario.length != 0 && post.nuevoComentario.length<=150 && post.id
       && this.user.registroAcademico) {
       var commentPost: CommentPost = this.commentService.generateCommentPost(post.nuevoComentario, this.user.registroAcademico, post.id);
-      var user : User = this.sessionService.getUserWithToken();
-      this.commentService.createComment(commentPost,user)
-      .subscribe((data)=>{
-        data.user=this.user
-        console.log("Comentario:",data)
-        post.nuevoComentario=""
-        post.commentPost?.push(data)
-      })
+      var user: User = this.sessionService.getUserWithToken();
+
+      this.commentService.createComment(commentPost, user)
+        .subscribe((data) => {
+          data.user = this.user
+          data.createdAt=this.getFormatedTime(data.createdAt)
+          post.nuevoComentario = ""
+          post.caracteresDeComentario = 0;
+          post.commentPost?.push(data)
+        })
     }
   }
 
-
+/**
+ * Calcula el numero de caracteres del comentario
+ * @param e 
+ * @param post 
+ */
+  onKeyComment(e: Event, post: CommunityPost) {
+    const element = e.currentTarget as HTMLInputElement;
+    post.caracteresDeComentario = element.value.length
+  }
 
   cargarComunidad() {
     this.comunityAssign = new ComunityAssign();
@@ -313,11 +324,12 @@ export class ViewComunityComponent implements OnInit {
     this.dataService.getAllCommunityPostByCommunity(search, this.user)
       .subscribe(data => {
         console.log("POSTS:", data)
-        /*        if(data){
-                  if(data[0].commentPost){
-                    data[0].commentPost[0].descripcion
-                  }
-                }*/
+
+        data.forEach(element => {
+          element.commentPost?.forEach(comment => {
+            comment.createdAt = this.getFormatedTime(comment.createdAt)
+          });
+        });
         this.communityPostList = data;
       });
   }

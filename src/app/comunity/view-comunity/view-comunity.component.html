@@ -147,19 +147,22 @@
                                     Autor: {{userName(post.user)}}
                                 </div>
                             </mat-card-subtitle>
-                            <div class="text-right">
-                                <button name="activeCommentButton-{{i}}" class="btn btn-link"><i class="fa fa-comments-o" (click)="disableCreateCommunityPost = !disableCreateCommunityPost" ></i> </button>
-                            </div>
-                            <div *ngIf ="disableCreateCommunityPost" class="container">
-                                <p>AQUI VA CREAR COMENTARIO</p>
+                            <div *ngIf="comunidadEsDelUsuarioLogueado || solicitudEstaActiva" class="container">
                                 <div class="container">
                                     <mat-form-field class="col-sm-12" appearance="fill">
-                                        <mat-label>Numero de registro*</mat-label>
-                                        <input type="text"  [(ngModel)]="post.nuevoComentario" name="comment-{{i}}" matInput />
+                                        <mat-label>Escriba un nuevo comentario*</mat-label>
+                                        <input (keyup)="onKeyComment($event,post)" type="text"  [(ngModel)]="post.nuevoComentario" name="comment-{{i}}" matInput />
                                     </mat-form-field>
-                                    <button type="submit"class="btn btn-success" (click)=saveComment(post)>
-                                        Comentar
-                                    </button>
+ 
+                                    <div class="text-right">
+                                        <div *ngIf="post.caracteresDeComentario && post.caracteresDeComentario>150" >
+                                            <p class="text-danger">Tu comentario solo puede tener 150 caracteres</p>
+                                        </div>
+                                        <button type="submit"class="btn btn-info" (click)=saveComment(post)>
+                                            Comentar
+                                        </button>
+ 
+                                    </div>
                                 </div>
                                 
                             </div>
@@ -175,7 +178,7 @@
                                         <div class="text">
                                           <p>{{comment.descripcion}}</p>
                                         </div>
-                                        <p class="attribution">by <a href="#non">{{comment.user?.nombreCompleto}}</a> at 14:23pm, 4 Dec 2015</p>
+                                        <p class="attribution">Por: <a href="#non">{{comment.user?.nombreCompleto}}</a> Publicado el: {{comment.createdAt}}</p>
                                       </div>
                                     </article>
                                   </section>

@@ -16,5 +16,7 @@ export class CommunityPost {
     modifiedAt?: string;
     datosFoto?:any;
     commentPost?: CommentPost[]
+    //Para poder comentar
     nuevoComentario?: string;
+    caracteresDeComentario?:number
 }
