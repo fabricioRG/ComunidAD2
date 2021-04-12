@@ -44,6 +44,12 @@
                                     <button type="button" class="btn btn-outline-danger"
                                         (click)="eliminarComunidad()">Eliminar Comunidad</button>
                                 </div>
+                                <div *ngIf="comunidadEsDelUsuarioLogueado" class="col-sm-12">
+                                    <mat-slide-toggle class="col-sm-12" appearance="fill" [(ngModel)]="privacidad"
+                                        color="primary" style="margin-bottom: 15px;"
+                                        (change)="cambiarPrivacidadComunidad()">
+                                        Comunidad Privada</mat-slide-toggle>
+                                </div>
                             </div>
                             <div *ngIf="disableCreateCommunityPost">
                                 <mat-card-title>
@@ -108,13 +114,24 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
-                <div *ngIf='banderaMostrarPosts;else noMostrarPosts'>
-                    Esto lo puedo mostrar
+                <div *ngIf='verificarPrivacidad();else noMostrarPosts'>
+
                 </div>
 
                 <ng-template #noMostrarPosts>
+                    <mat-card matRipple [matRippleUnbounded]="true" [matRippleRadius]="75" matRippleColor="red">
+                        <mat-card-content>
+                            <div class="row justify-content-around">
 
-                    Esto no lo puedo mostrar
+
+                                ES COMUNIDAD PRIVADA,
+                                SOLICITA UNIRTE
+
+
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
                 </ng-template>
                 <div class="genericCard" *ngFor="let post of communityPostList">
                     <mat-card>

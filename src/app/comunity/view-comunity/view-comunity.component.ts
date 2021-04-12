@@ -1,5 +1,7 @@
+import { trimTrailingNulls } from '@angular/compiler/src/render3/view/util';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
@@ -13,6 +15,7 @@ import { ComunityAssign } from 'src/app/models/comunityAssign.model';
 import { CommunityPost } from 'src/app/models/comunityPost.model';
 import { Course } from 'src/app/models/course.model';
 import { IdComunityAssign } from 'src/app/models/idComunityAssign.model';
+import { ConstantesHtmlService } from 'src/app/services/constantes/constantes-html.service';
 import { ConstantesService } from 'src/app/services/constantes/constantes.service';
 import { FiltrarSolicitudesComunidadService } from 'src/app/services/filtrar-solicitudes-comunidad/filtrar-solicitudes-comunidad.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
@@ -68,7 +71,8 @@ export class ViewComunityComponent implements OnInit {
   alertClosedSuccess = false;
   alertClosedDanger = false;
   disableCreateCommunityPost = false;
-
+  //privacidad
+  privacidad: boolean;
   ngOnInit(): void {
     this.newCommunityPost = new CommunityPost();
     this.postForm = this.formBuilder.group({
@@ -83,6 +87,7 @@ export class ViewComunityComponent implements OnInit {
       this.solicitudEstaActiva = false;
       this.solicitudEstaDenegada = false;
       this.banderaMostrarPosts = false;
+      this.privacidad = false;
       this.cargarComunidad();
     });
   }
@@ -95,17 +100,17 @@ export class ViewComunityComponent implements OnInit {
         this.banderaMostrarPosts = true;
       } else {
         this.banderaMostrarPosts = false;
+        this.communityPostList = [];
+        this.usersInCommunityList = [];
       }
     } else {
       this.banderaMostrarPosts = true;
     }
-    console.log('*************************************');
-    console.log('LA COMUNIDAD ES: ', this.comunity.privacidad);
-    console.log('SE PUEDEN MOSTRAR POSTS: ', this.banderaMostrarPosts);
+
     return this.banderaMostrarPosts;
   }
 
-  cargarComunidad() {
+  async cargarComunidad() {
     this.comunityAssign = new ComunityAssign();
     this.comunity = new Comunity();
     this.user = new User();
@@ -121,14 +126,44 @@ export class ViewComunityComponent implements OnInit {
         console.log('EXISTE SESION Y EL ID DE COMUNIDAD');
         var y: number = +idComunidad;
         this.comunity.id = y;
-        this.verificarOpcionesParaComunidad();
+
+        await this.verificarOpcionesParaComunidad();
+
+        await this.verificarPrivacidad();
       }
     } else {
       console.log('VOY A REDIRIGIR');
       this.redirection.navigate(['inicio']);
     }
   }
+  asignarPrivacidad(dato: any) {
+    if (dato == ConstantesService.COMUNITY_PRIVADO) {
+      this.privacidad = true;
+    } else {
+      this.privacidad = false;
+    }
+  }
+  asignarPrivacidadBooleanAString(dato: boolean) {
+    if (dato) {
+      this.comunity.privacidad = ConstantesService.COMUNITY_PRIVADO;
+    } else {
+      this.comunity.privacidad = ConstantesService.COMUNITY_PUBLICO;
+    }
+  }
 
+  cambiarPrivacidadComunidad() {
+    this.asignarPrivacidadBooleanAString(this.privacidad);
+    this.guardarComunidad(this.user);
+  }
+  guardarComunidad(aux: User) {
+    //Creamos el JSON
+    this.dataService.saveComunity(this.comunity, aux).subscribe(
+      (response) => {},
+      (error) => {
+        alert('ERROR: ' + error);
+      }
+    );
+  }
   verificarOpcionesParaComunidad(): boolean {
     this.dataService
       .getUserByToken(this.sessionService.getUserWithToken())
@@ -143,6 +178,7 @@ export class ViewComunityComponent implements OnInit {
             // console.log("Comunity:::::: ", response);
             if (response.comunity) {
               this.comunity = response.comunity;
+              this.asignarPrivacidad(this.comunity.privacidad);
               this.verificarPrivacidad();
             }
             console.log('JAXDD', this.comunityAssign.user?.registroAcademico);
@@ -329,16 +365,14 @@ export class ViewComunityComponent implements OnInit {
   }
 
   getAllCommunityPost() {
-    if (this.banderaMostrarPosts) {
-      let search: OrdinaryObject = {
-        numberParam: this.comunity.id,
-      };
-      this.dataService
-        .getAllCommunityPostByCommunity(search, this.user)
-        .subscribe((data) => {
-          this.communityPostList = data;
-        });
-    }
+    let search: OrdinaryObject = {
+      numberParam: this.comunity.id,
+    };
+    this.dataService
+      .getAllCommunityPostByCommunity(search, this.user)
+      .subscribe((data) => {
+        this.communityPostList = data;
+      });
   }
 
   getAllUsersInCommunity() {
