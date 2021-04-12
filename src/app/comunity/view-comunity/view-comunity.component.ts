@@ -449,11 +449,11 @@ export class ViewComunityComponent implements OnInit {
     } else {//comunityPost.rated=0
       if (operacion == '+') {
         comunityPost.rated = 0;
-        comunityPost.rated+=aumento_devcremento;
+        comunityPost.rated += aumento_devcremento;
 
       } else {
         comunityPost.rated = 0;
-        comunityPost.rated-=aumento_devcremento;
+        comunityPost.rated -= aumento_devcremento;
 
       }
     }
@@ -489,28 +489,31 @@ export class ViewComunityComponent implements OnInit {
   upvote(comunityPost: CommunityPost) {
     //Metodo que cree el like
     var isCreate: boolean;
-    if (comunityPost.valoration) {
-      if (comunityPost.valoration == 'DOWN') {//CAMBIARLO A UP-----rated++
-        comunityPost.valoration = 'UP'
-        this.recalcularRated(comunityPost, '+', 2)//2
-      } else if (comunityPost.valoration == 'NONE') {
-        comunityPost.valoration = 'UP'
+    if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
+      if (comunityPost.valoration) {
+        if (comunityPost.valoration == 'DOWN') {//CAMBIARLO A UP-----rated++
+          comunityPost.valoration = 'UP'
+          this.recalcularRated(comunityPost, '+', 2)//2
+        } else if (comunityPost.valoration == 'NONE') {
+          comunityPost.valoration = 'UP'
+          this.recalcularRated(comunityPost, '+', 1)
+        } else if (comunityPost.valoration == 'UP') {//CAMBIARLO A NONE-----rated--
+          comunityPost.valoration = 'NONE';
+          this.recalcularRated(comunityPost, '-', 1)
+        }
+
+        //Actualizar una tupla donde id_post=x AND user_registro=y
+        isCreate = false;
+      } else {//Crear un valoration UP-------rated++
+        isCreate = true;
+        comunityPost.valoration = 'UP';
         this.recalcularRated(comunityPost, '+', 1)
-      } else if (comunityPost.valoration == 'UP') {//CAMBIARLO A NONE-----rated--
-        comunityPost.valoration = 'NONE';
-        this.recalcularRated(comunityPost, '-', 1)
       }
 
-      //Actualizar una tupla donde id_post=x AND user_registro=y
-      isCreate = false;
-    } else {//Crear un valoration UP-------rated++
-      isCreate = true;
-      comunityPost.valoration = 'UP';
-      this.recalcularRated(comunityPost, '+', 1)
-    }
+      //Actualizar el comunity_post
+      this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
 
-    //Actualizar el comunity_post
-    this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
+    }
 
   }
 
@@ -520,27 +523,30 @@ export class ViewComunityComponent implements OnInit {
   downvote(comunityPost: CommunityPost) {
     //Metodo que cree el dislike
     var isCreate: boolean;
-    if (comunityPost.valoration) {
-      if (comunityPost.valoration == 'UP') {//CAMBIARLO A DOWN-----rated--
-        comunityPost.valoration = 'DOWN'
-        this.recalcularRated(comunityPost, '-', 2)
-      } else if (comunityPost.valoration == 'NONE') {
-        comunityPost.valoration = 'DOWN'
-        this.recalcularRated(comunityPost, '-', 1)
-      } else if (comunityPost.valoration == 'DOWN') {//CAMBIARLO A NONE-----rated++
-        comunityPost.valoration = 'NONE';
-        this.recalcularRated(comunityPost, '+', 1)
-      }
+    if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
+      if (comunityPost.valoration) {
+        if (comunityPost.valoration == 'UP') {//CAMBIARLO A DOWN-----rated--
+          comunityPost.valoration = 'DOWN'
+          this.recalcularRated(comunityPost, '-', 2)
+        } else if (comunityPost.valoration == 'NONE') {
+          comunityPost.valoration = 'DOWN'
+          this.recalcularRated(comunityPost, '-', 1)
+        } else if (comunityPost.valoration == 'DOWN') {//CAMBIARLO A NONE-----rated++
+          comunityPost.valoration = 'NONE';
+          this.recalcularRated(comunityPost, '+', 1)
+        }
 
-      //Actualizar una tupla donde id_post=x AND user_registro=y
-      isCreate = false;
-    } else {//Crear un valoration UP-------rated--
-      isCreate = true;
-      comunityPost.valoration = 'DOWN';
-      this.recalcularRated(comunityPost, '-', 1)
+        //Actualizar una tupla donde id_post=x AND user_registro=y
+        isCreate = false;
+      } else {//Crear un valoration UP-------rated--
+        isCreate = true;
+        comunityPost.valoration = 'DOWN';
+        this.recalcularRated(comunityPost, '-', 1)
+      }
+      //Actualizar el comunity_post
+      this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
     }
-    //Actualizar el comunity_post
-    this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
+
   }
 
 }
