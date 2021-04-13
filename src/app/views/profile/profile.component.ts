@@ -62,14 +62,6 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  mensajeEstadoBoton(): String {
-    if (this.usuario.estado == ConstantesService.ESTADO_USUARIO_ACTIVO) {
-      return ConstantesService.ESTADO_USUARIO_INACTIVO
-    } else {
-      return ConstantesService.ESTADO_USUARIO_ACTIVO
-    }
-  }
-
   cambiarEstado() {
     const modal = this._modalService.open(ActiveModalComponent);
     modal.componentInstance.modalHeader = "CONFIRMACION DE CAMBIO";
@@ -179,6 +171,70 @@ export class ProfileComponent implements OnInit {
     }, (reason) => {
     });
 
+  }
+
+  async changeUserPrivacy() {
+    let header = "Cambiar privacidad";
+    let body = "¿Estas seguro que deseas cambiar la privacidad de la cuenta?";
+    let title = "Cambiar estado a ";
+    let confirmType = true;
+    if(this.usuario.privacidad == ConstantesService.USER_PRIVACY_PUBLICO){
+      title += ConstantesService.USER_PRIVACY_PRIVADO;
+    } else {
+      title += ConstantesService.USER_PRIVACY_PUBLICO
+    }
+    var result = await this.showConfirmMessage(header, body,title,confirmType);
+    if (result) {
+      if(this.usuario.privacidad == ConstantesService.USER_PRIVACY_PUBLICO){
+        this.usuario.privacidad = ConstantesService.USER_PRIVACY_PRIVADO;
+      } else {
+        this.usuario.privacidad = ConstantesService.USER_PRIVACY_PUBLICO;
+      }
+      this.dataService.updateUser(this.usuario)
+      .subscribe((resp) => {
+        this.mostrarMensaje("Se ha cambiado correctamente la privacidad de la cuenta");
+        this.updateUser();
+      }, (reason) => {
+        this.mostrarError(reason, 1);
+      })
+    }
+  }
+
+  get userStateText() {
+    if (this.usuario.estado == ConstantesService.ESTADO_USUARIO_ACTIVO) {
+      return ConstantesService.ESTADO_USUARIO_ACTIVO
+    } else {
+      return ConstantesService.ESTADO_USUARIO_INACTIVO
+    }
+  }
+  
+  get userStateIcon() {
+    if (this.usuario.estado == ConstantesService.ESTADO_USUARIO_ACTIVO) {
+      return ConstantesService.ICON_CHECK_CIRCLE_OUTLINE;
+    } else {
+      return ConstantesService.ICON_CANCEL;
+    }
+  }
+
+  get userPrivacyText() {
+    if (this.usuario.privacidad == ConstantesService.USER_PRIVACY_PUBLICO) {
+      return ConstantesService.USER_PRIVACY_PUBLICO
+    } else {
+      return ConstantesService.USER_PRIVACY_PRIVADO
+    }
+  }
+
+  get userPrivacyIcon(){
+    if (this.usuario.privacidad == ConstantesService.USER_PRIVACY_PUBLICO) {
+      return ConstantesService.ICON_PUBLIC;
+    } else {
+      return ConstantesService.ICON_LOCK;
+    }
+  }
+
+  async showConfirmMessage(header: any, title: any, 
+    body: any, typeConfirm: boolean): Promise<boolean>{
+      return await this._modalPropio.openModal(header, title, body, typeConfirm);
   }
 
 }

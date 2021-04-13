@@ -4,21 +4,35 @@
       <div class="col-md-4 mb-3">
         <mat-card>
           <mat-card-content>
-            <div class="d-flex flex-column align-items-center text-center">
+            <div class="row align-items-center text-center justify-content-sm-center">
               <div class="profile-pic" [style.background-image]="this.styleBackgroundImage">
                 <mat-icon>photo_camera</mat-icon>
                 <span>Cambiar Imagen</span>
                 <input type="file" accept="image/*" id="wizard-picture" (change)="onSelectFile($event)" class="">
               </div>
 
-              <div class="mt-3">
+              <div >
                 <h2>{{usuario.nombreCompleto}}</h2>
                 <p class="text-muted font-size-sm">{{usuario.registroAcademico}}</p>
                 <p class="text-secondary mb-1">{{usuario.correoElectronico}}</p>
                 <p class="text-muted font-size-sm">{{usuario.ciudad}}</p>
-                <button class="btn btn-outline-primary" (click)="cambiarEstado()" style="margin: 5px;">
+                <div class="row justify-content-center">
+                  <div class="col-sm-4">
+                    <button mat-icon-button="primary" (click)="cambiarEstado()">
+                      <mat-icon [inline]="true" class="material-icon md-36">{{userStateIcon}}</mat-icon>
+                    </button>
+                    <p class="p iconText">{{userStateText}}</p>
+                  </div>
+                  <div class="col-sm-4">
+                    <button mat-icon-button="accent" (click) = "changeUserPrivacy()">
+                      <mat-icon [inline]="true" class="material-icon md-36">{{userPrivacyIcon}}</mat-icon>
+                    </button>
+                    <p class="p iconText">{{userPrivacyText}}</p>
+                  </div>
+                </div>
+                <!-- <button class="btn btn-outline-primary" (click)="cambiarEstado()" style="margin: 5px;">
                   Cambiar a: {{ this.mensajeEstadoBoton()}}
-                </button>
+                </button> -->
               </div>
             </div>
           </mat-card-content>

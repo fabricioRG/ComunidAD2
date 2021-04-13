@@ -1,17 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router, ParamMap } from '@angular/router';
 import { DataService } from 'src/app/data.service';
 import { OrdinaryObject } from 'src/app/helpers/ordinary-object.model';
+import { CommentPost } from 'src/app/models/commentPost.model';
 import { Comunity } from 'src/app/models/comunity.model';
 import { ComunityAssign } from 'src/app/models/comunityAssign.model';
 import { CommunityPost } from 'src/app/models/comunityPost.model';
 import { Course } from 'src/app/models/course.model';
 import { IdComunityAssign } from 'src/app/models/idComunityAssign.model';
+import { CommentService } from 'src/app/services/comment/comment.service';
+import { ValorationPost } from 'src/app/models/valorationPost.model';
 import { FiltrarSolicitudesComunidadService } from 'src/app/services/filtrar-solicitudes-comunidad/filtrar-solicitudes-comunidad.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { SesionService } from 'src/app/services/sesion/sesion.service';
 import { UploadFileServiceService } from 'src/app/services/uploadFileService/upload-file-service.service';
+import { VoteService } from 'src/app/services/vote/vote.service';
 import { User } from 'src/app/user.model';
 import { LoadComunitysComponent } from '../load-comunitys/load-comunitys.component';
 
@@ -27,7 +31,9 @@ const defaultPicture = "";
 export class ViewComunityComponent implements OnInit {
 
   constructor(private redirection: Router, private route: ActivatedRoute, private uploadFileService: UploadFileServiceService,
-    private dataService: DataService, private sessionService: SesionService, private formBuilder: FormBuilder, private modal: ModalService, private comunidadService: FiltrarSolicitudesComunidadService) {
+    private dataService: DataService, private sessionService: SesionService, private formBuilder: FormBuilder, private modal: ModalService, private comunidadService: FiltrarSolicitudesComunidadService,
+    private commentService: CommentService,
+    private voteService: VoteService) {
     this.cargarComunidad();
   }
 
@@ -54,6 +60,9 @@ export class ViewComunityComponent implements OnInit {
   alertClosedSuccess = false;
   alertClosedDanger = false;
   disableCreateCommunityPost = false;
+  disableCreateComment = false;
+  comentarioEsValido = true;
+
 
   ngOnInit(): void {
     this.newCommunityPost = new CommunityPost();
@@ -73,6 +82,35 @@ export class ViewComunityComponent implements OnInit {
     })
   }
 
+  /**
+   * Evalua si se puede guardar el comentario del usuario
+   * @param post 
+   */
+  saveComment(post: CommunityPost) {
+    if (post.nuevoComentario && post.nuevoComentario.length != 0 && post.nuevoComentario.length<=150 && post.id
+      && this.user.registroAcademico) {
+      var commentPost: CommentPost = this.commentService.generateCommentPost(post.nuevoComentario, this.user.registroAcademico, post.id);
+      var user: User = this.sessionService.getUserWithToken();
+
+      this.commentService.createComment(commentPost, user)
+        .subscribe((data) => {
+          data.user = this.user
+          post.nuevoComentario = ""
+          post.caracteresDeComentario = 0;
+          post.commentPost?.push(data)
+        })
+    }
+  }
+
+/**
+ * Calcula el numero de caracteres del comentario
+ * @param e 
+ * @param post 
+ */
+  onKeyComment(e: Event, post: CommunityPost) {
+    const element = e.currentTarget as HTMLInputElement;
+    post.caracteresDeComentario = element.value.length
+  }
 
   cargarComunidad() {
     this.comunityAssign = new ComunityAssign();
@@ -80,7 +118,7 @@ export class ViewComunityComponent implements OnInit {
     this.user = new User();
     var idComunidad: string | null = this.route.snapshot.paramMap.get('id');
     //var idComunidad="20"
-    console.log("JAXD",this.route.snapshot.paramMap.get('id'))
+    console.log("JAXD", this.route.snapshot.paramMap.get('id'))
     console.log('ID COMUNIDAD ESCOGIDA', idComunidad);
     //Ver si hay una sesion, de no haber sesion mandarlo al inicio
     //Si hay sesion buscar el usuario
@@ -96,10 +134,10 @@ export class ViewComunityComponent implements OnInit {
       console.log("VOY A REDIRIGIR")
       this.redirection.navigate(['inicio']);
     }
-    
+
   }
 
-  verificarOpcionesParaComunidad() : boolean{
+  verificarOpcionesParaComunidad(): boolean {
     this.dataService.getUserByToken(this.sessionService.getUserWithToken()).subscribe(response => {
       this.user = response;
       console.log("USUARIO get token:", this.user)
@@ -110,8 +148,8 @@ export class ViewComunityComponent implements OnInit {
         if (response.comunity) {
           this.comunity = response.comunity;
         }
-        console.log("JAXDD",this.comunityAssign.user?.registroAcademico)
-        console.log("JAXDDD",this.user.registroAcademico)
+        console.log("JAXDD", this.comunityAssign.user?.registroAcademico)
+        console.log("JAXDDD", this.user.registroAcademico)
         this.loadImageCommunity();
         this.getAllCommunityPost();
         this.getAllUsersInCommunity();
@@ -273,7 +311,7 @@ export class ViewComunityComponent implements OnInit {
   }
 
   loadImageCommunity() {
-    console.log("LOAD",this.comunity)
+    console.log("LOAD", this.comunity)
     if (this.comunity.datosFoto) {
       this.styleBackgroundImageCommunity = encabezadoFoto + this.comunity.datosFoto + finalFoto;
     } else {
@@ -283,13 +321,17 @@ export class ViewComunityComponent implements OnInit {
 
   getAllCommunityPost() {
     let search: OrdinaryObject = {
-      numberParam: this.comunity.id
+      numberParam: this.comunity.id,
+      stringParam: this.user.registroAcademico
     }
     this.dataService.getAllCommunityPostByCommunity(search, this.user)
       .subscribe(data => {
+        console.log("POSTS:", data)
         this.communityPostList = data;
       });
   }
+
+
 
   getAllUsersInCommunity() {
     let search: OrdinaryObject = {
@@ -424,4 +466,124 @@ export class ViewComunityComponent implements OnInit {
         );
     }
   }
+  ////////////////
+
+
+
+  /**
+   * Recalcula el rated para un post de una comunidad
+   * @param comunityPost 
+   * @param operacion 
+   */
+  recalcularRated(comunityPost: CommunityPost, operacion: string, aumento_devcremento: number) {
+    if (comunityPost.rated) {
+      if (operacion == '+') {
+        comunityPost.rated += aumento_devcremento;
+      } else {
+        comunityPost.rated -= aumento_devcremento;
+      }
+    } else {//comunityPost.rated=0
+      if (operacion == '+') {
+        comunityPost.rated = 0;
+        comunityPost.rated += aumento_devcremento;
+
+      } else {
+        comunityPost.rated = 0;
+        comunityPost.rated -= aumento_devcremento;
+
+      }
+    }
+  }
+
+  /**
+   * Actualiza la valoracion del usuario y el rated del post de la comunidad
+   * @param comunityPost 
+   */
+  saveOrModifyValorationAndComunityPost(comunityPost: CommunityPost, isCreate: boolean) {
+    var user: User = this.sessionService.getUserWithToken();
+    this.dataService.persistCommunityPost(comunityPost, user)
+      .subscribe((data) => {
+        var valoration: ValorationPost = this.voteService.genereteValorationPostOfUserLogued(comunityPost, this.user);
+        valoration.valoration = comunityPost.valoration
+        if (isCreate) {
+          this.voteService.createValoration(valoration, user)
+            .subscribe((data) => {
+            })
+        } else {//Actualizacion
+          this.voteService.updateValoration(valoration, user)
+            .subscribe((data) => {
+            })
+        }
+      })
+  }
+
+
+  /**
+   * Accion que se realiza al darle click al boton de Valoracio positiva(Flecha para arriba)
+   * @param comunityPost 
+   */
+  upvote(comunityPost: CommunityPost) {
+    //Metodo que cree el like
+    var isCreate: boolean;
+    if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
+      if (comunityPost.valoration) {
+        if (comunityPost.valoration == 'DOWN') {//CAMBIARLO A UP-----rated++
+          comunityPost.valoration = 'UP'
+          this.recalcularRated(comunityPost, '+', 2)//2
+        } else if (comunityPost.valoration == 'NONE') {
+          comunityPost.valoration = 'UP'
+          this.recalcularRated(comunityPost, '+', 1)
+        } else if (comunityPost.valoration == 'UP') {//CAMBIARLO A NONE-----rated--
+          comunityPost.valoration = 'NONE';
+          this.recalcularRated(comunityPost, '-', 1)
+        }
+
+        //Actualizar una tupla donde id_post=x AND user_registro=y
+        isCreate = false;
+      } else {//Crear un valoration UP-------rated++
+        isCreate = true;
+        comunityPost.valoration = 'UP';
+        this.recalcularRated(comunityPost, '+', 1)
+      }
+      //Actualizar el comunity_post
+      this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
+
+    }
+
+  }
+
+  goToUserProfile(usr: User){
+    this.redirection.navigate(['userProfile', usr.registroAcademico]);
+  }
+
+
+  downvote(comunityPost: CommunityPost) {
+    //Metodo que cree el dislike
+    var isCreate: boolean;
+    if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
+      if (comunityPost.valoration) {
+        if (comunityPost.valoration == 'UP') {//CAMBIARLO A DOWN-----rated--
+          comunityPost.valoration = 'DOWN'
+          this.recalcularRated(comunityPost, '-', 2)
+        } else if (comunityPost.valoration == 'NONE') {
+          comunityPost.valoration = 'DOWN'
+          this.recalcularRated(comunityPost, '-', 1)
+        } else if (comunityPost.valoration == 'DOWN') {//CAMBIARLO A NONE-----rated++
+          comunityPost.valoration = 'NONE';
+          this.recalcularRated(comunityPost, '+', 1)
+        }
+
+        //Actualizar una tupla donde id_post=x AND user_registro=y
+        isCreate = false;
+      } else {//Crear un valoration UP-------rated--
+        isCreate = true;
+        comunityPost.valoration = 'DOWN';
+        this.recalcularRated(comunityPost, '-', 1)
+      }
+      //Actualizar el comunity_post
+      this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
+    }
+
+  }
+
 }
