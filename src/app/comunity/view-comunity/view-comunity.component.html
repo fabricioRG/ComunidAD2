@@ -150,7 +150,7 @@
                         <mat-card-footer>
                             <mat-card-subtitle>
                                 <div style="padding-left: 30px;">
-                                    Autor: {{userName(post.user)}}
+                                    Autor: <a routerLink="" (click)="goToUserProfile(post.user!)">{{userName(post.user)}}</a>
                                 </div>
                             </mat-card-subtitle>
                             <div *ngIf="comunidadEsDelUsuarioLogueado || solicitudEstaActiva" class="container">
@@ -184,7 +184,7 @@
                                         <div class="text">
                                           <p>{{comment.descripcion}}</p>
                                         </div>
-                                        <p class="attribution">Por: <a href="#non">{{comment.user?.nombreCompleto}}</a> Publicado el: {{getFormatedTime(comment.createdAt)}}</p>
+                                        <p class="attribution">Por: <a routerLink="" (click)="goToUserProfile(comment.user!)">{{comment.user?.nombreCompleto}}</a> Publicado el: {{getFormatedTime(comment.createdAt)}}</p>
                                       </div>
                                     </article>
                                   </section>
