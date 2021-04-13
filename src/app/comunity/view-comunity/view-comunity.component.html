@@ -1,4 +1,5 @@
 <div class="container">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <div class="main-body">
         <div class="row gutters-sm">
             <div class="col-sm-9 mb-3">
@@ -11,7 +12,7 @@
                 <div class="genericCard">
                     <mat-card>
                         <mat-card-content>
-                            
+
                             <div class="row justify-content-around">
                                 <div *ngIf="solicitudEstaEnEspera">
                                     <p class="text-warning">Solicitud Enviada</p>
@@ -20,8 +21,9 @@
                                     <p class="text-danger">Tu solicitud ha sido rechazada</p>
                                 </div>
                                 <div *ngIf="comunidadEsDelUsuarioLogueado || solicitudEstaActiva" class="col-sm-3">
-                                    <button style="width: 100%;" (click)="disableCreateCommunityPost = !disableCreateCommunityPost" 
-                                    class="btn btn-outline-warning">Crear Publicacion</button>
+                                    <button style="width: 100%;"
+                                        (click)="disableCreateCommunityPost = !disableCreateCommunityPost"
+                                        class="btn btn-outline-warning">Crear Publicacion</button>
                                 </div>
                                 <div *ngIf='puedeEnviarSolicitud' class="col-sm-3">
                                     <button (click)="solicitarUnionAComunidad()" type="button"
@@ -32,16 +34,16 @@
                                         (click)="verSolicitudes()">Ver solicitudes</button>
                                 </div>
                                 <div *ngIf='comunidadEsDelUsuarioLogueado' class="col-sm-3">
-                                    <button type="button" 
-                                    class="btn btn-outline-danger" (click)="verMiembrosDeComunidad()">Eliminar Miembros</button>
+                                    <button type="button" class="btn btn-outline-danger"
+                                        (click)="verMiembrosDeComunidad()">Eliminar Miembros</button>
                                 </div>
                                 <div *ngIf="solicitudEstaActiva" class="col-sm-3">
-                                    <button  type="button" class="btn btn-outline-danger" 
-                                    (click)="salirDeComunidad()">Quiero salirme de la Comunidad</button>
+                                    <button type="button" class="btn btn-outline-danger"
+                                        (click)="salirDeComunidad()">Quiero salirme de la Comunidad</button>
                                 </div>
                                 <div *ngIf="comunidadEsDelUsuarioLogueado" class="col-sm-3">
-                                    <button type="button" 
-                                    class="btn btn-outline-danger" (click)="eliminarComunidad()">Eliminar Comunidad</button> 
+                                    <button type="button" class="btn btn-outline-danger"
+                                        (click)="eliminarComunidad()">Eliminar Comunidad</button>
                                 </div>
                             </div>
                             <div *ngIf="disableCreateCommunityPost">
@@ -56,13 +58,14 @@
                                     <mat-form-field class="example-full-width">
                                         <mat-label>Titulo de la publicacion</mat-label>
                                         <input matInput maxlength="100" #title formControlName="title"
-                                            [ngClass]="{ 'is-invalid':f.title.errors }" placeholder="Ejemplo: Mi comunidad">
+                                            [ngClass]="{ 'is-invalid':f.title.errors }"
+                                            placeholder="Ejemplo: Mi comunidad">
                                         <mat-hint align="end">{{title.value.length}} / 100</mat-hint>
                                         <div *ngIf="f.title.errors" class="invalid-feedback">
                                             <div *ngIf="f.title.errors.required">Titulo requerido</div>
                                         </div>
                                     </mat-form-field>
-    
+
                                     <mat-form-field class="example-full-width">
                                         <mat-label>Mensaje de la publicacion</mat-label>
                                         <textarea matInput #message formControlName="message"
@@ -107,7 +110,7 @@
                     </mat-card>
                 </div>
 
-                <div class="genericCard" *ngFor="let post of communityPostList">
+                <div class="genericCard" *ngFor="let post of communityPostList;let i = index">
                     <mat-card>
                         <mat-card-header>
                             <mat-card-title>
@@ -120,11 +123,13 @@
                         <mat-card-content>
                             <div class="row" style="margin-right: 0px;">
                                 <div class="col-sm-1">
-                                    <span class="material-icons" style="font-size: 2rem;">
+                                    <span class="material-icons vote up" style="font-size: 2rem;" (click)="upvote(post)"
+                                    [ngClass]="{'active' : post.valoration=='UP' }">
                                         arrow_drop_up
                                     </span>
                                     <p style="text-align: center; margin: 0px; padding: 0px;">{{post.rated}}</p>
-                                    <span class="material-icons" style="font-size: 2rem; ">
+                                    <span class="material-icons vote down" style="font-size: 2rem;" (click)="downvote(post)"
+                                    [ngClass]="{'active' : post.valoration=='DOWN' }">
                                         arrow_drop_down
                                     </span>
                                 </div>
@@ -134,6 +139,8 @@
                                     </div>
                                 </div>
                             </div>
+
+
                             <div class="row justify-content-sm-center">
                                 <div class="col-sm-10" style="margin-top: 10px;">
                                     <img style="width: 100%;" *ngIf="post.datosFoto" [src]="getImage(post.datosFoto)">
@@ -146,6 +153,44 @@
                                     Autor: {{userName(post.user)}}
                                 </div>
                             </mat-card-subtitle>
+                            <div *ngIf="comunidadEsDelUsuarioLogueado || solicitudEstaActiva" class="container">
+                                <div class="container">
+                                    <mat-form-field class="col-sm-12" >
+                                        <mat-label>Escriba un nuevo comentario*</mat-label>
+                                        <input (keyup)="onKeyComment($event,post)" type="text"  [(ngModel)]="post.nuevoComentario" name="comment-{{i}}" matInput />
+                                    </mat-form-field>
+ 
+                                    <div class="text-right">
+                                        <div *ngIf="post.caracteresDeComentario && post.caracteresDeComentario>150" >
+                                            <p class="text-danger">Tu comentario solo puede tener 150 caracteres</p>
+                                        </div>
+                                        <button type="submit"class="btn btn-info" (click)=saveComment(post)>
+                                            Comentar
+                                        </button>
+ 
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="container">
+                                <p>Comentarios actuales</p>
+                                <br>
+                                <section *ngFor="let comment of post.commentPost" class="comments">
+                                    <article class="comment">
+                                      <a class="comment-img" href="#non">
+                                        <img src="https://i.pinimg.com/564x/46/6c/02/466c0297a20203c8ba7ebd1f4cf0d21c.jpg" alt="" width="50" height="50">
+                                      </a>
+                                      <div class="comment-body">
+                                        <div class="text">
+                                          <p>{{comment.descripcion}}</p>
+                                        </div>
+                                        <p class="attribution">Por: <a href="#non">{{comment.user?.nombreCompleto}}</a> Publicado el: {{getFormatedTime(comment.createdAt)}}</p>
+                                      </div>
+                                    </article>
+                                  </section>
+
+                            </div>
+
                         </mat-card-footer>
                     </mat-card>
                 </div>
