@@ -16,7 +16,7 @@ export class ConstantesService {
   public static FOTO_PERFIL = 'FOTO';
   public static REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,30}/;
 
-
+  //USERS
   public static PRIVACIDAD_PRIVADA = 'PRIVADO';
   public static PRIVACIDAD_PUBLICA = 'PUBLICA';
 
