@@ -1,4 +1,5 @@
 import { User } from "../user.model";
+import { CommentPost } from "./commentPost.model";
 import { Comunity } from "./comunity.model";
 
 export class CommunityPost {
@@ -14,7 +15,9 @@ export class CommunityPost {
     createdAt?: string;
     modifiedAt?: string;
     datosFoto?:any;
-    //Valoracion Usuario
+    commentPost?: CommentPost[]
+    nuevoComentario?: string;
+    caracteresDeComentario?:number
     valoration?:string;
 
 }

@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router, ParamMap } from '@angular/router';
 import { DataService } from 'src/app/data.service';
 import { OrdinaryObject } from 'src/app/helpers/ordinary-object.model';
+import { CommentPost } from 'src/app/models/commentPost.model';
 import { Comunity } from 'src/app/models/comunity.model';
 import { ComunityAssign } from 'src/app/models/comunityAssign.model';
 import { CommunityPost } from 'src/app/models/comunityPost.model';
 import { Course } from 'src/app/models/course.model';
 import { IdComunityAssign } from 'src/app/models/idComunityAssign.model';
+import { CommentService } from 'src/app/services/comment/comment.service';
 import { ValorationPost } from 'src/app/models/valorationPost.model';
 import { FiltrarSolicitudesComunidadService } from 'src/app/services/filtrar-solicitudes-comunidad/filtrar-solicitudes-comunidad.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
@@ -30,6 +32,7 @@ export class ViewComunityComponent implements OnInit {
 
   constructor(private redirection: Router, private route: ActivatedRoute, private uploadFileService: UploadFileServiceService,
     private dataService: DataService, private sessionService: SesionService, private formBuilder: FormBuilder, private modal: ModalService, private comunidadService: FiltrarSolicitudesComunidadService,
+    private commentService: CommentService,
     private voteService: VoteService) {
     this.cargarComunidad();
   }
@@ -57,6 +60,9 @@ export class ViewComunityComponent implements OnInit {
   alertClosedSuccess = false;
   alertClosedDanger = false;
   disableCreateCommunityPost = false;
+  disableCreateComment = false;
+  comentarioEsValido = true;
+
 
   ngOnInit(): void {
     this.newCommunityPost = new CommunityPost();
@@ -76,6 +82,36 @@ export class ViewComunityComponent implements OnInit {
     })
   }
 
+  /**
+   * Evalua si se puede guardar el comentario del usuario
+   * @param post 
+   */
+  saveComment(post: CommunityPost) {
+    if (post.nuevoComentario && post.nuevoComentario.length != 0 && post.nuevoComentario.length<=150 && post.id
+      && this.user.registroAcademico) {
+      var commentPost: CommentPost = this.commentService.generateCommentPost(post.nuevoComentario, this.user.registroAcademico, post.id);
+      var user: User = this.sessionService.getUserWithToken();
+
+      this.commentService.createComment(commentPost, user)
+        .subscribe((data) => {
+          data.user = this.user
+          data.createdAt=this.getFormatedTime(data.createdAt)
+          post.nuevoComentario = ""
+          post.caracteresDeComentario = 0;
+          post.commentPost?.push(data)
+        })
+    }
+  }
+
+/**
+ * Calcula el numero de caracteres del comentario
+ * @param e 
+ * @param post 
+ */
+  onKeyComment(e: Event, post: CommunityPost) {
+    const element = e.currentTarget as HTMLInputElement;
+    post.caracteresDeComentario = element.value.length
+  }
 
   cargarComunidad() {
     this.comunityAssign = new ComunityAssign();
@@ -291,6 +327,7 @@ export class ViewComunityComponent implements OnInit {
     }
     this.dataService.getAllCommunityPostByCommunity(search, this.user)
       .subscribe(data => {
+        console.log("POSTS:", data)
         this.communityPostList = data;
       });
   }
@@ -509,7 +546,6 @@ export class ViewComunityComponent implements OnInit {
         comunityPost.valoration = 'UP';
         this.recalcularRated(comunityPost, '+', 1)
       }
-
       //Actualizar el comunity_post
       this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
 
