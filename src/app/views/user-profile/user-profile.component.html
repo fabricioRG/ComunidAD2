@@ -4,25 +4,70 @@
             <div class="col-md-4 mb-3">
                 <mat-card>
                     <mat-card-content>
-                        <div class="d-flex flex-column align-items-center text-center">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin"
-                                class="rounded-circle" width="150">
-                            <div class="mt-3">
-                                <h2>{{actualUser.nombreCompleto}}</h2>
-                                <p class="text-muted font-size-sm">{{actualUser.registroAcademico}}</p>
-                                <p class="text-secondary mb-1">{{actualUser.correoElectronico}}</p>
-                                <p class="text-muted font-size-sm">{{actualUser.ciudad}}</p>
-                                <button class="btn btn-primary" style="margin: 5px;">Seguir</button>
-                                <button class="btn btn-outline-primary" style="margin: 5px;">Mensaje</button>
+                        <div class="row align-items-center text-center justify-content-sm-center">
+                            <div class="profile-pic" [style.background-image]="this.styleBackgroundImage">
+                                <mat-icon *ngIf="profileOwner">photo_camera</mat-icon>
+                                <span *ngIf="profileOwner">Cambiar Imagen</span>
+                                <input *ngIf="profileOwner" type="file" accept="image/*" id="wizard-picture"
+                                    (change)="onSelectFile($event)">
+                            </div>
+                            <div>
+                                <div class="d-flex justify-content-center">
+                                    <div class="titleProfileText">
+                                        <p>{{actualUser.nombreCompleto}}</p>
+                                    </div>
+                                    <div *ngIf="profileOwner">
+                                        <a class="btn btn-light" (click)="goToEditProfile()"
+                                            style="margin: 0px;padding: 0px;">
+                                            <div class="titleProfileIcon">
+                                                <mat-icon [inline]="true">edit</mat-icon>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div style="margin: 10px;">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="primaryProfileIcon">
+                                            <mat-icon [inline]="true">assignment_ind</mat-icon>
+                                        </div>
+                                        <div class="profileSecondText">
+                                            <p class="text-secondary">{{actualUser.registroAcademico}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="primaryProfileIcon">
+                                            <mat-icon [inline]="true">{{userRolIcon}}</mat-icon>
+                                        </div>
+                                        <div class="profileSecondText">
+                                            <p class="text-secondary">{{actualUser.rolUsuario}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-4">
+                                        <button mat-icon-button="primary" (click)="cambiarEstado()">
+                                            <mat-icon [inline]="true" class="material-icon md-36">{{userStateIcon}}
+                                            </mat-icon>
+                                        </button>
+                                        <p class="p iconText">{{userStateText}}</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <button mat-icon-button="accent" (click)="changeUserPrivacy()">
+                                            <mat-icon [inline]="true" class="material-icon md-36">{{userPrivacyIcon}}
+                                            </mat-icon>
+                                        </button>
+                                        <p class="p iconText">{{userPrivacyText}}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </mat-card-content>
                 </mat-card>
                 <div class="mt-3">
                     <mat-card>
-                        <mat-card-title>
-                            <h2>Acerca del Usuario</h2>
-                        </mat-card-title>
+                        <div class="titleProfileText">
+                            <p>Acerca del Usuario</p>
+                        </div>
                         <mat-card-content>
                             Breve descripcion del perfil del usuario
                         </mat-card-content>
@@ -33,29 +78,49 @@
                 <div class="mb-3">
                     <mat-card>
                         <mat-card-content>
-                            <!-- <mat-list>
-                                <mat-list-item>
-                                    <h5 class="mb-1">Creador de la comunidad</h5>
-                                <p class="mb-1">Nombre</p>
-                                </mat-list-item>
-                            </mat-list> -->
-                            <a class="list-group-item list-group-item-action flex-column align-items-start">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Genero</h5>
+                            <div class="titleProfileText">
+                                <p>Informacion</p>
+                            </div>
+                            <a class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <div class="profileIcon">
+                                        <mat-icon [inline]="true">{{userGenderIcon}}</mat-icon>
+                                    </div>
+                                    <div class="profileSecondText">
+                                        <p class="mb-1">{{userGenderText}}</p>
+                                    </div>
+                                    <!-- <h5 class="mb-1">Tipo de Usuario</h5> -->
                                 </div>
-                                <p class="mb-1">{{actualUser.genero}}</p>
                             </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Tipo de Usuario</h5>
+                            <a class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <div class="profileIcon">
+                                        <mat-icon>cake</mat-icon>
+                                    </div>
+                                    <div class="profileSecondText">
+                                        <p class="mb-1">{{getFormatedTime(actualUser.fechaDeNacimiento)}}</p>
+                                    </div>
                                 </div>
-                                <p class="mb-1">{{actualUser.rolUsuario}}</p>
                             </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Fecha de Nacimiento</h5>
+                            <a class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <div class="profileIcon">
+                                        <mat-icon>email</mat-icon>
+                                    </div>
+                                    <div class="profileSecondText">
+                                        <p class="mb-1">{{actualUser.correoElectronico}}</p>
+                                    </div>
                                 </div>
-                                <p class="mb-1">{{actualUser.fechaDeNacimiento}}</p>
+                            </a>
+                            <a class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <div class="profileIcon">
+                                        <mat-icon>place</mat-icon>
+                                    </div>
+                                    <div class="profileSecondText">
+                                        <p class="mb-1">{{actualUser.ciudad}}</p>
+                                    </div>
+                                </div>
                             </a>
                         </mat-card-content>
                     </mat-card>
@@ -64,49 +129,44 @@
                 <div class="content">
                     <mat-card>
                         <div class="row justify-content-sm-center">
-                            <div class="col-sm-12" >
-                                <p *ngIf="!usuarioTieneComunidades" class="text-center" style="color: lightslategrey;">Usuario sin comunidades</p>
-                                <p *ngIf="usuarioTieneComunidades" class="text-center" style="color: lightslategrey;">Comunidades a las que pertenece el usuario</p>
-                            
+                            <div class="col-sm-12">
+                                <div *ngIf="!usuarioTieneComunidades" class="titleProfileText">
+                                    <p>Sin comunidades</p>
+                                </div>
+                                <div *ngIf="usuarioTieneComunidades" class="titleProfileText">
+                                    <p>Comunidades</p>
+                                </div>
+
                             </div>
                         </div>
-                        <div fxLayout="row wrap" fxLayoutGap="18px grid">
-                            <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of comunidades">
+                        <div fxLayout="row wrap" fxLayoutGap="18px grid" fxLayoutAlign="center start">
+                            <div fxFlex="30%" fxFlex.xs="100%" fxFlex.md="33%" *ngFor="let data of comunidades">
                                 <mat-card class="mat-elevation-z2">
-                                    <mat-card-header>
-                                        <mat-card-title>{{data.comunity?.nombre}}</mat-card-title>
-                                    </mat-card-header>
                                     <img mat-card-image *ngIf="data.comunity?.foto"
-                                        [src]='getImage(data.comunity?.datosFoto)' width="100" height="100">
+                                    [src]='getImage(data.comunity?.datosFoto)'>
                                     <mat-card-content>
-                                        <p>
-                                            {{data.comunity?.descripcion}}
-                                        </p>
+                                        <div class="community-card-title">
+                                            <p>{{data.comunity?.nombre}}</p>
+                                        </div>
+                                        <div class="community-card-p">
+                                            <p>{{data.comunity?.descripcion}}</p>
+                                        </div>
                                     </mat-card-content>
                                     <mat-card-actions>
-                                        <button class="text-center btn btn-success"
-                                            (click)="verComunidad(data.comunity?.id)" mat-button>Ver
-                                            comunidad</button>
-                                        <button mat-button>SHARE</button>
+                                        <div class="d-flex justify-content-center">
+                                            <button mat-icon-button="primary" (click)="verComunidad(data.comunity?.id)">
+                                                <mat-icon [inline]="true" class="material-icon md-24">visibility
+                                                </mat-icon>
+                                            </button>
+                                            <button mat-icon-button="primary">
+                                                <mat-icon [inline]="true" class="material-icon md-24">share
+                                                </mat-icon>
+                                            </button>
+                                        </div>
                                     </mat-card-actions>
                                 </mat-card>
                             </div>
                         </div>
-                    </mat-card>
-                </div>
-
-
-
-
-                <div class="row gutters-sm" *ngIf="!usuarioTieneComunidades">
-                    <mat-card>
-                        <mat-card-title>
-                            <div class="row justify-content-sm-center">
-                                <div class="col-sm-3">
-                                    <p class="text-center" style="color: lightslategrey;">Usuario sin comunidades</p>
-                                </div>
-                            </div>
-                        </mat-card-title>
                     </mat-card>
                 </div>
             </div>

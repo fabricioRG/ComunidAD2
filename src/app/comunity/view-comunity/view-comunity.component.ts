@@ -95,7 +95,6 @@ export class ViewComunityComponent implements OnInit {
       this.commentService.createComment(commentPost, user)
         .subscribe((data) => {
           data.user = this.user
-          data.createdAt=this.getFormatedTime(data.createdAt)
           post.nuevoComentario = ""
           post.caracteresDeComentario = 0;
           post.commentPost?.push(data)
@@ -553,7 +552,9 @@ export class ViewComunityComponent implements OnInit {
 
   }
 
-
+  goToUserProfile(usr: User){
+    this.redirection.navigate(['userProfile', usr.registroAcademico]);
+  }
 
 
   downvote(comunityPost: CommunityPost) {

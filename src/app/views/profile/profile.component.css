@@ -10,6 +10,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 10px;
 }
 
 .profile-pic input[type="file"] {
@@ -164,4 +165,15 @@ img {
     height: 100%;
     width: 100%;
     border-radius: 50%;
+}
+
+.material-icons.md-36 {
+    font-size: 36px;
+    color: darkorange;
+}
+
+.p.iconText {
+    font-size: 15px;
+    margin: 3px;
+    color: rgb(207, 114, 0);
 }
