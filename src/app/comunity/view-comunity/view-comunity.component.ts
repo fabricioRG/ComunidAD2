@@ -10,10 +10,12 @@ import { CommunityPost } from 'src/app/models/comunityPost.model';
 import { Course } from 'src/app/models/course.model';
 import { IdComunityAssign } from 'src/app/models/idComunityAssign.model';
 import { CommentService } from 'src/app/services/comment/comment.service';
+import { ValorationPost } from 'src/app/models/valorationPost.model';
 import { FiltrarSolicitudesComunidadService } from 'src/app/services/filtrar-solicitudes-comunidad/filtrar-solicitudes-comunidad.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { SesionService } from 'src/app/services/sesion/sesion.service';
 import { UploadFileServiceService } from 'src/app/services/uploadFileService/upload-file-service.service';
+import { VoteService } from 'src/app/services/vote/vote.service';
 import { User } from 'src/app/user.model';
 import { LoadComunitysComponent } from '../load-comunitys/load-comunitys.component';
 
@@ -30,7 +32,8 @@ export class ViewComunityComponent implements OnInit {
 
   constructor(private redirection: Router, private route: ActivatedRoute, private uploadFileService: UploadFileServiceService,
     private dataService: DataService, private sessionService: SesionService, private formBuilder: FormBuilder, private modal: ModalService, private comunidadService: FiltrarSolicitudesComunidadService,
-    private commentService: CommentService) {
+    private commentService: CommentService,
+    private voteService: VoteService) {
     this.cargarComunidad();
   }
 
@@ -319,20 +322,17 @@ export class ViewComunityComponent implements OnInit {
 
   getAllCommunityPost() {
     let search: OrdinaryObject = {
-      numberParam: this.comunity.id
+      numberParam: this.comunity.id,
+      stringParam: this.user.registroAcademico
     }
     this.dataService.getAllCommunityPostByCommunity(search, this.user)
       .subscribe(data => {
         console.log("POSTS:", data)
-
-        data.forEach(element => {
-          element.commentPost?.forEach(comment => {
-            comment.createdAt = this.getFormatedTime(comment.createdAt)
-          });
-        });
         this.communityPostList = data;
       });
   }
+
+
 
   getAllUsersInCommunity() {
     let search: OrdinaryObject = {
@@ -467,4 +467,122 @@ export class ViewComunityComponent implements OnInit {
         );
     }
   }
+  ////////////////
+
+
+
+  /**
+   * Recalcula el rated para un post de una comunidad
+   * @param comunityPost 
+   * @param operacion 
+   */
+  recalcularRated(comunityPost: CommunityPost, operacion: string, aumento_devcremento: number) {
+    if (comunityPost.rated) {
+      if (operacion == '+') {
+        comunityPost.rated += aumento_devcremento;
+      } else {
+        comunityPost.rated -= aumento_devcremento;
+      }
+    } else {//comunityPost.rated=0
+      if (operacion == '+') {
+        comunityPost.rated = 0;
+        comunityPost.rated += aumento_devcremento;
+
+      } else {
+        comunityPost.rated = 0;
+        comunityPost.rated -= aumento_devcremento;
+
+      }
+    }
+  }
+
+  /**
+   * Actualiza la valoracion del usuario y el rated del post de la comunidad
+   * @param comunityPost 
+   */
+  saveOrModifyValorationAndComunityPost(comunityPost: CommunityPost, isCreate: boolean) {
+    var user: User = this.sessionService.getUserWithToken();
+    this.dataService.persistCommunityPost(comunityPost, user)
+      .subscribe((data) => {
+        var valoration: ValorationPost = this.voteService.genereteValorationPostOfUserLogued(comunityPost, this.user);
+        valoration.valoration = comunityPost.valoration
+        if (isCreate) {
+          this.voteService.createValoration(valoration, user)
+            .subscribe((data) => {
+            })
+        } else {//Actualizacion
+          this.voteService.updateValoration(valoration, user)
+            .subscribe((data) => {
+            })
+        }
+      })
+  }
+
+
+  /**
+   * Accion que se realiza al darle click al boton de Valoracio positiva(Flecha para arriba)
+   * @param comunityPost 
+   */
+  upvote(comunityPost: CommunityPost) {
+    //Metodo que cree el like
+    var isCreate: boolean;
+    if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
+      if (comunityPost.valoration) {
+        if (comunityPost.valoration == 'DOWN') {//CAMBIARLO A UP-----rated++
+          comunityPost.valoration = 'UP'
+          this.recalcularRated(comunityPost, '+', 2)//2
+        } else if (comunityPost.valoration == 'NONE') {
+          comunityPost.valoration = 'UP'
+          this.recalcularRated(comunityPost, '+', 1)
+        } else if (comunityPost.valoration == 'UP') {//CAMBIARLO A NONE-----rated--
+          comunityPost.valoration = 'NONE';
+          this.recalcularRated(comunityPost, '-', 1)
+        }
+
+        //Actualizar una tupla donde id_post=x AND user_registro=y
+        isCreate = false;
+      } else {//Crear un valoration UP-------rated++
+        isCreate = true;
+        comunityPost.valoration = 'UP';
+        this.recalcularRated(comunityPost, '+', 1)
+      }
+      //Actualizar el comunity_post
+      this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
+
+    }
+
+  }
+
+
+
+
+  downvote(comunityPost: CommunityPost) {
+    //Metodo que cree el dislike
+    var isCreate: boolean;
+    if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
+      if (comunityPost.valoration) {
+        if (comunityPost.valoration == 'UP') {//CAMBIARLO A DOWN-----rated--
+          comunityPost.valoration = 'DOWN'
+          this.recalcularRated(comunityPost, '-', 2)
+        } else if (comunityPost.valoration == 'NONE') {
+          comunityPost.valoration = 'DOWN'
+          this.recalcularRated(comunityPost, '-', 1)
+        } else if (comunityPost.valoration == 'DOWN') {//CAMBIARLO A NONE-----rated++
+          comunityPost.valoration = 'NONE';
+          this.recalcularRated(comunityPost, '+', 1)
+        }
+
+        //Actualizar una tupla donde id_post=x AND user_registro=y
+        isCreate = false;
+      } else {//Crear un valoration UP-------rated--
+        isCreate = true;
+        comunityPost.valoration = 'DOWN';
+        this.recalcularRated(comunityPost, '-', 1)
+      }
+      //Actualizar el comunity_post
+      this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
+    }
+
+  }
+
 }

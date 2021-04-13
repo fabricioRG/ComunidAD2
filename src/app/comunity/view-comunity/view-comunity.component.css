@@ -230,3 +230,21 @@ mat-card {
     border-color: #e5e5e5;
     background: #fff;
 }
+    .vote{
+        cursor : pointer;
+    }
+
+    .vote:hover{
+        color: orange;
+    }
+  
+    .active.up {
+        color: green;
+      }
+  
+    .active.down {
+       color: red;
+     }
+  
+  
+  
