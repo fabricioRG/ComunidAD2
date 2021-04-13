@@ -23,6 +23,7 @@ export class NavbarComponent implements OnInit {
 
 
   token: any;
+  userId: string;
   formControl: FormControl;
 
   sesion$: Observable<boolean>;
@@ -146,6 +147,14 @@ export class NavbarComponent implements OnInit {
     }
     this.updateResultList();
     // console.log("Result:::: ",this.resultListSearch);
+  }
+
+  goToPageUserProfile(){
+    this.dataService
+      .getUserByToken(this.sesionService.getUserWithToken())
+      .subscribe((response) => {
+        this.router.navigate(['userProfile', response.registroAcademico]);
+      });
   }
 
 }
