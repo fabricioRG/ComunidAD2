@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, Data, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  convertToParamMap,
+  Data,
+  Router,
+} from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
 import { DataService } from 'src/app/data.service';
@@ -17,6 +22,9 @@ import curso from 'src/app/Test/ArchivosJson/course.json';
 import arregloAsigns from 'src/app/Test/ArchivosJson/AsignacionesComunidad.json';
 import arregloPosts from 'src/app/Test/ArchivosJson/comunityPosts.json';
 import { ComunityAssign } from 'src/app/models/comunityAssign.model';
+import { ModalService } from 'src/app/services/modal/modal.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UploadFileServiceService } from 'src/app/services/uploadFileService/upload-file-service.service';
 describe('UserProfileComponent', () => {
   let component: UserProfileComponent;
   let fixture: ComponentFixture<UserProfileComponent>;
@@ -41,15 +49,17 @@ describe('UserProfileComponent', () => {
               paramMap: convertToParamMap({ id: '50' }),
             },
             paramMap: {
-              subscribe: (fn: (value: Data) => void) => fn({
-              }),
-            }
-          }
+              subscribe: (fn: (value: Data) => void) => fn({}),
+            },
+          },
         },
         DataService,
         HeadersService,
         HttpClient,
         SesionService,
+        NgbModal,
+        ModalService,
+        UploadFileServiceService,
       ],
     }).compileComponents();
   });
@@ -65,7 +75,10 @@ describe('UserProfileComponent', () => {
       TestBed.inject(Router),
       TestBed.inject(ActivatedRoute),
       dataService,
-      sesionService
+      sesionService,
+      TestBed.inject(ModalService),
+      TestBed.inject(NgbModal),
+      TestBed.inject(UploadFileServiceService)
     );
     fixture.detectChanges();
   });
