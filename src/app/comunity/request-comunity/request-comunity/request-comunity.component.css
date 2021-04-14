@@ -1,3 +1,15 @@
 table {
-    width: 100%;
-  }
+  width: 100%;
+}
+
+.main-body {
+  border-radius: 10px;
+  margin: 10px;
+  padding: 20px;
+  background-color: rgb(253, 239, 219);
+}
+
+.mat-mini-fab.mat-yellow {
+  background-color: rgb(255, 183, 0);
+  color: #fff;
+}

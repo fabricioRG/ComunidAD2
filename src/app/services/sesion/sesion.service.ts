@@ -35,7 +35,6 @@ export class SesionService {
   private loggedIn: boolean;
 
   constructor(private _http: HttpClient, private dataService: DataService) {
-    console.log('REINICIANDO EL SERVICIO');
     if (localStorage.getItem('token') === null) {
       //No hay session
       this.loggedIn = false;
@@ -76,7 +75,6 @@ export class SesionService {
         }
       },
       (error) => {
-        console.log(error.error);
         this.logger$.next(this.loggedIn);
       }
     );
@@ -84,7 +82,6 @@ export class SesionService {
 
   //CIerra la sesion, llamarlo cuando se va a cerrar la sesion
   log0ut() {
-    console.log('SESSION LOG OUT');
     this.loggedIn = false;
     localStorage.clear();
     this.logger$.next(this.loggedIn); //Avisar a los observadores el cambio del valor de la variable
@@ -122,10 +119,6 @@ export class SesionService {
     } else {
       this.esSuscriptor = true;
     }
-
-    console.log('Es suscriptor:', this.esSuscriptor);
-    console.log('Es admin de sistema:', this.esAdministradorDeSitema);
-    console.log('Es admin de comunidad:', this.esAdministradorDeComunidad);
   }
 
   asignarTipodeUsuarioSinSesion() {

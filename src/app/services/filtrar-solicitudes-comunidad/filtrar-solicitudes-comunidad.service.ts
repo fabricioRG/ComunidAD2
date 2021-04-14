@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 export class FiltrarSolicitudesComunidadService {
   filtrarSolicitudesComunidadURL =
     '/api/comunity/filtrarSolicitudesComunidades';
+  usersByStateAndFilterURL = '/api/comunity/assigns/find/byStateAndComunity';
   actualizarEstadoSolicitudesComunidadURL =
     '/api/users/updateStateComunityRequest';
   deleteComunityURL = '/api/comunity/deleteComunity';
@@ -64,4 +65,13 @@ export class FiltrarSolicitudesComunidadService {
   removeUserFromComunity(token:any,comunityAssign: ComunityAssign){
     return this._http.post<ComunityAssign>(this.removeUserFromComunityURL,comunityAssign,this.controllHeader.obtenerHeaderConToken(token))
   }
+
+  getCommunityAssignsByState(token: any, filtros: any): any {
+    return this._http.post<ComunityAssign[]>(
+      this.usersByStateAndFilterURL,
+      filtros,
+      this.controllHeader.obtenerHeaderConToken(token)
+    );
+  }
+
 }

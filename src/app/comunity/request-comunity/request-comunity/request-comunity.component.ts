@@ -32,6 +32,7 @@ export class RequestComunityComponent implements OnInit {
   user: User;
   comunityAssign: ComunityAssign;
   comunityAssignList: any;
+  deniedComunityAssignList: any;
   comunidadEsDelUsuarioLogueado: boolean;
   comunity: Comunity;
   displayedColumns: string[] = [
@@ -45,10 +46,14 @@ export class RequestComunityComponent implements OnInit {
   fechaInicial: '';
   fechaFinal: '';
   registroAcademico: '';
+  deniedRegistroAcademico: '';
   ESTADO_ACTIVO: string;
   ESTADO_DENEGADO: string;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.buscarPorFiltros();
+    this.getDeniedUsersByFilter();
+  }
 
   cargarDatos() {
     this.comunityAssign = new ComunityAssign();
@@ -141,11 +146,12 @@ export class RequestComunityComponent implements OnInit {
               this.mostrarMensaje(
                 'Actualizacion correcta de la Aceptacion de la solicitud',
                 'Se completo correctamente la solicitud de ' +
-                  elemento.user.registroAcademico,
+                elemento.user.registroAcademico,
                 'La solicitud ahora esta: ' +
-                  ConstantesService.COMUNITY_ASIGN_ACTIVO
+                ConstantesService.COMUNITY_ASIGN_ACTIVO
               );
               this.buscarPorFiltros();
+              this.getDeniedUsersByFilter();
             },
             (error: any) => {
               this.mostrarMensaje(
@@ -192,11 +198,12 @@ export class RequestComunityComponent implements OnInit {
               this.mostrarMensaje(
                 'Actualizacion correcta de la denegacion de la solicitud',
                 'Se completo correctamente la solicitud de ' +
-                  elemento.user.registroAcademico,
+                elemento.user.registroAcademico,
                 'La solicitud ahora esta:' +
-                  ConstantesService.COMUNITY_ASIGN_DENEGADO
+                ConstantesService.COMUNITY_ASIGN_DENEGADO
               );
               this.buscarPorFiltros();
+              this.getDeniedUsersByFilter();
             },
             (error: any) => {
               this.mostrarMensaje(
@@ -228,4 +235,32 @@ export class RequestComunityComponent implements OnInit {
     modal.componentInstance.modalBody = mensaje;
     modal.componentInstance.infoModal = true;
   }
+
+  getDeniedUsersByFilter() {
+    if (this.deniedRegistroAcademico == null) {
+      this.deniedRegistroAcademico = '';
+    }
+    let deniedUsersParamsFilter: IdComunityAssign = {
+      idComunidad: this.comunity.id,
+      registroAcademico: this.deniedRegistroAcademico,
+      stateAssign: ConstantesService.COMUNITY_ASIGN_DENEGADO
+    }
+    return this.filtrarAsignacionesComunidad
+      .getCommunityAssignsByState(
+        this.sessionService.getUserWithToken().token,
+        deniedUsersParamsFilter
+      )
+      .subscribe((data: any) => {
+        console.log('asignaciones: ', data);
+        this.deniedComunityAssignList = data;
+      });
+  }
+
+  getFormatedTime(time: string | undefined) {
+    let d = new Date(time!);
+    var datestring = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear() + " " +
+      d.getHours() + ":" + d.getMinutes();
+    return datestring;
+  }
+
 }

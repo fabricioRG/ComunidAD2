@@ -32,10 +32,10 @@
 
     <div>
         <a class="nav-link" mat-button routerLink="inicio">Inicio</a>
-        <a class="nav-link" *ngIf="existeSession" mat-button routerLink="profile">Perfil</a>
+        <a class="nav-link" *ngIf="existeSession" mat-button routerLink="" (click)="goToPageUserProfile()">Perfil</a>
         <a class="nav-link" *ngIf="existeSession" mat-button routerLink="dashboard">Tablero</a>
         <a class="nav-link" *ngIf="!existeSession" mat-button routerLink="crearUsuario">Crear Usuario</a>
-        <a class="nav-link" *ngIf="existeSession" mat-button routerLink="editProfile">Editar Perfil</a>
+        <!-- <a class="nav-link" *ngIf="existeSession" mat-button routerLink="editProfile">Editar Perfil</a> -->
         <a class="nav-link" mat-button>Nosotros</a>
         <a class="nav-link" *ngIf="!existeSession" mat-raised-button color="accent" routerLink="login">Iniciar Sesion</a>
         <a class="nav-link" *ngIf="existeSession" mat-raised-button color="gray" routerLink="login" (click)="logOut()">Cerrar Sesion</a>
