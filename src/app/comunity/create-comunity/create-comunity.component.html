@@ -1,5 +1,4 @@
 <div *ngIf="verificarSesion()" class="form-container">
-
     <div class="row d-flex justify-content-center">
         <!--Grid column-->
         <div class="col-md-6">
@@ -7,74 +6,77 @@
                 <h1>Creacion de comunidad</h1>
             </div>
             <form [formGroup]="comunityForm" (ngSubmit)="onSaveForm()">
-
                 <!--Nombre comunidad-->
 
                 <mat-form-field class="col-sm-12" appearance="fill">
                     <mat-label>Nombre de la comunidad*</mat-label>
-                    <input type="text" formControlName="nombreDeComunidad" matInput [ngClass]="{ 'is-invalid':f.nombreDeComunidad.errors }">
+                    <input type="text" formControlName="nombreDeComunidad" matInput
+                        [ngClass]="{ 'is-invalid': f.nombreDeComunidad.errors }" />
                     <div class="invalid-feedback" *ngIf="f.nombreDeComunidad.errors">
-                        <div *ngIf="f.nombreDeComunidad.errors.required">El nombre de comunidad es requerido </div>
-                        <div *ngIf="f.nombreDeComunidad.errors.maxlength">La descripcion debe tener maximo 50 caracteres</div>
+                        <div *ngIf="f.nombreDeComunidad.errors.required">
+                            El nombre de comunidad es requerido
+                        </div>
+                        <div *ngIf="f.nombreDeComunidad.errors.maxlength">
+                            La descripcion debe tener maximo 50 caracteres
+                        </div>
                     </div>
                 </mat-form-field>
 
                 <!--Dexcipcion-->
                 <mat-form-field class="col-sm-12" appearance="fill">
                     <mat-label>Descripcion de la comunidad*</mat-label>
-                    <textarea matInput id="descripcion" rows="3"
-                        formControlName="descripcion" [ngClass]="{ 'is-invalid':f.descripcion.errors }"></textarea>
+                    <textarea matInput id="descripcion" rows="3" formControlName="descripcion"
+                        [ngClass]="{ 'is-invalid': f.descripcion.errors }"></textarea>
                     <div class="invalid-feedback" *ngIf="f.descripcion.errors">
-                        <div *ngIf="f.descripcion.errors.required">La descripcion es requerida </div>
-                        <div *ngIf="f.descripcion.errors.maxlength">La descripcion debe tener maximo 100 caracteres</div>
+                        <div *ngIf="f.descripcion.errors.required">
+                            La descripcion es requerida
+                        </div>
+                        <div *ngIf="f.descripcion.errors.maxlength">
+                            La descripcion debe tener maximo 100 caracteres
+                        </div>
                     </div>
                 </mat-form-field>
-
 
                 <!--Cursos-->
                 <mat-form-field class="col-sm-12" appearance="fill">
                     <mat-label>Curso al que sera orientada la comunidad*</mat-label>
-                    <mat-select formControlName="tipoDeCurso" [ngClass]="{ 'is-invalid':f.tipoDeCurso.errors }">
+                    <mat-select formControlName="tipoDeCurso" [ngClass]="{ 'is-invalid': f.tipoDeCurso.errors }">
                         <mat-option [value]="data.codigoDeCurso" *ngFor="let data of courses">
-                            {{data.codigoDeCurso}}
-                            {{data.nombre}}
+                            {{ data.codigoDeCurso }}
+                            {{ data.nombre }}
                         </mat-option>
                         <div class="invalid-feedback" *ngIf="f.tipoDeCurso.errors">
-                            <div *ngIf="f.tipoDeCurso.errors.required">El tipo de curso es requerdio </div>
+                            <div *ngIf="f.tipoDeCurso.errors.required">
+                                El tipo de curso es requerdio
+                            </div>
                         </div>
                     </mat-select>
-
                 </mat-form-field>
 
-
+                <mat-slide-toggle class="col-sm-12" appearance="fill" formControlName="privacidad" color="primary"
+                    style="margin-bottom: 15px;">
+                    Comunidad Privada</mat-slide-toggle>
 
                 <!--Foto  -->
-                <div class="form-group col-sm-6">
-                    Imagen para la comunidad:
-                </div>
+                <div class="form-group col-sm-6">Imagen para la comunidad:</div>
                 <div class="form-group">
-                    <input class="col-sm-12 " (change)="cargarImagen($event)" type="file" id="" name=""
-                        accept="image/png, image/jpeg" formControlName="fileImage">
+                    <input class="col-sm-12" (change)="cargarImagen($event)" type="file" id="" name=""
+                        accept="image/png, image/jpeg" formControlName="fileImage" />
                 </div>
 
                 <!--Previsualizacion de la imagen-->
-                <div class="text-center form-group" *ngIf=imagenCargada>
-                    <img width="200px" [src]="imagenCargada" alt="">
+                <div class="text-center form-group" *ngIf="imagenCargada">
+                    <img width="200px" [src]="imagenCargada" alt="" />
                 </div>
 
                 <!--BOTON-->
                 <div class="text-center">
-                    <button type="submit" [disabled]="comunityForm.invalid" class="btn btn-success">Crear
-                        comunidad</button>
+                    <button type="submit" [disabled]="comunityForm.invalid" class="btn btn-success">
+                        Crear comunidad
+                    </button>
                 </div>
-
-
-
             </form>
-
-
         </div>
         <!--Grid column-->
     </div>
-
 </div>

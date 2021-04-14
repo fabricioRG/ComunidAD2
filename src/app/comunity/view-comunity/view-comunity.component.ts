@@ -1,5 +1,12 @@
+import { trimTrailingNulls } from '@angular/compiler/src/render3/view/util';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
@@ -8,15 +15,21 @@ import {
 } from '@angular/router';
 import { DataService } from 'src/app/data.service';
 import { OrdinaryObject } from 'src/app/helpers/ordinary-object.model';
+import { CommentPost } from 'src/app/models/commentPost.model';
 import { Comunity } from 'src/app/models/comunity.model';
 import { ComunityAssign } from 'src/app/models/comunityAssign.model';
 import { CommunityPost } from 'src/app/models/comunityPost.model';
 import { Course } from 'src/app/models/course.model';
 import { IdComunityAssign } from 'src/app/models/idComunityAssign.model';
+import { ConstantesHtmlService } from 'src/app/services/constantes/constantes-html.service';
+import { ConstantesService } from 'src/app/services/constantes/constantes.service';
+import { CommentService } from 'src/app/services/comment/comment.service';
+import { ValorationPost } from 'src/app/models/valorationPost.model';
 import { FiltrarSolicitudesComunidadService } from 'src/app/services/filtrar-solicitudes-comunidad/filtrar-solicitudes-comunidad.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { SesionService } from 'src/app/services/sesion/sesion.service';
 import { UploadFileServiceService } from 'src/app/services/uploadFileService/upload-file-service.service';
+import { VoteService } from 'src/app/services/vote/vote.service';
 import { User } from 'src/app/user.model';
 import { LoadComunitysComponent } from '../load-comunitys/load-comunitys.component';
 
@@ -38,7 +51,9 @@ export class ViewComunityComponent implements OnInit {
     private sessionService: SesionService,
     private formBuilder: FormBuilder,
     private modal: ModalService,
-    private comunidadService: FiltrarSolicitudesComunidadService
+    private comunidadService: FiltrarSolicitudesComunidadService,
+    private commentService: CommentService,
+    private voteService: VoteService
   ) {
     this.cargarComunidad();
   }
@@ -63,9 +78,14 @@ export class ViewComunityComponent implements OnInit {
   solicitudEstaEnEspera: boolean;
   solicitudEstaActiva: boolean;
   solicitudEstaDenegada: boolean;
+  banderaMostrarPosts: boolean;
   alertClosedSuccess = false;
   alertClosedDanger = false;
   disableCreateCommunityPost = false;
+  //privacidad
+  privacidad: boolean;
+  disableCreateComment = false;
+  comentarioEsValido = true;
 
   //rich text
   public tools: object = {
@@ -127,18 +147,73 @@ export class ViewComunityComponent implements OnInit {
       this.solicitudEstaEnEspera = false;
       this.solicitudEstaActiva = false;
       this.solicitudEstaDenegada = false;
+      this.banderaMostrarPosts = false;
+      this.privacidad = false;
       this.cargarComunidad();
     });
   }
 
-  cargarComunidad() {
+  verificarPrivacidad(): boolean {
+    if (this.comunity.privacidad === ConstantesService.COMUNITY_PRIVADO) {
+      if (this.comunidadEsDelUsuarioLogueado) {
+        this.banderaMostrarPosts = true;
+      } else if (this.solicitudEstaActiva) {
+        this.banderaMostrarPosts = true;
+      } else {
+        this.banderaMostrarPosts = false;
+        this.communityPostList = [];
+        this.usersInCommunityList = [];
+      }
+    } else {
+      this.banderaMostrarPosts = true;
+    }
+
+    return this.banderaMostrarPosts;
+  }
+  /**
+   * Evalua si se puede guardar el comentario del usuario
+   * @param post
+   */
+  saveComment(post: CommunityPost) {
+    if (
+      post.nuevoComentario &&
+      post.nuevoComentario.length != 0 &&
+      post.nuevoComentario.length <= 150 &&
+      post.id &&
+      this.user.registroAcademico
+    ) {
+      var commentPost: CommentPost = this.commentService.generateCommentPost(
+        post.nuevoComentario,
+        this.user.registroAcademico,
+        post.id
+      );
+      var user: User = this.sessionService.getUserWithToken();
+
+      this.commentService.createComment(commentPost, user).subscribe((data) => {
+        data.user = this.user;
+        post.nuevoComentario = '';
+        post.caracteresDeComentario = 0;
+        post.commentPost?.push(data);
+      });
+    }
+  }
+
+  /**
+   * Calcula el numero de caracteres del comentario
+   * @param e
+   * @param post
+   */
+  onKeyComment(e: Event, post: CommunityPost) {
+    const element = e.currentTarget as HTMLInputElement;
+    post.caracteresDeComentario = element.value.length;
+  }
+
+  async cargarComunidad() {
     this.comunityAssign = new ComunityAssign();
     this.comunity = new Comunity();
     this.user = new User();
     var idComunidad: string | null = this.route.snapshot.paramMap.get('id');
     //var idComunidad="20"
-    console.log('JAXD', this.route.snapshot.paramMap.get('id'));
-    console.log('ID COMUNIDAD ESCOGIDA', idComunidad);
     //Ver si hay una sesion, de no haber sesion mandarlo al inicio
     //Si hay sesion buscar el usuario
     //Ver si la comunidad es del usuario(Dependiendo si es del usuario o no apareceran ciertos botones
@@ -147,20 +222,49 @@ export class ViewComunityComponent implements OnInit {
         console.log('EXISTE SESION Y EL ID DE COMUNIDAD');
         var y: number = +idComunidad;
         this.comunity.id = y;
-        this.verificarOpcionesParaComunidad();
+
+        await this.verificarOpcionesParaComunidad();
+
+        await this.verificarPrivacidad();
       }
     } else {
       console.log('VOY A REDIRIGIR');
       this.redirection.navigate(['inicio']);
     }
   }
+  asignarPrivacidad(dato: any) {
+    if (dato == ConstantesService.COMUNITY_PRIVADO) {
+      this.privacidad = true;
+    } else {
+      this.privacidad = false;
+    }
+  }
+  asignarPrivacidadBooleanAString(dato: boolean) {
+    if (dato) {
+      this.comunity.privacidad = ConstantesService.COMUNITY_PRIVADO;
+    } else {
+      this.comunity.privacidad = ConstantesService.COMUNITY_PUBLICO;
+    }
+  }
 
+  cambiarPrivacidadComunidad() {
+    this.asignarPrivacidadBooleanAString(this.privacidad);
+    this.guardarComunidad(this.user);
+  }
+  guardarComunidad(aux: User) {
+    //Creamos el JSON
+    this.dataService.saveComunity(this.comunity, aux).subscribe(
+      (response) => {},
+      (error) => {
+        alert('ERROR: ' + error);
+      }
+    );
+  }
   verificarOpcionesParaComunidad(): boolean {
     this.dataService
       .getUserByToken(this.sessionService.getUserWithToken())
       .subscribe((response) => {
         this.user = response;
-        console.log('USUARIO get token:', this.user);
         //Buscando la comunidad para ver si es del usuario
         this.dataService
           .findComunityById(this.comunity, this.user)
@@ -169,12 +273,13 @@ export class ViewComunityComponent implements OnInit {
             // console.log("Comunity:::::: ", response);
             if (response.comunity) {
               this.comunity = response.comunity;
+              this.asignarPrivacidad(this.comunity.privacidad);
+              this.verificarPrivacidad();
             }
-            console.log('JAXDD', this.comunityAssign.user?.registroAcademico);
-            console.log('JAXDDD', this.user.registroAcademico);
+
             this.loadImageCommunity();
-            this.getAllCommunityPost();
-            this.getAllUsersInCommunity();
+            this.getAllCommunityPost(); //es privado
+            this.getAllUsersInCommunity(); //es privado
             //Siel registroAcadmico de la comunidad que se recibio es igual al registroAcademico de usuario, es su comunidad
             if (
               this.comunityAssign.user?.registroAcademico ===
@@ -344,7 +449,6 @@ export class ViewComunityComponent implements OnInit {
   }
 
   loadImageCommunity() {
-    console.log('LOAD', this.comunity);
     if (this.comunity.datosFoto) {
       this.styleBackgroundImageCommunity =
         encabezadoFoto + this.comunity.datosFoto + finalFoto;
@@ -510,6 +614,135 @@ export class ViewComunityComponent implements OnInit {
             this.redirection.navigate(['dashboard']);
           }
         );
+    }
+  }
+  ////////////////
+
+  /**
+   * Recalcula el rated para un post de una comunidad
+   * @param comunityPost
+   * @param operacion
+   */
+  recalcularRated(
+    comunityPost: CommunityPost,
+    operacion: string,
+    aumento_devcremento: number
+  ) {
+    if (comunityPost.rated) {
+      if (operacion == '+') {
+        comunityPost.rated += aumento_devcremento;
+      } else {
+        comunityPost.rated -= aumento_devcremento;
+      }
+    } else {
+      //comunityPost.rated=0
+      if (operacion == '+') {
+        comunityPost.rated = 0;
+        comunityPost.rated += aumento_devcremento;
+      } else {
+        comunityPost.rated = 0;
+        comunityPost.rated -= aumento_devcremento;
+      }
+    }
+  }
+
+  /**
+   * Actualiza la valoracion del usuario y el rated del post de la comunidad
+   * @param comunityPost
+   */
+  saveOrModifyValorationAndComunityPost(
+    comunityPost: CommunityPost,
+    isCreate: boolean
+  ) {
+    var user: User = this.sessionService.getUserWithToken();
+    this.dataService
+      .persistCommunityPost(comunityPost, user)
+      .subscribe((data) => {
+        var valoration: ValorationPost = this.voteService.genereteValorationPostOfUserLogued(
+          comunityPost,
+          this.user
+        );
+        valoration.valoration = comunityPost.valoration;
+        if (isCreate) {
+          this.voteService
+            .createValoration(valoration, user)
+            .subscribe((data) => {});
+        } else {
+          //Actualizacion
+          this.voteService
+            .updateValoration(valoration, user)
+            .subscribe((data) => {});
+        }
+      });
+  }
+
+  /**
+   * Accion que se realiza al darle click al boton de Valoracio positiva(Flecha para arriba)
+   * @param comunityPost
+   */
+  upvote(comunityPost: CommunityPost) {
+    //Metodo que cree el like
+    var isCreate: boolean;
+    if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
+      if (comunityPost.valoration) {
+        if (comunityPost.valoration == 'DOWN') {
+          //CAMBIARLO A UP-----rated++
+          comunityPost.valoration = 'UP';
+          this.recalcularRated(comunityPost, '+', 2); //2
+        } else if (comunityPost.valoration == 'NONE') {
+          comunityPost.valoration = 'UP';
+          this.recalcularRated(comunityPost, '+', 1);
+        } else if (comunityPost.valoration == 'UP') {
+          //CAMBIARLO A NONE-----rated--
+          comunityPost.valoration = 'NONE';
+          this.recalcularRated(comunityPost, '-', 1);
+        }
+
+        //Actualizar una tupla donde id_post=x AND user_registro=y
+        isCreate = false;
+      } else {
+        //Crear un valoration UP-------rated++
+        isCreate = true;
+        comunityPost.valoration = 'UP';
+        this.recalcularRated(comunityPost, '+', 1);
+      }
+      //Actualizar el comunity_post
+      this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
+    }
+  }
+
+  goToUserProfile(usr: User) {
+    this.redirection.navigate(['userProfile', usr.registroAcademico]);
+  }
+
+  downvote(comunityPost: CommunityPost) {
+    //Metodo que cree el dislike
+    var isCreate: boolean;
+    if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
+      if (comunityPost.valoration) {
+        if (comunityPost.valoration == 'UP') {
+          //CAMBIARLO A DOWN-----rated--
+          comunityPost.valoration = 'DOWN';
+          this.recalcularRated(comunityPost, '-', 2);
+        } else if (comunityPost.valoration == 'NONE') {
+          comunityPost.valoration = 'DOWN';
+          this.recalcularRated(comunityPost, '-', 1);
+        } else if (comunityPost.valoration == 'DOWN') {
+          //CAMBIARLO A NONE-----rated++
+          comunityPost.valoration = 'NONE';
+          this.recalcularRated(comunityPost, '+', 1);
+        }
+
+        //Actualizar una tupla donde id_post=x AND user_registro=y
+        isCreate = false;
+      } else {
+        //Crear un valoration UP-------rated--
+        isCreate = true;
+        comunityPost.valoration = 'DOWN';
+        this.recalcularRated(comunityPost, '-', 1);
+      }
+      //Actualizar el comunity_post
+      this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
     }
   }
 }

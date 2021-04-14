@@ -54,6 +54,8 @@ import { UserProfileComponent } from './views/user-profile/user-profile.componen
 import { RequestComunityComponent } from './comunity/request-comunity/request-comunity/request-comunity.component';
 import { UnsuscribeMembersComponent } from './comunity/unsuscribe-members/unsuscribe-members.component';
 import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRippleModule } from '@angular/material/core';
 
 const rutas: Routes = [
   {
@@ -180,6 +182,8 @@ const rutas: Routes = [
     MatSelectModule,
     FlexLayoutModule,
     RichTextEditorAllModule,
+    MatSlideToggleModule,
+    MatRippleModule,
     RouterModule.forRoot(rutas, {
       useHash: true,
     }),
