@@ -87,6 +87,53 @@ export class ViewComunityComponent implements OnInit {
   disableCreateComment = false;
   comentarioEsValido = true;
 
+  //rich text
+  public tools: object = {
+    items: [
+      'Undo',
+      'Redo',
+      '|',
+      'Bold',
+      'Italic',
+      'Underline',
+      'StrikeThrough',
+      '|',
+      'FontName',
+      'FontSize',
+      'FontColor',
+      'BackgroundColor',
+      '|',
+      'SubScript',
+      'SuperScript',
+      '|',
+      'LowerCase',
+      'UpperCase',
+      '|',
+      'Formats',
+      'Alignments',
+      '|',
+      'OrderedList',
+      'UnorderedList',
+      '|',
+      'Indent',
+      'Outdent',
+      '|',
+      'CreateLink',
+      '|',
+      'ClearFormat',
+      'Print',
+      'SourceCode',
+      '|',
+      'FullScreen',
+    ],
+  };
+
+  public emptyTools: object = {
+    items: ['Undo', 'Redo'],
+  };
+  public iframe: object = { enable: true };
+  public height: number = 500;
+  //
   ngOnInit(): void {
     this.newCommunityPost = new CommunityPost();
     this.postForm = this.formBuilder.group({
@@ -218,7 +265,6 @@ export class ViewComunityComponent implements OnInit {
       .getUserByToken(this.sessionService.getUserWithToken())
       .subscribe((response) => {
         this.user = response;
-
         //Buscando la comunidad para ver si es del usuario
         this.dataService
           .findComunityById(this.comunity, this.user)
