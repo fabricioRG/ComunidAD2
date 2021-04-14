@@ -45,6 +45,12 @@
                                     <button type="button" class="btn btn-outline-danger"
                                         (click)="eliminarComunidad()">Eliminar Comunidad</button>
                                 </div>
+                                <div *ngIf="comunidadEsDelUsuarioLogueado" class="col-sm-12">
+                                    <mat-slide-toggle class="col-sm-12" appearance="fill" [(ngModel)]="privacidad"
+                                        color="primary" style="margin-bottom: 15px;"
+                                        (change)="cambiarPrivacidadComunidad()">
+                                        Comunidad Privada</mat-slide-toggle>
+                                </div>
                             </div>
                             <div *ngIf="disableCreateCommunityPost">
                                 <mat-card-title>
@@ -109,7 +115,25 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
+                <div *ngIf='verificarPrivacidad();else noMostrarPosts'>
 
+                </div>
+
+                <ng-template #noMostrarPosts>
+                    <mat-card matRipple [matRippleUnbounded]="true" [matRippleRadius]="75" matRippleColor="red">
+                        <mat-card-content>
+                            <div class="row justify-content-around">
+
+
+                                ES COMUNIDAD PRIVADA,
+                                SOLICITA UNIRTE
+
+
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                </ng-template>
                 <div class="genericCard" *ngFor="let post of communityPostList;let i = index">
                     <mat-card>
                         <mat-card-header>
@@ -124,12 +148,12 @@
                             <div class="row" style="margin-right: 0px;">
                                 <div class="col-sm-1">
                                     <span class="material-icons vote up" style="font-size: 2rem;" (click)="upvote(post)"
-                                    [ngClass]="{'active' : post.valoration=='UP' }">
+                                        [ngClass]="{'active' : post.valoration=='UP' }">
                                         arrow_drop_up
                                     </span>
                                     <p style="text-align: center; margin: 0px; padding: 0px;">{{post.rated}}</p>
-                                    <span class="material-icons vote down" style="font-size: 2rem;" (click)="downvote(post)"
-                                    [ngClass]="{'active' : post.valoration=='DOWN' }">
+                                    <span class="material-icons vote down" style="font-size: 2rem;"
+                                        (click)="downvote(post)" [ngClass]="{'active' : post.valoration=='DOWN' }">
                                         arrow_drop_down
                                     </span>
                                 </div>
@@ -150,44 +174,49 @@
                         <mat-card-footer>
                             <mat-card-subtitle>
                                 <div style="padding-left: 30px;">
-                                    Autor: <a routerLink="" (click)="goToUserProfile(post.user!)">{{userName(post.user)}}</a>
+                                    Autor: <a routerLink=""
+                                        (click)="goToUserProfile(post.user!)">{{userName(post.user)}}</a>
                                 </div>
                             </mat-card-subtitle>
                             <div *ngIf="comunidadEsDelUsuarioLogueado || solicitudEstaActiva" class="container">
                                 <div class="container">
-                                    <mat-form-field class="col-sm-12" >
+                                    <mat-form-field class="col-sm-12">
                                         <mat-label>Escriba un nuevo comentario*</mat-label>
-                                        <input (keyup)="onKeyComment($event,post)" type="text"  [(ngModel)]="post.nuevoComentario" name="comment-{{i}}" matInput />
+                                        <input (keyup)="onKeyComment($event,post)" type="text"
+                                            [(ngModel)]="post.nuevoComentario" name="comment-{{i}}" matInput />
                                     </mat-form-field>
- 
+
                                     <div class="text-right">
-                                        <div *ngIf="post.caracteresDeComentario && post.caracteresDeComentario>150" >
+                                        <div *ngIf="post.caracteresDeComentario && post.caracteresDeComentario>150">
                                             <p class="text-danger">Tu comentario solo puede tener 150 caracteres</p>
                                         </div>
-                                        <button type="submit"class="btn btn-info" (click)=saveComment(post)>
+                                        <button type="submit" class="btn btn-info" (click)=saveComment(post)>
                                             Comentar
                                         </button>
- 
+
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="container">
                                 <p>Comentarios actuales</p>
                                 <br>
                                 <section *ngFor="let comment of post.commentPost" class="comments">
                                     <article class="comment">
-                                      <a class="comment-img" href="#non">
-                                        <img src="https://i.pinimg.com/564x/46/6c/02/466c0297a20203c8ba7ebd1f4cf0d21c.jpg" alt="" width="50" height="50">
-                                      </a>
-                                      <div class="comment-body">
-                                        <div class="text">
-                                          <p>{{comment.descripcion}}</p>
+                                        <a class="comment-img" href="#non">
+                                            <img src="https://i.pinimg.com/564x/46/6c/02/466c0297a20203c8ba7ebd1f4cf0d21c.jpg"
+                                                alt="" width="50" height="50">
+                                        </a>
+                                        <div class="comment-body">
+                                            <div class="text">
+                                                <p>{{comment.descripcion}}</p>
+                                            </div>
+                                            <p class="attribution">Por: <a routerLink=""
+                                                    (click)="goToUserProfile(comment.user!)">{{comment.user?.nombreCompleto}}</a>
+                                                Publicado el: {{getFormatedTime(comment.createdAt)}}</p>
                                         </div>
-                                        <p class="attribution">Por: <a routerLink="" (click)="goToUserProfile(comment.user!)">{{comment.user?.nombreCompleto}}</a> Publicado el: {{getFormatedTime(comment.createdAt)}}</p>
-                                      </div>
                                     </article>
-                                  </section>
+                                </section>
 
                             </div>
 

@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConstantesService {
-
-  constructor() { }
-
+  constructor() {}
 
   public static ESTADO_USUARIO_ACTIVO = 'ACTIVO';
   public static ESTADO_USUARIO_INACTIVO = 'INACTIVO';
@@ -37,7 +35,7 @@ export class ConstantesService {
   public static USER_ROL_SUPER = 'SUPER';
   public static USER_ROL_COMUNIDAD = 'COMUNIDAD';
   public static USER_ROL_NORMAL = 'NORMAL';
-  
+
   //ICONS
   public static ICON_PUBLIC = 'public';
   public static ICON_LOCK = 'lock';
@@ -54,4 +52,6 @@ export class ConstantesService {
   public static ICON_GROUPS = 'groups';
   public static ICON_CAKE = 'cake';
 
+  public static COMUNITY_PUBLICO = 'PUBLICO';
+  public static COMUNITY_PRIVADO = 'PRIVADO';
 }
