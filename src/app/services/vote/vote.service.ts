@@ -15,8 +15,7 @@ export class VoteService {
   updateValorationURL = "/api/users/updateValoration"
 
   constructor(
-    private _http: HttpClient,
-    private controllHeader: HeadersService
+    private _http: HttpClient
   ) { }
 
 
@@ -38,11 +37,11 @@ export class VoteService {
     );
   }
 
-/**
- * Permite actualizar una valoracion
- * @param valorationPost 
- * @param user 
- */
+  /**
+   * Permite actualizar una valoracion
+   * @param valorationPost 
+   * @param user 
+   */
   updateValoration(valorationPost: ValorationPost, user: User) {
     //console.log('En save comunity: ' + comunity.nombre)
     let headers = new HttpHeaders({

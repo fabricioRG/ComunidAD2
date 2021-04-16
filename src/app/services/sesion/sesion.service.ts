@@ -142,4 +142,11 @@ export class SesionService {
   public getLogger() {
     return this.logger$;
   }
+
+  //Getter
+  public getLoggedIn(){
+    return this.loggedIn;
+  }
+
+
 }

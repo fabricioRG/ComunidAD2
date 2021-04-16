@@ -67,13 +67,13 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  get registroAcademico(){
+ /* get registroAcademico(){
     return this.loginForm.get('registroAcademico');
   }
 
   get password(){
     return this.loginForm.get('password');
-  }
+  }*/
 
   get f(){
     return this.loginForm.controls;
