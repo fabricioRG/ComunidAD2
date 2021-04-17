@@ -151,25 +151,7 @@ describe('RequestComunityComponent', () => {
     expect(expResult).toEqual(result);
   });
 
-  // it('Buscar por filtros', () => {
-  //   //Arrange
-  //   var user: User = new User();
-  //   user.registroAcademico = '123456789';
-  //   user.token = '1234';
-  //   var comunityAssignList: ComunityAssign[] = [{}];
-
-  //   sessionServiceMock.getUserWithToken.and.returnValue(user);
-  //   filtrarSolicitudesComunidadServiceMock.getAsignacionesComunidad.and.returnValue(
-  //     of(comunityAssignList)
-  //   );
-  //   component.buscarPorFiltros();
-  //   //Act
-  //   var expResult = comunityAssignList;
-  //   var result = component.comunityAssignList;
-  //   //Assert
-  //   expect(expResult).toEqual(result);
-  // });
-
+ 
   it('mostrarMensaje', () => {
     expect(component.mostrarMensaje('Header', 'Tittle', 'Mensaje')).toBeTruthy;
   });
@@ -221,4 +203,14 @@ describe('RequestComunityComponent', () => {
     //Assert
     expect(spy).toHaveBeenCalled();
   });
+
+  it('getFormattedTime',()=>{
+      var time : string = '2021-04-14 14:21:37.448058'
+      var expResult = "14/4/2021 14:21"
+      var result = component.getFormatedTime(time)
+      expect(expResult).toEqual(result)
+    })
+
+
+
 });

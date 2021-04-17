@@ -19,7 +19,7 @@ describe('LoadComunityComponent', () => {
   let component: LoadComunitysComponent;
   let fixture: ComponentFixture<LoadComunitysComponent>;
   const sesionServiceMock = jasmine.createSpyObj('SesionService', ['getUserWithToken', 'exitSession','usuarioEsAdministradorDeComunidad']);
-  const dataServiceMock = jasmine.createSpyObj('DataServiceMock', ['getUserByToken', 'findComunytyByRegistroAcademico']);
+  const dataServiceMock = jasmine.createSpyObj('DataService', ['getUserByToken', 'findComunytyByRegistroAcademico']);
   const spyRouter = jasmine.createSpyObj('Router', ['navigate'])
 
   beforeEach(async () => {

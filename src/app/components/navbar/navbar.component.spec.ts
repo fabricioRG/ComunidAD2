@@ -1,8 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { ViewComunityComponent } from 'src/app/comunity/view-comunity/view-comunity.component';
@@ -27,17 +29,17 @@ describe('NavbarComponent', () => {
 
 
   let sesionServiceMock = jasmine.createSpyObj('SesionService',
-    ['asignarTipoDeUsuarioConSesion','getUserWithToken','loggedIn$', 'log0ut', 'exitSession', 'usuarioEsSuscriptor', 'usuarioEsAdministradorDeSistema', 'usuarioEsAdministradorDeComunidad'])
+    ['asignarTipoDeUsuarioConSesion', 'getUserWithToken', 'loggedIn$', 'log0ut', 'exitSession', 'usuarioEsSuscriptor', 'usuarioEsAdministradorDeSistema', 'usuarioEsAdministradorDeComunidad'])
   let dataServiceMock = jasmine.createSpyObj('DataService',
-    ['getUserByToken','getUsersBySearch', 'getCommunitiesBySearch'])
+    ['getUserByToken', 'getUsersBySearch', 'getCommunitiesBySearch'])
 
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatAutocompleteModule, RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule, BrowserDynamicTestingModule,
+      imports: [MatAutocompleteModule, HttpClientTestingModule, BrowserAnimationsModule, BrowserDynamicTestingModule,
         RouterTestingModule.withRoutes([
-          { path: 'userProfile', component: UserProfileComponent, },
-          { path: 'viewComunity', component: ViewComunityComponent }])
+          { path: 'userProfile/value', component: UserProfileComponent, },
+          { path: 'viewComunity/123456789', component: ViewComunityComponent }])
       ],
       declarations: [NavbarComponent],
       providers: [NavbarComponent,
@@ -57,7 +59,7 @@ describe('NavbarComponent', () => {
   beforeEach(() => {
     var user: User = new User()
     user.registroAcademico = '123456789'
-    spyOn(localStorage,'getItem').and.returnValue(JSON.stringify('token'))
+    spyOn(localStorage, 'getItem').and.returnValue(JSON.stringify('token'))
     sesionServiceMock.loggedIn$.and.returnValue(logger$.asObservable())
     logger$.next(true)
     sesionServiceMock.getUserWithToken.and.returnValue(user)
@@ -143,13 +145,45 @@ describe('NavbarComponent', () => {
   })
 
 
-  it('on key',()=>{
-//    localStorage.getItem('token');
+  it('on key', () => {
+    //    localStorage.getItem('token');
     //spyOn(localStorage,'getItem').and.returnValue(JSON.stringify('token'))
-    spyOn(component,'updateResultList').and.stub()
+    spyOn(component, 'updateResultList').and.stub()
     const event = new Event('click');
     expect(component.onKey(event)).toBeUndefined()
 
   })
+
+   /*it('goToPageUserProfile', () => {
+     var user: User = new User()
+     user.token = 'abc'
+     user.registroAcademico = '123456789'
+     dataServiceMock.getUserByToken.and.returnValue(of(user))
+     expect(component.goToPageUserProfile()).toBeUndefined()
+   })
+
+
+  it('selectUser categoryList-0', () => {
+    component.categoryList[0] = 'A'
+    component.selectedCategory = 'A'
+
+    var rst: option = new Option()
+    rst.viewValue = 'viewValue'
+    rst.value = 'value'
+    expect(component.selectUser(rst)).toBeUndefined()
+
+  })
+
+  it('selectUser categoryList-1', () => {
+    component.categoryList[0] = 'B'
+    component.categoryList[1] = 'A'
+    component.selectedCategory = 'A'
+
+    var rst: option = new Option()
+    rst.viewValue = 'viewValue'
+    rst.value = 'value'
+    expect(component.selectUser(rst)).toBeUndefined()
+
+  })*/
 
 });

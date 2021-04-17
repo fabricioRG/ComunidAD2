@@ -460,6 +460,7 @@ export class ViewComunityComponent implements OnInit {
   getAllCommunityPost() {
     let search: OrdinaryObject = {
       numberParam: this.comunity.id,
+      stringParam : this.user.registroAcademico
     };
     this.dataService
       .getAllCommunityPostByCommunity(search, this.user)
