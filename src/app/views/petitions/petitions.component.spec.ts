@@ -180,14 +180,10 @@ describe('PetitionsComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  // it('errorMessage', async() => {
-  //   let spy = spyOn(modalService, 'open').and.returnValue(await mockModalRef.result);
-  //   component.errorMessage();
-  //   expect(spy).toHaveBeenCalled();
-  // })
-
-  // it('ngAfterViewChecked', () => {
-  //   let spy = spyOn(component, 'cdRef')
-  // });
+  it('errorMessage', async() => {
+    let spy = spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
+    component.errorMessage();
+    expect(spy).toHaveBeenCalled();
+  })
 
 });

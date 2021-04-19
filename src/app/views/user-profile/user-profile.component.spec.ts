@@ -292,12 +292,12 @@ describe('UserProfileComponent', () => {
   //   expect(spy).toHaveBeenCalled();
   // });
 
-  // it('cambiarEstado', () => {
-  //   component.profileOwner = true;
-  //   component.cambiarEstado();
-  //   let spy = spyOn(modalService, 'open').and.stub();
-  //   expect(spy).toHaveBeenCalled();
-  // });
+  it('cambiarEstado', () => {
+    component.profileOwner = true;
+    let spy = spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
+    component.cambiarEstado();
+    expect(spy).toHaveBeenCalled();
+  });
 
   it('mostrarError', () => {
     let spy = spyOn(modal, 'openModal').and.returnValue(Promise.resolve(true));
@@ -481,5 +481,11 @@ describe('UserProfileComponent', () => {
     component.showConfirmMessage('','','', false);
     expect(spy).toHaveBeenCalled();
   });
+
+  it('llamarModal', async () => {
+    let spy = spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
+    component.llamarModal('','','');
+    expect(spy).toHaveBeenCalled();
+  })
 
 });
