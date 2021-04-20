@@ -261,6 +261,13 @@ export class UserProfileComponent implements OnInit {
     this.redirection.navigate(['editProfile']);
   }
 
+  isNonPublicProfile(){
+    if(this.actualUser.privacidad == ConstantesService.USER_PRIVACY_PRIVADO){
+      return true;
+    }
+    return false;
+  }
+
   get userStateText() {
     if (this.actualUser.estado == ConstantesService.ESTADO_USUARIO_ACTIVO) {
       return ConstantesService.ESTADO_USUARIO_ACTIVO
