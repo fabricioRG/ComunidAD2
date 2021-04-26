@@ -32,6 +32,9 @@ import { UploadFileServiceService } from 'src/app/services/uploadFileService/upl
 import { VoteService } from 'src/app/services/vote/vote.service';
 import { User } from 'src/app/user.model';
 import { LoadComunitysComponent } from '../load-comunitys/load-comunitys.component';
+import { DeletePostService } from 'src/app/services/deletePost/delete-post.service';
+import { CommunitytPostAndUserToken } from 'src/app/models/communitytPostAndUserToken.model';
+import { CommunityPostService } from 'src/app/services/communityPost/community-post.service';
 
 const encabezadoFoto = 'url(data:image/jpeg;base64,';
 const finalFoto = ')';
@@ -53,7 +56,9 @@ export class ViewComunityComponent implements OnInit {
     private modal: ModalService,
     private comunidadService: FiltrarSolicitudesComunidadService,
     private commentService: CommentService,
-    private voteService: VoteService
+    private voteService: VoteService,
+    private deletePostService: DeletePostService,
+    private communityPostService: CommunityPostService
   ) {
     this.cargarComunidad();
   }
@@ -185,7 +190,7 @@ export class ViewComunityComponent implements OnInit {
       var commentPost: CommentPost = this.commentService.generateCommentPost(
         post.nuevoComentario,
         this.user.registroAcademico,
-        post.id
+        post
       );
       var user: User = this.sessionService.getUserWithToken();
 
@@ -254,7 +259,7 @@ export class ViewComunityComponent implements OnInit {
   guardarComunidad(aux: User) {
     //Creamos el JSON
     this.dataService.saveComunity(this.comunity, aux).subscribe(
-      (response) => {},
+      (response) => { },
       (error) => {
         alert('ERROR: ' + error);
       }
@@ -399,8 +404,8 @@ export class ViewComunityComponent implements OnInit {
     var dato = await this.modal.openModal(
       'ELIMINAR COMUNIDAD PARA SIEMPRE',
       'ESTAS SEGURO QUE DESEAS ELIMINAR LA COMUNIDAD: ' +
-        this.comunity.nombre +
-        ', NO PODRAS RECUPERARLA NUNCA MAS',
+      this.comunity.nombre +
+      ', NO PODRAS RECUPERARLA NUNCA MAS',
       'ELIMINACION PERMANENTE UNA VEZ SE CONFIRME',
       true
     );
@@ -460,7 +465,7 @@ export class ViewComunityComponent implements OnInit {
   getAllCommunityPost() {
     let search: OrdinaryObject = {
       numberParam: this.comunity.id,
-      stringParam : this.user.registroAcademico
+      stringParam: this.user.registroAcademico
     };
     this.dataService
       .getAllCommunityPostByCommunity(search, this.user)
@@ -580,8 +585,8 @@ export class ViewComunityComponent implements OnInit {
     var dato = await this.modal.openModal(
       'SALIRME DE LA COMUNIDAD PARA SIEMPRE',
       'ESTAS SEGURO QUE DESEAS SALIRTE DE LA COMUNIDAD: ' +
-        this.comunity.nombre +
-        ', NO PODRAS INTERACTUAR CON NADA DE LA COMUNIDAD EN CUESTION, TENDRAS QUE VOLVER A ENVIAR SOLICITUD PARA UNIRTE SI QUISIERAS',
+      this.comunity.nombre +
+      ', NO PODRAS INTERACTUAR CON NADA DE LA COMUNIDAD EN CUESTION, TENDRAS QUE VOLVER A ENVIAR SOLICITUD PARA UNIRTE SI QUISIERAS',
       'SE SALDRA DE LA COMUNIDAD UNA VEZ SE CONFIRME',
       true
     );
@@ -667,12 +672,12 @@ export class ViewComunityComponent implements OnInit {
         if (isCreate) {
           this.voteService
             .createValoration(valoration, user)
-            .subscribe((data) => {});
+            .subscribe((data) => { });
         } else {
           //Actualizacion
           this.voteService
             .updateValoration(valoration, user)
-            .subscribe((data) => {});
+            .subscribe((data) => { });
         }
       });
   }
@@ -682,34 +687,40 @@ export class ViewComunityComponent implements OnInit {
    * @param comunityPost
    */
   upvote(comunityPost: CommunityPost) {
-    //Metodo que cree el like
-    var isCreate: boolean;
-    if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
-      if (comunityPost.valoration) {
-        if (comunityPost.valoration == 'DOWN') {
-          //CAMBIARLO A UP-----rated++
-          comunityPost.valoration = 'UP';
-          this.recalcularRated(comunityPost, '+', 2); //2
-        } else if (comunityPost.valoration == 'NONE') {
-          comunityPost.valoration = 'UP';
-          this.recalcularRated(comunityPost, '+', 1);
-        } else if (comunityPost.valoration == 'UP') {
-          //CAMBIARLO A NONE-----rated--
-          comunityPost.valoration = 'NONE';
-          this.recalcularRated(comunityPost, '-', 1);
+    var user = this.sessionService.getUserWithToken();
+    this.communityPostService.getCommunityPostById(comunityPost, user)
+      .subscribe((data) => {
+        comunityPost.rated = data.rated
+        //Metodo que cree el like
+        var isCreate: boolean;
+        if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
+          if (comunityPost.valoration) {
+            if (comunityPost.valoration == 'DOWN') {
+              //CAMBIARLO A UP-----rated++
+              comunityPost.valoration = 'UP';
+              this.recalcularRated(comunityPost, '+', 2); //2
+            } else if (comunityPost.valoration == 'NONE') {
+              comunityPost.valoration = 'UP';
+              this.recalcularRated(comunityPost, '+', 1);
+            } else if (comunityPost.valoration == 'UP') {
+              //CAMBIARLO A NONE-----rated--
+              comunityPost.valoration = 'NONE';
+              this.recalcularRated(comunityPost, '-', 1);
+            }
+
+            //Actualizar una tupla donde id_post=x AND user_registro=y
+            isCreate = false;
+          } else {
+            //Crear un valoration UP-------rated++
+            isCreate = true;
+            comunityPost.valoration = 'UP';
+            this.recalcularRated(comunityPost, '+', 1);
+          }
+          //Actualizar el comunity_post
+          this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
         }
 
-        //Actualizar una tupla donde id_post=x AND user_registro=y
-        isCreate = false;
-      } else {
-        //Crear un valoration UP-------rated++
-        isCreate = true;
-        comunityPost.valoration = 'UP';
-        this.recalcularRated(comunityPost, '+', 1);
-      }
-      //Actualizar el comunity_post
-      this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
-    }
+      })
   }
 
   goToUserProfile(usr: User) {
@@ -718,32 +729,89 @@ export class ViewComunityComponent implements OnInit {
 
   downvote(comunityPost: CommunityPost) {
     //Metodo que cree el dislike
-    var isCreate: boolean;
-    if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
-      if (comunityPost.valoration) {
-        if (comunityPost.valoration == 'UP') {
-          //CAMBIARLO A DOWN-----rated--
-          comunityPost.valoration = 'DOWN';
-          this.recalcularRated(comunityPost, '-', 2);
-        } else if (comunityPost.valoration == 'NONE') {
-          comunityPost.valoration = 'DOWN';
-          this.recalcularRated(comunityPost, '-', 1);
-        } else if (comunityPost.valoration == 'DOWN') {
-          //CAMBIARLO A NONE-----rated++
-          comunityPost.valoration = 'NONE';
-          this.recalcularRated(comunityPost, '+', 1);
-        }
+    var user = this.sessionService.getUserWithToken();
+    this.communityPostService.getCommunityPostById(comunityPost, user)
+      .subscribe((data) => {
+        comunityPost.rated = data.rated
+        var isCreate: boolean;
+        if (this.comunidadEsDelUsuarioLogueado || this.solicitudEstaActiva) {
+          if (comunityPost.valoration) {
+            if (comunityPost.valoration == 'UP') {
+              //CAMBIARLO A DOWN-----rated--
+              comunityPost.valoration = 'DOWN';
+              this.recalcularRated(comunityPost, '-', 2);
+            } else if (comunityPost.valoration == 'NONE') {
+              comunityPost.valoration = 'DOWN';
+              this.recalcularRated(comunityPost, '-', 1);
+            } else if (comunityPost.valoration == 'DOWN') {
+              //CAMBIARLO A NONE-----rated++
+              comunityPost.valoration = 'NONE';
+              this.recalcularRated(comunityPost, '+', 1);
+            }
 
-        //Actualizar una tupla donde id_post=x AND user_registro=y
-        isCreate = false;
-      } else {
-        //Crear un valoration UP-------rated--
-        isCreate = true;
-        comunityPost.valoration = 'DOWN';
-        this.recalcularRated(comunityPost, '-', 1);
+            //Actualizar una tupla donde id_post=x AND user_registro=y
+            isCreate = false;
+          } else {
+            //Crear un valoration UP-------rated--
+            isCreate = true;
+            comunityPost.valoration = 'DOWN';
+            this.recalcularRated(comunityPost, '-', 1);
+          }
+          //Actualizar el comunity_post
+          this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
+        }
+      })
+  }
+
+  async deletePost(comunityPost: CommunityPost) {
+    var dato = await this.modal.openModal(
+      'Eliminar post',
+      'ESTAS SEGURO QUE DESEAS ELIMINAR EL POST ',
+      'SE ELIMINARAR EL POST UNA VEZ SE CONFIRME',
+      true
+    );
+    if (dato) {
+      var userWithToken = this.sessionService.getUserWithToken()
+      var communityPostAndUserToken: CommunitytPostAndUserToken = this.deletePostService.generateCommunitytPostAndUserToken(comunityPost, userWithToken.token)
+      const index = this.communityPostList.indexOf(comunityPost)
+      if (this.comunidadEsDelUsuarioLogueado) {//Usuario es dueno de la comunidad
+        this.deletePostService.deletePostByAdmin(communityPostAndUserToken, userWithToken)
+          .subscribe((response) => {
+            this.modal.openModal(
+              'Post eliminado:',
+              'El post se ha eliminado correctamente' + '',
+              '',
+              false
+            );
+            if (index !== -1) {
+              this.communityPostList.splice(index, 1);
+            }
+          })
+      } else {//Usuario borra el post
+        this.deletePostService.deletePostByUser(communityPostAndUserToken, userWithToken)
+          .subscribe((response) => {
+            this.modal.openModal(
+              'Post eliminado:',
+              'El post se ha eliminado correctamente' + '',
+              '',
+              false
+            );
+            if (index !== -1) {
+              this.communityPostList.splice(index, 1);
+            }
+          })
       }
-      //Actualizar el comunity_post
-      this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
     }
+
+
+
+
+  }
+
+  postIsOfUser(comunityPost: CommunityPost): boolean {
+    if (this.user.registroAcademico == comunityPost.user?.registroAcademico && this.solicitudEstaActiva) {
+      return true;
+    }
+    return false;
   }
 }

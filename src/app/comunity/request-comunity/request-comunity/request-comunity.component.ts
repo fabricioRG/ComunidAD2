@@ -84,7 +84,6 @@ export class RequestComunityComponent implements OnInit {
             if (response.comunity) {
               this.comunity = response.comunity;
             }
-            console.log('EN VISTA ES', response);
             if (
               response.user?.registroAcademico === this.user.registroAcademico
             ) {
@@ -98,9 +97,6 @@ export class RequestComunityComponent implements OnInit {
   }
 
   buscarPorFiltros() {
-    console.log(this.fechaInicial);
-    console.log(this.fechaFinal);
-    console.log(this.registroAcademico);
     if (this.registroAcademico == null) {
       this.registroAcademico = '';
     }
@@ -146,9 +142,9 @@ export class RequestComunityComponent implements OnInit {
               this.mostrarMensaje(
                 'Actualizacion correcta de la Aceptacion de la solicitud',
                 'Se completo correctamente la solicitud de ' +
-                  elemento.user.registroAcademico,
+                elemento.user.registroAcademico,
                 'La solicitud ahora esta: ' +
-                  ConstantesService.COMUNITY_ASIGN_ACTIVO
+                ConstantesService.COMUNITY_ASIGN_ACTIVO
               );
               this.buscarPorFiltros();
               this.getDeniedUsersByFilter();
@@ -198,9 +194,9 @@ export class RequestComunityComponent implements OnInit {
               this.mostrarMensaje(
                 'Actualizacion correcta de la denegacion de la solicitud',
                 'Se completo correctamente la solicitud de ' +
-                  elemento.user.registroAcademico,
+                elemento.user.registroAcademico,
                 'La solicitud ahora esta:' +
-                  ConstantesService.COMUNITY_ASIGN_DENEGADO
+                ConstantesService.COMUNITY_ASIGN_DENEGADO
               );
               this.buscarPorFiltros();
               this.getDeniedUsersByFilter();
