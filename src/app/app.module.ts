@@ -56,6 +56,7 @@ import { UnsuscribeMembersComponent } from './comunity/unsuscribe-members/unsusc
 import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRippleModule } from '@angular/material/core';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 const rutas: Routes = [
   {
@@ -183,6 +184,7 @@ const rutas: Routes = [
     FlexLayoutModule,
     RichTextEditorAllModule,
     MatSlideToggleModule,
+    MatExpansionModule,
     MatRippleModule,
     RouterModule.forRoot(rutas, {
       useHash: true,
