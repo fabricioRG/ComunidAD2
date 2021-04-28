@@ -109,7 +109,68 @@
           </mat-card>
         </div>
         <div *ngIf='verificarPrivacidad();else noMostrarPosts'>
+          <div>
+            <mat-card matRipple [matRippleUnbounded]="true" [matRippleRadius]="75" matRippleColor="orange"
+              style="margin-bottom: 20px; margin-top: 20px;">
+              <mat-card-content class="container">
+                <div class="row justify-content-around">
 
+                  <mat-accordion>
+                    <mat-expansion-panel hideToggle>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          FILTROS
+                        </mat-panel-title>
+                        <mat-panel-description>
+                          Si quieres filtrar las publicaciones da click aqui
+                        </mat-panel-description>
+                      </mat-expansion-panel-header>
+                      <form [formGroup]="filtrosForm" (ngSubmit)="filtrarPublicaciones(filtrosForm.value)">
+                        <mat-form-field appearance="fill" class="col-4">
+                          <mat-label>Usuario: </mat-label>
+                          <input matInput formControlName="usuario" type="text">
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill" class="col-4">
+                          <mat-label>Rango de fechas</mat-label>
+                          <mat-date-range-input [rangePicker]="picker2">
+                            <input matStartDate formControlName="fechaInicial" placeholder="Fecha inicio">
+                            <input matEndDate formControlName="fechaFinal" placeholder="Fecha final">
+                          </mat-date-range-input>
+                          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                          <mat-date-range-picker #picker2></mat-date-range-picker>
+                        </mat-form-field>
+
+
+                        <mat-form-field appearance="fill" class="col-4">
+                          <mat-label>Opciones de Valoracion</mat-label>
+                          <mat-select formControlName="tipoValoracion" value="tipoValoracion">
+                            <div *ngFor="let valoracion of opcionesValoracion;let i = index">
+                              <mat-option [value]=valoracion.valor>{{valoracion.mensaje}} <mat-icon matSuffix>
+                                  {{valoracion.icono}}</mat-icon>
+                              </mat-option>
+                            </div>
+                          </mat-select>
+                        </mat-form-field>
+                        <div class="container">
+                          <button mat-fab color="warn" class="button24" class="col-4" type="submit" aria-label="">
+                            <mat-icon>send</mat-icon>
+                          </button>
+                          <button mat-fab color="warn" class="button24" class="col-4" (click)='borrarCampos()'
+                            aria-label="">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </div>
+                      </form>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+
+
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+          </div>
         </div>
 
         <ng-template #noMostrarPosts>
@@ -127,6 +188,7 @@
           </mat-card>
 
         </ng-template>
+
         <div class="genericCard" *ngFor="let post of communityPostList;let i = index">
           <mat-card>
             <mat-card-header>

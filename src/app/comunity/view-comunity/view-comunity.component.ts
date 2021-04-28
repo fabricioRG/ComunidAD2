@@ -35,6 +35,8 @@ import { LoadComunitysComponent } from '../load-comunitys/load-comunitys.compone
 import { DeletePostService } from 'src/app/services/deletePost/delete-post.service';
 import { CommunitytPostAndUserToken } from 'src/app/models/communitytPostAndUserToken.model';
 import { CommunityPostService } from 'src/app/services/communityPost/community-post.service';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { FechasService } from 'src/app/services/fechas/fechas.service';
 
 const encabezadoFoto = 'url(data:image/jpeg;base64,';
 const finalFoto = ')';
@@ -58,7 +60,8 @@ export class ViewComunityComponent implements OnInit {
     private commentService: CommentService,
     private voteService: VoteService,
     private deletePostService: DeletePostService,
-    private communityPostService: CommunityPostService
+    private communityPostService: CommunityPostService,
+    private fechasService: FechasService
   ) {
     this.cargarComunidad();
   }
@@ -138,6 +141,21 @@ export class ViewComunityComponent implements OnInit {
   };
   public iframe: object = { enable: true };
   public height: number = 500;
+  //filtros
+  filtrosForm!: FormGroup;
+  opcionesValoracion = [
+    {
+      valor: ConstantesService.ESTADO_VALORACION_MAS_VALORACION,
+      mensaje: ConstantesService.MENSAJE_VALORACION_MAS_VALORACION,
+      icono: ConstantesService.ICONO_VALORACION_MAS_VALORACION,
+    },
+    {
+      valor: ConstantesService.ESTADO_VALORACION_MENOS_VALORACION,
+      mensaje: ConstantesService.MENSAJE_VALORACION_MENOS_VALORACION,
+      icono: ConstantesService.ICONO_VALORACION_MENOS_VALORACION,
+    },
+  ];
+
   //
   ngOnInit(): void {
     this.newCommunityPost = new CommunityPost();
@@ -155,6 +173,13 @@ export class ViewComunityComponent implements OnInit {
       this.banderaMostrarPosts = false;
       this.privacidad = false;
       this.cargarComunidad();
+    });
+
+    this.filtrosForm = this.formBuilder.group({
+      fechaInicial: [''],
+      fechaFinal: [''],
+      usuario: ['', Validators.maxLength(200)],
+      tipoValoracion: [''],
     });
   }
 
@@ -813,5 +838,35 @@ export class ViewComunityComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  filtrarPublicaciones(values: any) {
+
+    let search = {
+      idComunidad: this.comunity.id,
+      registroAcademico: this.user.registroAcademico,
+      fechaInicial: this.fechasService.validarCampoYConvertirFecha(
+        values.fechaInicial
+      ),
+      fechaFinal: this.fechasService.validarCampoYConvertirFecha(
+        values.fechaFinal
+      ),
+      usuario: values.usuario,
+      valoracion: values.tipoValoracion,
+    };
+
+    this.dataService
+      .getAllCommunityPostByCommunityWithFilters(search, this.user)
+      .subscribe((data) => {
+        this.communityPostList = data;
+      });
+  }
+
+  borrarCampos() {
+    this.filtrosForm.reset();
+    this.filtrosForm.controls['usuario'].setValue('');
+    this.filtrosForm.controls['fechaInicial'].setValue('');
+    this.filtrosForm.controls['fechaFinal'].setValue('');
+    this.filtrosForm.controls['tipoValoracion'].setValue('');
   }
 }
