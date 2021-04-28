@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FechasService {
-
-  constructor() { }
-
-
-
+  constructor() {}
 
   convertirFecha(date: Date) {
     let day = date.getDate();
@@ -31,25 +27,31 @@ export class FechasService {
   }
 
   compararFechas(fechaNacimiento: string, fechaActual: string) {
-    var dateNac = new Date(fechaNacimiento)
-    var dateActual = new Date(fechaActual)
-    dateNac.setTime(dateNac.getTime()+21600000)
-    dateActual.setTime(dateActual.getTime()+21600000)
+    var dateNac = new Date(fechaNacimiento);
+    var dateActual = new Date(fechaActual);
+    dateNac.setTime(dateNac.getTime() + 21600000);
+    dateActual.setTime(dateActual.getTime() + 21600000);
 
-    21600000
+    21600000;
     console.log('comparandoFechas sin formato: ');
-    console.log('Nacimiento: '+ fechaNacimiento);
-    console.log('Actual'+ fechaActual);
-    
+    console.log('Nacimiento: ' + fechaNacimiento);
+    console.log('Actual' + fechaActual);
+
     console.log('comparandoFechas Con formato: ');
-    console.log('Nacimiento: '+dateNac);
-    console.log('Actual: '+dateActual);
-    if (
-      dateNac.getTime() >= dateActual.getTime()
-    ) {
+    console.log('Nacimiento: ' + dateNac);
+    console.log('Actual: ' + dateActual);
+    if (dateNac.getTime() >= dateActual.getTime()) {
       return false;
     } else {
       return true;
+    }
+  }
+
+  validarCampoYConvertirFecha(campo: any) {
+    if (campo === null || campo === '') {
+      return '';
+    } else {
+      return this.convertirFecha(campo);
     }
   }
 }

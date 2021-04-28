@@ -35,6 +35,8 @@ export class DataService {
 
   communityPostCreateURL = '/api/community/post/create';
   findAllCommunityPostByCommunityURL = '/api/community/post/get/allByCommunity';
+  findAllCommunityPostByCommunityFiltersURL =
+    '/api/community/post/get/allByCommunityFilters';
   findAllUsersInCommunityURL = '/api/comunity/users';
   findUserComunitysURL = '/api/users/findUserComunitys';
 
@@ -328,6 +330,18 @@ export class DataService {
     let options = { headers: headers };
     return this._http.post<CommunityPost[]>(
       this.findAllCommunityPostByCommunityURL,
+      params,
+      options
+    );
+  }
+
+  getAllCommunityPostByCommunityWithFilters(params: any, token: User) {
+    let headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token.token,
+    });
+    let options = { headers: headers };
+    return this._http.post<CommunityPost[]>(
+      this.findAllCommunityPostByCommunityFiltersURL,
       params,
       options
     );

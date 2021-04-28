@@ -32,6 +32,8 @@ import { UploadFileServiceService } from 'src/app/services/uploadFileService/upl
 import { VoteService } from 'src/app/services/vote/vote.service';
 import { User } from 'src/app/user.model';
 import { LoadComunitysComponent } from '../load-comunitys/load-comunitys.component';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { FechasService } from 'src/app/services/fechas/fechas.service';
 
 const encabezadoFoto = 'url(data:image/jpeg;base64,';
 const finalFoto = ')';
@@ -53,7 +55,8 @@ export class ViewComunityComponent implements OnInit {
     private modal: ModalService,
     private comunidadService: FiltrarSolicitudesComunidadService,
     private commentService: CommentService,
-    private voteService: VoteService
+    private voteService: VoteService,
+    private fechasService: FechasService
   ) {
     this.cargarComunidad();
   }
@@ -133,6 +136,21 @@ export class ViewComunityComponent implements OnInit {
   };
   public iframe: object = { enable: true };
   public height: number = 500;
+  //filtros
+  filtrosForm!: FormGroup;
+  opcionesValoracion = [
+    {
+      valor: ConstantesService.ESTADO_VALORACION_MAS_VALORACION,
+      mensaje: ConstantesService.MENSAJE_VALORACION_MAS_VALORACION,
+      icono: ConstantesService.ICONO_VALORACION_MAS_VALORACION,
+    },
+    {
+      valor: ConstantesService.ESTADO_VALORACION_MENOS_VALORACION,
+      mensaje: ConstantesService.MENSAJE_VALORACION_MENOS_VALORACION,
+      icono: ConstantesService.ICONO_VALORACION_MENOS_VALORACION,
+    },
+  ];
+
   //
   ngOnInit(): void {
     this.newCommunityPost = new CommunityPost();
@@ -150,6 +168,13 @@ export class ViewComunityComponent implements OnInit {
       this.banderaMostrarPosts = false;
       this.privacidad = false;
       this.cargarComunidad();
+    });
+
+    this.filtrosForm = this.formBuilder.group({
+      fechaInicial: [''],
+      fechaFinal: [''],
+      usuario: ['', Validators.maxLength(200)],
+      tipoValoracion: [''],
     });
   }
 
@@ -460,7 +485,7 @@ export class ViewComunityComponent implements OnInit {
   getAllCommunityPost() {
     let search: OrdinaryObject = {
       numberParam: this.comunity.id,
-      stringParam : this.user.registroAcademico
+      stringParam: this.user.registroAcademico,
     };
     this.dataService
       .getAllCommunityPostByCommunity(search, this.user)
@@ -745,5 +770,37 @@ export class ViewComunityComponent implements OnInit {
       //Actualizar el comunity_post
       this.saveOrModifyValorationAndComunityPost(comunityPost, isCreate);
     }
+  }
+
+  filtrarPublicaciones(values: any) {
+    console.log(values);
+
+    let search = {
+      idComunidad: this.comunity.id,
+      registroAcademico: this.user.registroAcademico,
+      fechaInicial: this.fechasService.validarCampoYConvertirFecha(
+        values.fechaInicial
+      ),
+      fechaFinal: this.fechasService.validarCampoYConvertirFecha(
+        values.fechaFinal
+      ),
+      usuario: values.usuario,
+      valoracion: values.tipoValoracion,
+    };
+
+    console.log(search);
+    this.dataService
+      .getAllCommunityPostByCommunityWithFilters(search, this.user)
+      .subscribe((data) => {
+        this.communityPostList = data;
+      });
+  }
+
+  borrarCampos() {
+    this.filtrosForm.reset();
+    this.filtrosForm.controls['usuario'].setValue('');
+    this.filtrosForm.controls['fechaInicial'].setValue('');
+    this.filtrosForm.controls['fechaFinal'].setValue('');
+    this.filtrosForm.controls['tipoValoracion'].setValue('');
   }
 }
