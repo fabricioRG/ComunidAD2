@@ -42,11 +42,10 @@ export class CommentService {
    * @param registroAcademico 
    * @param idCommunityPost 
    */
-  generateCommentPost(comentario : string , registroAcademico: string,idCommunityPost:number): CommentPost{
+  generateCommentPost(comentario : string , registroAcademico: string,post:CommunityPost): CommentPost{
     var commentPost : CommentPost = new CommentPost()
-    var comunityPost : CommunityPost = new CommunityPost()
+    var comunityPost : CommunityPost = post
     var user : User = new User()
-    comunityPost.id=idCommunityPost
     user.registroAcademico=registroAcademico
     
     commentPost.descripcion=comentario

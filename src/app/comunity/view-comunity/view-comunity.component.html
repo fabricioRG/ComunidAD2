@@ -192,6 +192,13 @@
         <div class="genericCard" *ngFor="let post of communityPostList;let i = index">
           <mat-card>
             <mat-card-header>
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-12 col-md-offset-2">
+                    <a *ngIf='comunidadEsDelUsuarioLogueado || postIsOfUser(post)' class="btn btn-primary btn-sm float-right" (click)="deletePost(post)">Eliminar</a>
+                  </div>
+                </div>
+              </div>
               <mat-card-title>
                 {{post.title}}
               </mat-card-title>
