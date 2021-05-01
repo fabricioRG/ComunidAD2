@@ -35,14 +35,14 @@ describe('CommentService', () => {
      request.flush(commentPost);
    })
 
-   it('generateCommentPost',()=>{
-     var comentario : string = 'Nuevo comentario'
-     var registroAcademico : string = '123456789'
-     var idCommunityPost :  number = 1
+  //  it('generateCommentPost',()=>{
+  //    var comentario : string = 'Nuevo comentario'
+  //    var registroAcademico : string = '123456789'
+  //    var idCommunityPost :  number = 1
     
-     var result = 'ACTIVE'
-     var expResult=service.generateCommentPost(comentario,registroAcademico,idCommunityPost).stateComment;
-     expect(expResult).toEqual(result)
-    })
+  //    var result = 'ACTIVE'
+  //    var expResult=service.generateCommentPost(comentario,registroAcademico,idCommunityPost).stateComment;
+  //    expect(expResult).toEqual(result)
+  //   })
 });
  
