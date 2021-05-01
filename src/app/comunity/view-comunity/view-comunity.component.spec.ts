@@ -38,6 +38,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { FechasService } from 'src/app/services/fechas/fechas.service';
 
 describe('ViewComunityComponents', () => {
   let component: ViewComunityComponent;
@@ -58,12 +59,16 @@ describe('ViewComunityComponents', () => {
     'getAllUsersInCommunity',
     'persistCommunityPost',
     'saveComunity',
+    'getAllCommunityPostByCommunityWithFilters',
   ]);
   const filtrarSolicitudesComunidadServiceMock = jasmine.createSpyObj(
     'FiltrarSolicitudesComunidadService',
     ['deleteComunity', 'deleteUserFromComunity']
   );
   const modalServiceMock = jasmine.createSpyObj('ModalService', ['openModal']);
+  const fechasServiceMock = jasmine.createSpyObj('FechasService', [
+    'validarCampoYConvertirFecha',
+  ]);
   const spyRouter = jasmine.createSpyObj('Router', ['navigate']);
   const uploadFileServiceServiceMock = jasmine.createSpyObj(
     'UploadFileServiceService',
@@ -85,7 +90,7 @@ describe('ViewComunityComponents', () => {
         MatSelectModule,
         MatFormFieldModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
       ],
       declarations: [ViewComunityComponent],
       providers: [
@@ -106,6 +111,10 @@ describe('ViewComunityComponents', () => {
         {
           provide: VoteService,
           useValue: voteServiceMock,
+        },
+        {
+          provide: FechasService,
+          useValue: fechasServiceMock,
         },
         {
           provide: ActivatedRoute,
@@ -132,11 +141,11 @@ describe('ViewComunityComponents', () => {
         },
         MatInputModule,
         MatSelectModule,
-        MatFormFieldModule, 
-        BrowserAnimationsModule,      
-        MatExpansionModule, 
+        MatFormFieldModule,
+        BrowserAnimationsModule,
+        MatExpansionModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
       ],
     });
     //component = TestBed.get(ViewComunityComponent)
@@ -703,7 +712,7 @@ describe('ViewComunityComponents', () => {
     expect(postt.rated == -1).toBeTruthy();
   });
 
- /* it('upvote DOWN', () => {
+  /* it('upvote DOWN', () => {
     component.user = usuarioImportado;
     var postt = new CommunityPost();
     postt.nuevoComentario = 'hola';
@@ -721,7 +730,7 @@ describe('ViewComunityComponents', () => {
     expect(spy1).toHaveBeenCalled();
   });*/
 
- /* it('upvote UP', () => {
+  /* it('upvote UP', () => {
     component.user = usuarioImportado;
     var postt = new CommunityPost();
     postt.nuevoComentario = 'hola';
@@ -780,7 +789,7 @@ describe('ViewComunityComponents', () => {
     expect(component).toBeTruthy();
   });
 
- /* it('downvote DOWN', () => {
+  /* it('downvote DOWN', () => {
     component.user = usuarioImportado;
     var postt = new CommunityPost();
     postt.nuevoComentario = 'hola';
@@ -797,7 +806,7 @@ describe('ViewComunityComponents', () => {
     expect(spy).toHaveBeenCalled();
     expect(spy1).toHaveBeenCalled();
   });*/
-  
+
   /*it('downvote UP', () => {
     component.user = usuarioImportado;
     var postt = new CommunityPost();
@@ -816,7 +825,7 @@ describe('ViewComunityComponents', () => {
     expect(spy1).toHaveBeenCalled();
   });*/
 
- /* it('downvote NONE', () => {
+  /* it('downvote NONE', () => {
     component.user = usuarioImportado;
     var postt = new CommunityPost();
     postt.nuevoComentario = 'hola';
@@ -850,6 +859,31 @@ describe('ViewComunityComponents', () => {
 
     expect(spy1).toHaveBeenCalled();
   });*/
+
+  it('borrarCampos', () => {
+    component.borrarCampos();
+    expect(component.filtrosForm.value.usuario).toEqual('');
+    expect(component.filtrosForm.value.fechaInicial).toEqual('');
+    expect(component.filtrosForm.value.fechaFinal).toEqual('');
+    expect(component.filtrosForm.value.tipoValoracion).toEqual('');
+  });
+
+  it('filtrarpublicaciones', () => {
+    let values = {
+      fechaInicial: new Date(),
+      fechaFinal: new Date(),
+      usuario: 'a',
+      valoracion: 'MAS_VALORACION',
+    };
+
+    fechasServiceMock.validarCampoYConvertirFecha.and.returnValue('2000-01-01');
+    dataServiceMock.getAllCommunityPostByCommunityWithFilters.and.returnValue(
+      of(arregloComunidades)
+    );
+    component.filtrarPublicaciones(values);
+
+    expect(component.communityPostList).toEqual(arregloComunidades);
+  });
 
   interface MockFile {
     name: string;
