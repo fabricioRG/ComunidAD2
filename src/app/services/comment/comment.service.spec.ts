@@ -35,7 +35,7 @@ describe('CommentService', () => {
      request.flush(commentPost);
    })
 
-   it('generateCommentPost',()=>{
+ /*  it('generateCommentPost',()=>{
      var comentario : string = 'Nuevo comentario'
      var registroAcademico : string = '123456789'
      var idCommunityPost :  number = 1
@@ -43,6 +43,6 @@ describe('CommentService', () => {
      var result = 'ACTIVE'
      var expResult=service.generateCommentPost(comentario,registroAcademico,idCommunityPost).stateComment;
      expect(expResult).toEqual(result)
-    })
+    })*/
 });
  
