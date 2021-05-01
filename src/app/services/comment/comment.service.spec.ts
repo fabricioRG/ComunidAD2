@@ -1,6 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { CommentPost } from 'src/app/models/commentPost.model';
+import { CommunityPost } from 'src/app/models/comunityPost.model';
 import { User } from 'src/app/user.model';
 
 import { CommentService } from './comment.service';
@@ -35,14 +36,16 @@ describe('CommentService', () => {
      request.flush(commentPost);
    })
 
- /*  it('generateCommentPost',()=>{
+   it('generateCommentPost',()=>{
      var comentario : string = 'Nuevo comentario'
      var registroAcademico : string = '123456789'
+     var communityPost : CommunityPost = new CommunityPost()
      var idCommunityPost :  number = 1
+     communityPost.id=idCommunityPost
     
      var result = 'ACTIVE'
-     var expResult=service.generateCommentPost(comentario,registroAcademico,idCommunityPost).stateComment;
+     var expResult=service.generateCommentPost(comentario,registroAcademico,communityPost).stateComment;
      expect(expResult).toEqual(result)
-    })*/
+    })
 });
  
