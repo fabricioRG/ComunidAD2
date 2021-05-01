@@ -38,6 +38,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { DeletePostService } from 'src/app/services/deletePost/delete-post.service';
+import { CommunitytPostAndUserToken } from 'src/app/models/communitytPostAndUserToken.model';
+import { CommunityPostService } from 'src/app/services/communityPost/community-post.service';
 import { FechasService } from 'src/app/services/fechas/fechas.service';
 
 describe('ViewComunityComponents', () => {
@@ -76,6 +79,12 @@ describe('ViewComunityComponents', () => {
   );
   const voteServiceMock = jasmine.createSpyObj('VoteService', ['']);
 
+  const deletePostServiceMock = jasmine.createSpyObj('DeletePostService',
+    ['generateCommunitytPostAndUserToken', 'deletePostByAdmin', 'deletePostByUser'])
+
+  const communityPostServiceMock = jasmine.createSpyObj('CommunityPostService',
+    ['getCommunityPostById'])
+
   beforeEach(async () => {
     console.log('BEFORE EACH EN VIEW COMUNITY COMPONENT');
     await TestBed.configureTestingModule({
@@ -111,6 +120,14 @@ describe('ViewComunityComponents', () => {
         {
           provide: VoteService,
           useValue: voteServiceMock,
+        },
+        {
+          provide: DeletePostService,
+          useValue: deletePostServiceMock
+        },
+        {
+          provide : CommunityPostService,
+          useValue : communityPostServiceMock
         },
         {
           provide: FechasService,
@@ -712,13 +729,77 @@ describe('ViewComunityComponents', () => {
     expect(postt.rated == -1).toBeTruthy();
   });
 
-  /* it('upvote DOWN', () => {
+  it('postIsOfUser', () => {
+    var registroAcademico = "12345678"
+    component.solicitudEstaActiva = true;
+    component.user.registroAcademico = registroAcademico
+    var comunityPost: CommunityPost = new CommunityPost()
+    comunityPost.user = new User()
+    comunityPost.user.registroAcademico = registroAcademico
+    var expResult = true;
+    var result = component.postIsOfUser(comunityPost);
+    expect(expResult).toEqual(result)
+  })
+
+  it('postIsOfUserFalse', () => {
+    var registroAcademico = "12345678"
+    component.solicitudEstaActiva = true;
+    component.user.registroAcademico = registroAcademico
+    var comunityPost: CommunityPost = new CommunityPost()
+    var expResult = false;
+    var result = component.postIsOfUser(comunityPost);
+    expect(expResult).toEqual(result)
+  })
+
+  it('deletePostAdmin', () => {
+    var user: User = new User();
+    user.registroAcademico = '12345678'
+    var comunityPost: CommunityPost = new CommunityPost()
+    comunityPost.id = 1
+    component.communityPostList = [comunityPost]
+
+    var comunityPostAndUserToken: CommunitytPostAndUserToken = new CommunitytPostAndUserToken
+    comunityPostAndUserToken.token = '123456'
+    comunityPostAndUserToken.communityPost = comunityPost
+    component.comunidadEsDelUsuarioLogueado = true
+
+    modalServiceMock.openModal.and.returnValue('YES');
+    sesionServiceMock.getUserWithToken.and.returnValue(user)
+    deletePostServiceMock.generateCommunitytPostAndUserToken.and.returnValue(comunityPostAndUserToken)
+    deletePostServiceMock.deletePostByAdmin.and.returnValue(of(comunityPost))
+
+    expect(component.deletePost(comunityPost)).toBeTruthy()
+  })
+
+  it('deletePostUser', () => {
+    var user: User = new User();
+    user.registroAcademico = '12345678'
+    var comunityPost: CommunityPost = new CommunityPost()
+    comunityPost.id = 1
+    component.communityPostList = [comunityPost]
+    var comunityPostAndUserToken: CommunitytPostAndUserToken = new CommunitytPostAndUserToken
+    comunityPostAndUserToken.token = '123456'
+    comunityPostAndUserToken.communityPost = comunityPost
+    component.comunidadEsDelUsuarioLogueado = false
+    modalServiceMock.openModal.and.returnValue('YES');
+    sesionServiceMock.getUserWithToken.and.returnValue(user)
+    deletePostServiceMock.generateCommunitytPostAndUserToken.and.returnValue(comunityPostAndUserToken)
+    deletePostServiceMock.deletePostByUser.and.returnValue(of(comunityPost))
+
+    expect(component.deletePost(comunityPost)).toBeTruthy()
+  })
+
+  
+  it('upvote DOWN', () => {
     component.user = usuarioImportado;
     var postt = new CommunityPost();
     postt.nuevoComentario = 'hola';
     postt.id = 20;
     postt.valoration = 'DOWN';
-
+    var comunityPost : CommunityPost = new CommunityPost()
+    comunityPost.id=1
+    comunityPost.rated=2
+    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
     var spy = spyOn(component, 'recalcularRated').and.stub();
     var spy1 = spyOn(
       component,
@@ -728,33 +809,39 @@ describe('ViewComunityComponents', () => {
     component.upvote(postt);
     expect(spy).toHaveBeenCalled();
     expect(spy1).toHaveBeenCalled();
-  });*/
+  });
 
-  /* it('upvote UP', () => {
-    component.user = usuarioImportado;
-    var postt = new CommunityPost();
-    postt.nuevoComentario = 'hola';
-    postt.id = 20;
-    postt.valoration = 'UP';
+   it('upvote UP', () => {
+     component.user = usuarioImportado;
+     var postt = new CommunityPost();
+     postt.nuevoComentario = 'hola';
+     postt.id = 20;
+     postt.valoration = 'UP';
+    var comunityPost : CommunityPost = new CommunityPost()
+    comunityPost.id=1
+    comunityPost.rated=2
+    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
+     var spy = spyOn(component, 'recalcularRated').and.stub();
+     var spy1 = spyOn(
+       component,
+       'saveOrModifyValorationAndComunityPost'
+     ).and.stub();
+     component.comunidadEsDelUsuarioLogueado = true;
+     component.upvote(postt);
+     expect(spy).toHaveBeenCalled();
+     expect(spy1).toHaveBeenCalled();
+   });
 
-    var spy = spyOn(component, 'recalcularRated').and.stub();
-    var spy1 = spyOn(
-      component,
-      'saveOrModifyValorationAndComunityPost'
-    ).and.stub();
-    component.comunidadEsDelUsuarioLogueado = true;
-    component.upvote(postt);
-    expect(spy).toHaveBeenCalled();
-    expect(spy1).toHaveBeenCalled();
-  });*/
-
-  /*it('upvote NONE', () => {
+  it('upvote NONE', () => {
     component.user = usuarioImportado;
     var postt = new CommunityPost();
     postt.nuevoComentario = 'hola';
     postt.id = 20;
     postt.valoration = 'NONE';
-
+    var comunityPost : CommunityPost = new CommunityPost()
+    comunityPost.id=1
+    comunityPost.rated=2
+    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
     var spy = spyOn(component, 'recalcularRated').and.stub();
     var spy1 = spyOn(
       component,
@@ -764,14 +851,18 @@ describe('ViewComunityComponents', () => {
     component.upvote(postt);
     expect(spy).toHaveBeenCalled();
     expect(spy1).toHaveBeenCalled();
-  });*/
+  });
 
-  /*it('upvote without valoration', () => {
+  it('upvote without valoration', () => {
     component.user = usuarioImportado;
     var postt = new CommunityPost();
     postt.nuevoComentario = 'hola';
     postt.id = 20;
     postt.valoration = undefined;
+    var comunityPost : CommunityPost = new CommunityPost()
+    comunityPost.id=1
+    comunityPost.rated=2
+    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
     var spy = spyOn(component, 'recalcularRated').and.stub();
     var spy1 = spyOn(
       component,
@@ -781,7 +872,7 @@ describe('ViewComunityComponents', () => {
     component.upvote(postt);
 
     expect(spy1).toHaveBeenCalled();
-  });*/
+  });
 
   it('gotoUserProfile', () => {
     spyRouter.navigate.and.returnValue('YES');
@@ -789,31 +880,40 @@ describe('ViewComunityComponents', () => {
     expect(component).toBeTruthy();
   });
 
-  /* it('downvote DOWN', () => {
-    component.user = usuarioImportado;
-    var postt = new CommunityPost();
-    postt.nuevoComentario = 'hola';
-    postt.id = 20;
-    postt.valoration = 'DOWN';
+ 
 
-    var spy = spyOn(component, 'recalcularRated').and.stub();
-    var spy1 = spyOn(
-      component,
-      'saveOrModifyValorationAndComunityPost'
-    ).and.stub();
-    component.comunidadEsDelUsuarioLogueado = true;
-    component.downvote(postt);
-    expect(spy).toHaveBeenCalled();
-    expect(spy1).toHaveBeenCalled();
-  });*/
+   it('downvote DOWN', () => {
+     component.user = usuarioImportado;
+     var postt = new CommunityPost();
+     postt.nuevoComentario = 'hola';
+     postt.id = 20;
+     postt.valoration = 'DOWN';
+     var comunityPost : CommunityPost = new CommunityPost()
+     comunityPost.id=1
+     comunityPost.rated=2
+     communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
+     var spy = spyOn(component, 'recalcularRated').and.stub();
+     var spy1 = spyOn(
+       component,
+       'saveOrModifyValorationAndComunityPost'
+     ).and.stub();
+     component.comunidadEsDelUsuarioLogueado = true;
+     component.downvote(postt);
+     expect(spy).toHaveBeenCalled();
+     expect(spy1).toHaveBeenCalled();
+   });
 
-  /*it('downvote UP', () => {
+  it('downvote UP', () => {
+ 
     component.user = usuarioImportado;
     var postt = new CommunityPost();
     postt.nuevoComentario = 'hola';
     postt.id = 20;
     postt.valoration = 'UP';
-
+    var comunityPost : CommunityPost = new CommunityPost()
+    comunityPost.id=1
+    comunityPost.rated=2
+    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
     var spy = spyOn(component, 'recalcularRated').and.stub();
     var spy1 = spyOn(
       component,
@@ -823,32 +923,39 @@ describe('ViewComunityComponents', () => {
     component.downvote(postt);
     expect(spy).toHaveBeenCalled();
     expect(spy1).toHaveBeenCalled();
-  });*/
+  });
 
-  /* it('downvote NONE', () => {
-    component.user = usuarioImportado;
-    var postt = new CommunityPost();
-    postt.nuevoComentario = 'hola';
-    postt.id = 20;
-    postt.valoration = 'NONE';
+   it('downvote NONE', () => {
+     component.user = usuarioImportado;
+     var postt = new CommunityPost();
+     postt.nuevoComentario = 'hola';
+     postt.id = 20;
+     postt.valoration = 'NONE';
+     var comunityPost : CommunityPost = new CommunityPost()
+     comunityPost.id=1
+     comunityPost.rated=2
+     communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
+     var spy = spyOn(component, 'recalcularRated').and.stub();
+     var spy1 = spyOn(
+       component,
+       'saveOrModifyValorationAndComunityPost'
+     ).and.stub();
+     component.comunidadEsDelUsuarioLogueado = true;
+     component.downvote(postt);
+     expect(spy).toHaveBeenCalled();
+     expect(spy1).toHaveBeenCalled();
+   });
 
-    var spy = spyOn(component, 'recalcularRated').and.stub();
-    var spy1 = spyOn(
-      component,
-      'saveOrModifyValorationAndComunityPost'
-    ).and.stub();
-    component.comunidadEsDelUsuarioLogueado = true;
-    component.downvote(postt);
-    expect(spy).toHaveBeenCalled();
-    expect(spy1).toHaveBeenCalled();
-  });*/
-
-  /*it('downvote without valoration', () => {
+  it('downvote without valoration', () => {
     component.user = usuarioImportado;
     var postt = new CommunityPost();
     postt.nuevoComentario = 'hola';
     postt.id = 20;
     postt.valoration = undefined;
+    var comunityPost : CommunityPost = new CommunityPost()
+    comunityPost.id=1
+    comunityPost.rated=2
+    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
     var spy = spyOn(component, 'recalcularRated').and.stub();
     var spy1 = spyOn(
       component,
@@ -858,7 +965,9 @@ describe('ViewComunityComponents', () => {
     component.downvote(postt);
 
     expect(spy1).toHaveBeenCalled();
-  });*/
+  });
+
+
 
   it('borrarCampos', () => {
     component.borrarCampos();
