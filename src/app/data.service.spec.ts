@@ -362,5 +362,21 @@ describe('DataService', () => {
       var result = service.getLogger$();
       expect(result).toBeTruthy();
     });
+
+    it('Get all ComunityPOst by comunity with filters', () => {
+      let search: OrdinaryObject = {
+        stringParam: 'a',
+      };
+      service
+        .getAllCommunityPostByCommunityWithFilters(search, user)
+        .subscribe((result: CommunityPost[]) => {
+          expect(result.length).toEqual(arregloPosts.length);
+        });
+      const request = httpMock.expectOne(
+        `${service.findAllCommunityPostByCommunityFiltersURL}`
+      );
+      expect(request.request.method).toBe('POST');
+      request.flush(arregloPosts);
+    });
   });
 });

@@ -41,6 +41,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { DeletePostService } from 'src/app/services/deletePost/delete-post.service';
 import { CommunitytPostAndUserToken } from 'src/app/models/communitytPostAndUserToken.model';
 import { CommunityPostService } from 'src/app/services/communityPost/community-post.service';
+import { FechasService } from 'src/app/services/fechas/fechas.service';
 
 describe('ViewComunityComponents', () => {
   let component: ViewComunityComponent;
@@ -61,12 +62,16 @@ describe('ViewComunityComponents', () => {
     'getAllUsersInCommunity',
     'persistCommunityPost',
     'saveComunity',
+    'getAllCommunityPostByCommunityWithFilters',
   ]);
   const filtrarSolicitudesComunidadServiceMock = jasmine.createSpyObj(
     'FiltrarSolicitudesComunidadService',
     ['deleteComunity', 'deleteUserFromComunity']
   );
   const modalServiceMock = jasmine.createSpyObj('ModalService', ['openModal']);
+  const fechasServiceMock = jasmine.createSpyObj('FechasService', [
+    'validarCampoYConvertirFecha',
+  ]);
   const spyRouter = jasmine.createSpyObj('Router', ['navigate']);
   const uploadFileServiceServiceMock = jasmine.createSpyObj(
     'UploadFileServiceService',
@@ -94,7 +99,7 @@ describe('ViewComunityComponents', () => {
         MatSelectModule,
         MatFormFieldModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
       ],
       declarations: [ViewComunityComponent],
       providers: [
@@ -125,6 +130,10 @@ describe('ViewComunityComponents', () => {
           useValue : communityPostServiceMock
         },
         {
+          provide: FechasService,
+          useValue: fechasServiceMock,
+        },
+        {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
@@ -153,7 +162,7 @@ describe('ViewComunityComponents', () => {
         BrowserAnimationsModule,
         MatExpansionModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
       ],
     });
     //component = TestBed.get(ViewComunityComponent)
@@ -780,95 +789,8 @@ describe('ViewComunityComponents', () => {
     expect(component.deletePost(comunityPost)).toBeTruthy()
   })
 
-  it('upvote DOWN', () => {
-    component.user = usuarioImportado;
-    var postt = new CommunityPost();
-    postt.nuevoComentario = 'hola';
-    postt.id = 20;
-    postt.valoration = 'DOWN';
-    var comunityPost : CommunityPost = new CommunityPost()
-    comunityPost.id=1
-    comunityPost.rated=2
-    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
-    var spy = spyOn(component, 'recalcularRated').and.stub();
-    var spy1 = spyOn(
-      component,
-      'saveOrModifyValorationAndComunityPost'
-    ).and.stub();
-    component.comunidadEsDelUsuarioLogueado = true;
-    component.upvote(postt);
-    expect(spy).toHaveBeenCalled();
-    expect(spy1).toHaveBeenCalled();
-  });
-
-   it('upvote UP', () => {
-     component.user = usuarioImportado;
-     var postt = new CommunityPost();
-     postt.nuevoComentario = 'hola';
-     postt.id = 20;
-     postt.valoration = 'UP';
-    var comunityPost : CommunityPost = new CommunityPost()
-    comunityPost.id=1
-    comunityPost.rated=2
-    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
-     var spy = spyOn(component, 'recalcularRated').and.stub();
-     var spy1 = spyOn(
-       component,
-       'saveOrModifyValorationAndComunityPost'
-     ).and.stub();
-     component.comunidadEsDelUsuarioLogueado = true;
-     component.upvote(postt);
-     expect(spy).toHaveBeenCalled();
-     expect(spy1).toHaveBeenCalled();
-   });
-
-  it('upvote NONE', () => {
-    component.user = usuarioImportado;
-    var postt = new CommunityPost();
-    postt.nuevoComentario = 'hola';
-    postt.id = 20;
-    postt.valoration = 'NONE';
-    var comunityPost : CommunityPost = new CommunityPost()
-    comunityPost.id=1
-    comunityPost.rated=2
-    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
-    var spy = spyOn(component, 'recalcularRated').and.stub();
-    var spy1 = spyOn(
-      component,
-      'saveOrModifyValorationAndComunityPost'
-    ).and.stub();
-    component.comunidadEsDelUsuarioLogueado = true;
-    component.upvote(postt);
-    expect(spy).toHaveBeenCalled();
-    expect(spy1).toHaveBeenCalled();
-  });
-
-  it('upvote without valoration', () => {
-    component.user = usuarioImportado;
-    var postt = new CommunityPost();
-    postt.nuevoComentario = 'hola';
-    postt.id = 20;
-    postt.valoration = undefined;
-    var comunityPost : CommunityPost = new CommunityPost()
-    comunityPost.id=1
-    comunityPost.rated=2
-    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
-    var spy = spyOn(component, 'recalcularRated').and.stub();
-    var spy1 = spyOn(
-      component,
-      'saveOrModifyValorationAndComunityPost'
-    ).and.stub();
-    component.comunidadEsDelUsuarioLogueado = true;
-    component.upvote(postt);
-
-    expect(spy1).toHaveBeenCalled();
-  });
-
-  it('gotoUserProfile', () => {
-    spyRouter.navigate.and.returnValue('YES');
-    component.goToUserProfile(usuarioImportado);
-    expect(component).toBeTruthy();
-  });
+  
+ 
 
    it('downvote DOWN', () => {
      component.user = usuarioImportado;
@@ -892,6 +814,7 @@ describe('ViewComunityComponents', () => {
    });
 
   it('downvote UP', () => {
+ 
     component.user = usuarioImportado;
     var postt = new CommunityPost();
     postt.nuevoComentario = 'hola';
@@ -955,6 +878,31 @@ describe('ViewComunityComponents', () => {
   });
 
 
+
+  it('borrarCampos', () => {
+    component.borrarCampos();
+    expect(component.filtrosForm.value.usuario).toEqual('');
+    expect(component.filtrosForm.value.fechaInicial).toEqual('');
+    expect(component.filtrosForm.value.fechaFinal).toEqual('');
+    expect(component.filtrosForm.value.tipoValoracion).toEqual('');
+  });
+
+  it('filtrarpublicaciones', () => {
+    let values = {
+      fechaInicial: new Date(),
+      fechaFinal: new Date(),
+      usuario: 'a',
+      valoracion: 'MAS_VALORACION',
+    };
+
+    fechasServiceMock.validarCampoYConvertirFecha.and.returnValue('2000-01-01');
+    dataServiceMock.getAllCommunityPostByCommunityWithFilters.and.returnValue(
+      of(arregloComunidades)
+    );
+    component.filtrarPublicaciones(values);
+
+    expect(component.communityPostList).toEqual(arregloComunidades);
+  });
 
   interface MockFile {
     name: string;
