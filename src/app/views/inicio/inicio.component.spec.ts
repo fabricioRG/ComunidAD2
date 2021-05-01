@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of } from 'rxjs';
 import { DataService } from 'src/app/data.service';
 import { OrdinaryObject } from 'src/app/helpers/ordinary-object.model';
+import { CommentPost } from 'src/app/models/commentPost.model';
 import { Comunity } from 'src/app/models/comunity.model';
 import { CommunityPost } from 'src/app/models/comunityPost.model';
 import { ValorationPost } from 'src/app/models/valorationPost.model';
@@ -32,6 +33,7 @@ describe('InicioComponent', () => {
   let modal: ModalService;
   let sessionService: SesionService;
   let voteService: VoteService;
+  let commentService: CommentService;
   let mockRouter = {
     navigate: jasmine.createSpy('navigate'),
   };
@@ -85,6 +87,9 @@ describe('InicioComponent', () => {
     voteService = new VoteService(
       TestBed.inject(HttpClient)
     );
+    commentService = new CommentService(
+      TestBed.inject(HttpClient)
+    )
     component = new InicioComponent(
       dataService,
       sessionService,
@@ -93,7 +98,7 @@ describe('InicioComponent', () => {
       postService,
       voteService,
       TestBed.inject(Router),
-      TestBed.inject(CommentService)
+      commentService
     );
     fixture.detectChanges();
   });
@@ -263,6 +268,27 @@ describe('InicioComponent', () => {
     expect(spy1).toHaveBeenCalled();
   });
 
+  it('upvote without valoration', () => {
+    let usr: User = {
+      registroAcademico: '23523'
+    }
+    component.user = usr;
+    let postt: CommunityPost = {
+      nuevoComentario: 'hola',
+      id: 20,
+    }
+    var spy = spyOn(component, 'recalcularRated').and.stub();
+    var spy1 = spyOn(
+      component,
+      'saveOrModifyValorationAndComunityPost'
+    ).and.stub();
+    let spy2 = spyOn(postService, 'getCommunityPostById').and.returnValue(of(postt));
+    component.upvote(postt);
+    expect(spy2).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(spy1).toHaveBeenCalled();
+  });
+
   it('userName', () => {
     let user: User | undefined = {
       nombreCompleto: 'Jose Perez'
@@ -406,6 +432,27 @@ describe('InicioComponent', () => {
     expect(spy1).toHaveBeenCalled();
   });
 
+  it('down without valoration', () => {
+    let usr: User = {
+      registroAcademico: '23523'
+    }
+    component.user = usr;
+    let postt: CommunityPost = {
+      nuevoComentario: 'hola',
+      id: 20,
+    }
+    var spy = spyOn(component, 'recalcularRated').and.stub();
+    var spy1 = spyOn(
+      component,
+      'saveOrModifyValorationAndComunityPost'
+    ).and.stub();
+    let spy2 = spyOn(postService, 'getCommunityPostById').and.returnValue(of(postt));
+    component.downvote(postt);
+    expect(spy2).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(spy1).toHaveBeenCalled();
+  });
+
   it('saveOrModifyValorationAndComunityPost', () => {
     let usr: User = {
       registroAcademico: '25343',
@@ -436,6 +483,38 @@ describe('InicioComponent', () => {
     expect(spy5).toHaveBeenCalled();
   });
 
+  it('onKeyComment',() => {
+    let post: CommunityPost = {
+      id: 10
+    }
+    const event = new KeyboardEvent('keyup', {
+      bubbles: true, cancelable: true, shiftKey: false
+    })
+    let spy = spyOn(component, 'onKeyComment');
+    component.onKeyComment(event,post);
+    expect(spy).toHaveBeenCalled();
+  });
 
+  it('saveComment',() => {
+    let post: CommunityPost = {
+      nuevoComentario: 'comentario',
+      id: 30,
+    }
+    let usr: User = {
+      registroAcademico: '232094'
+    }
+    let comment: CommentPost = {
+      comunityPost: post,
+      id: 10
+    }
+    component.user = usr;
+    let spy = spyOn(commentService, 'generateCommentPost').and.returnValue(comment);
+    let spy2 = spyOn(sessionService, 'getUserWithToken').and.returnValue(usr);
+    let spy3 = spyOn(commentService, 'createComment').and.returnValue(of(comment));
+    component.saveComment(post);
+    expect(spy).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    expect(spy3).toHaveBeenCalled();
+  })
 
 });
