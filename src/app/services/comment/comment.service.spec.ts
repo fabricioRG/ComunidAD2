@@ -8,13 +8,13 @@ import { CommentService } from './comment.service';
 
 describe('CommentService', () => {
   let service: CommentService;
-  let httpMock :HttpTestingController;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
 
     TestBed.configureTestingModule({
-      imports:[HttpClientTestingModule],
-      providers:[CommentService]
+      imports: [HttpClientTestingModule],
+      providers: [CommentService]
 
     });
     service = TestBed.inject(CommentService);
@@ -48,4 +48,3 @@ describe('CommentService', () => {
      expect(expResult).toEqual(result)
     })
 });
- 

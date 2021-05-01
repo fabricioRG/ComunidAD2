@@ -790,6 +790,96 @@ describe('ViewComunityComponents', () => {
   })
 
   
+  it('upvote DOWN', () => {
+    component.user = usuarioImportado;
+    var postt = new CommunityPost();
+    postt.nuevoComentario = 'hola';
+    postt.id = 20;
+    postt.valoration = 'DOWN';
+    var comunityPost : CommunityPost = new CommunityPost()
+    comunityPost.id=1
+    comunityPost.rated=2
+    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
+    var spy = spyOn(component, 'recalcularRated').and.stub();
+    var spy1 = spyOn(
+      component,
+      'saveOrModifyValorationAndComunityPost'
+    ).and.stub();
+    component.comunidadEsDelUsuarioLogueado = true;
+    component.upvote(postt);
+    expect(spy).toHaveBeenCalled();
+    expect(spy1).toHaveBeenCalled();
+  });
+
+   it('upvote UP', () => {
+     component.user = usuarioImportado;
+     var postt = new CommunityPost();
+     postt.nuevoComentario = 'hola';
+     postt.id = 20;
+     postt.valoration = 'UP';
+    var comunityPost : CommunityPost = new CommunityPost()
+    comunityPost.id=1
+    comunityPost.rated=2
+    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
+     var spy = spyOn(component, 'recalcularRated').and.stub();
+     var spy1 = spyOn(
+       component,
+       'saveOrModifyValorationAndComunityPost'
+     ).and.stub();
+     component.comunidadEsDelUsuarioLogueado = true;
+     component.upvote(postt);
+     expect(spy).toHaveBeenCalled();
+     expect(spy1).toHaveBeenCalled();
+   });
+
+  it('upvote NONE', () => {
+    component.user = usuarioImportado;
+    var postt = new CommunityPost();
+    postt.nuevoComentario = 'hola';
+    postt.id = 20;
+    postt.valoration = 'NONE';
+    var comunityPost : CommunityPost = new CommunityPost()
+    comunityPost.id=1
+    comunityPost.rated=2
+    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
+    var spy = spyOn(component, 'recalcularRated').and.stub();
+    var spy1 = spyOn(
+      component,
+      'saveOrModifyValorationAndComunityPost'
+    ).and.stub();
+    component.comunidadEsDelUsuarioLogueado = true;
+    component.upvote(postt);
+    expect(spy).toHaveBeenCalled();
+    expect(spy1).toHaveBeenCalled();
+  });
+
+  it('upvote without valoration', () => {
+    component.user = usuarioImportado;
+    var postt = new CommunityPost();
+    postt.nuevoComentario = 'hola';
+    postt.id = 20;
+    postt.valoration = undefined;
+    var comunityPost : CommunityPost = new CommunityPost()
+    comunityPost.id=1
+    comunityPost.rated=2
+    communityPostServiceMock.getCommunityPostById.and.returnValue(of(comunityPost))
+    var spy = spyOn(component, 'recalcularRated').and.stub();
+    var spy1 = spyOn(
+      component,
+      'saveOrModifyValorationAndComunityPost'
+    ).and.stub();
+    component.comunidadEsDelUsuarioLogueado = true;
+    component.upvote(postt);
+
+    expect(spy1).toHaveBeenCalled();
+  });
+
+  it('gotoUserProfile', () => {
+    spyRouter.navigate.and.returnValue('YES');
+    component.goToUserProfile(usuarioImportado);
+    expect(component).toBeTruthy();
+  });
+
  
 
    it('downvote DOWN', () => {
