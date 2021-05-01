@@ -41,17 +41,9 @@ export class InicioComponent implements OnInit {
     items: ['Undo', 'Redo'],
   };
   encabezadoFoto: string = 'data:image/jpeg;base64,';
-  isHandset$: Observable<boolean> = this.breakpointObserver
-    .observe(Breakpoints.Handset)
-    .pipe(
-      map((result) => result.matches),
-      shareReplay()
-    );
 
   constructor(
-    private breakpointObserver: BreakpointObserver,
     private dataService: DataService,
-    private postService: CommunityPostService,
     private sessionService: SesionService,
     private modal: ModalService,
     private deletePostService: DeletePostService,
@@ -81,7 +73,7 @@ export class InicioComponent implements OnInit {
       stringParam: this.user.registroAcademico,
       numberParam: this.postOffset
     }
-    this.postService
+    this.communityPostService
       .getUserCommunitiesPost(params, this.user)
       .subscribe((data) => {
         if(data.length <= 0){

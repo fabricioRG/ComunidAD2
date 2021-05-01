@@ -63,7 +63,7 @@ export class ViewComunityComponent implements OnInit {
     private communityPostService: CommunityPostService,
     private fechasService: FechasService
   ) {
-    this.cargarComunidad();
+    //this.cargarComunidad();
   }
 
   user: User;
@@ -142,7 +142,7 @@ export class ViewComunityComponent implements OnInit {
   public iframe: object = { enable: true };
   public height: number = 500;
   //filtros
-  filtrosForm!: FormGroup;
+  filtrosForm: FormGroup;
   opcionesValoracion = [
     {
       valor: ConstantesService.ESTADO_VALORACION_MAS_VALORACION,
