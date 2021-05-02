@@ -2,7 +2,9 @@
     <span>
         <div>
             <img style="width: 35px;height: 35px;" src="assets/img/logo_comunidad2.png">
-            <a mat-button routerLink="inicio"><h1>ComunidAD2</h1></a>
+            <a mat-button routerLink="inicio">
+                <h1>ComunidAD2</h1>
+            </a>
         </div>
     </span>
 
@@ -10,7 +12,8 @@
 
     <div *ngIf="existeSession" class="conten">
         <mat-form-field>
-            <mat-select [(value)]="selectedCategory" placeholder="Categoria" [formControl]="category" panelClass="testClass">
+            <mat-select [(value)]="selectedCategory" placeholder="Categoria" [formControl]="category"
+                panelClass="testClass">
                 <mat-option *ngFor="let cat of categoryList" [value]="cat">{{cat}}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -31,14 +34,17 @@
     </button> -->
 
     <div>
-        <a class="nav-link" mat-button routerLink="inicio">Inicio</a>
-        <a class="nav-link" *ngIf="existeSession" mat-button routerLink="" (click)="goToPageUserProfile()">Perfil</a>
-        <a class="nav-link" *ngIf="existeSession" mat-button routerLink="dashboard">Tablero</a>
+        <a class="nav-link" *ngIf="existeSession" mat-button routerLink="inicio">Inicio</a>
+        <a id="boton-ir-perfil" class="nav-link" *ngIf="existeSession" mat-button routerLink=""
+            (click)="goToPageUserProfile()">Perfil</a>
+        <a id="boton-ir-tablero" class="nav-link" *ngIf="existeSession" mat-button routerLink="dashboard">Tablero</a>
         <a class="nav-link" *ngIf="!existeSession" mat-button routerLink="crearUsuario">Crear Usuario</a>
         <!-- <a class="nav-link" *ngIf="existeSession" mat-button routerLink="editProfile">Editar Perfil</a> -->
         <a class="nav-link" mat-button>Nosotros</a>
-        <a class="nav-link" *ngIf="!existeSession" mat-raised-button color="accent" routerLink="login">Iniciar Sesion</a>
-        <a class="nav-link" *ngIf="existeSession" mat-raised-button color="gray" routerLink="login" (click)="logOut()">Cerrar Sesion</a>
+        <a class="nav-link" *ngIf="!existeSession" mat-raised-button color="accent" routerLink="login">Iniciar
+            Sesion</a>
+        <a id="boton-cerrar-sesion" class="nav-link" *ngIf="existeSession" mat-raised-button color="gray"
+            routerLink="login" (click)="logOut()">Cerrar Sesion</a>
     </div>
 
 </mat-toolbar>

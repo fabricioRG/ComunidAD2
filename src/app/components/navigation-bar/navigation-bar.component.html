@@ -1,19 +1,20 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav"
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
+  <mat-sidenav #drawer class="sidenav" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <!-- <mat-toolbar>Menu</mat-toolbar> -->
     <mat-nav-list>
       <a *ngIf="verificarSesionSuperUsuario()" mat-list-item routerLink="petitions">Solicitudes</a>
       <a mat-list-item routerLink="users">Usuarios</a>
-      <a *ngIf="verificarSesionUsuarioComunidad()" mat-list-item routerLink="createComunity">Crear Comunidad</a>
+      <a id="boton-crear-comunidad" *ngIf="verificarSesionUsuarioComunidad()" mat-list-item
+        routerLink="createComunity">Crear Comunidad</a>
       <a *ngIf="verificarSesionSuperUsuario()" mat-list-item routerLink="changePassword">Contraseñas</a>
-      <a *ngIf="verificarSesionUsuarioComunidad()" mat-list-item routerLink="showComunitys">Ver mis comunidades</a>
-      <a *ngIf="verificarSesionAndAdminSistema()" mat-list-item   routerLink="stateUserAdmin">Cambiar estado de Usuarios</a>
+      <a id="boton-ver-mis-comunidades" *ngIf="verificarSesionUsuarioComunidad()" mat-list-item
+        routerLink="showComunitys">Ver mis comunidades</a>
+      <a *ngIf="verificarSesionAndAdminSistema()" mat-list-item routerLink="stateUserAdmin">Cambiar estado de
+        Usuarios</a>
 
-      
-      
+
+
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

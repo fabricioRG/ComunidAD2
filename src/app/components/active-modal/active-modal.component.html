@@ -10,8 +10,9 @@
 </div>
 <div *ngIf="this.confirmModal" class="modal-footer">
     <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">Cancelar</button>
-    <button type="button" class="btn btn-danger" (click)="modal.close('ok')">Aceptar</button>
+    <button id="boton-aceptar-modal" type="button" class="btn btn-danger" (click)="modal.close('ok')">Aceptar</button>
 </div>
 <div *ngIf="this.infoModal" class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('ok')">Aceptar</button>
+    <button id="boton-aceptar-confirmacion-modal" type="button" class="btn btn-danger"
+        (click)="modal.close('ok')">Aceptar</button>
 </div>

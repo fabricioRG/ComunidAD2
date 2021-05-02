@@ -10,12 +10,8 @@
       <!--Usuario-->
       <mat-form-field class="col-sm-12" appearance="fill">
         <mat-label>Numero de registro*</mat-label>
-        <input
-          type="text"
-          formControlName="registroAcademico"
-          matInput
-          [ngClass]="{ 'is-invalid': f.registroAcademico.errors }"
-        />
+        <input id="numero-registro-login" type="text" formControlName="registroAcademico" matInput
+          [ngClass]="{ 'is-invalid': f.registroAcademico.errors }" />
         <div class="invalid-feedback" *ngIf="f.registroAcademico.errors">
           <div *ngIf="f.registroAcademico.errors.required">
             El numero de registro es requerido
@@ -32,20 +28,10 @@
       <!-- Password -->
       <mat-form-field class="col-sm-12" appearance="fill">
         <mat-label>Contraseña</mat-label>
-        <input
-          matInput
-          [type]="hide ? 'password' : 'text'"
-          #password
-          formControlName="password"
-          [ngClass]="{ 'is-invalid': f.password.errors }"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="hide = !hide"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hide"
-        >
+        <input id="campo-contrasena-login" matInput [type]="hide ? 'password' : 'text'" #password
+          formControlName="password" [ngClass]="{ 'is-invalid': f.password.errors }" />
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide">
           <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
         </button>
         <div *ngIf="f.password.errors" class="invalid-feedback">
@@ -59,11 +45,7 @@
       </div>
       <!--button-->
       <div class="text-center">
-        <button
-          type="submit"
-          [disabled]="loginForm.invalid"
-          class="btn btn-success"
-        >
+        <button type="submit" [disabled]="loginForm.invalid" class="btn btn-success" id="boton-iniciar-sesion-login">
           Iniciar sesion
         </button>
       </div>

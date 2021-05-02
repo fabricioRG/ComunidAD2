@@ -21,7 +21,8 @@
                   <p class="text-danger">Tu solicitud ha sido rechazada</p>
                 </div>
                 <div *ngIf="comunidadEsDelUsuarioLogueado || solicitudEstaActiva" class="col-sm-3">
-                  <button style="width: 100%;" (click)="disableCreateCommunityPost = !disableCreateCommunityPost"
+                  <button id="boton-desplegar-creacion-publicacion" style="width: 100%;"
+                    (click)="disableCreateCommunityPost = !disableCreateCommunityPost"
                     class="btn btn-outline-warning">Crear Publicacion</button>
                 </div>
                 <div *ngIf='puedeEnviarSolicitud' class="col-sm-3">
@@ -29,8 +30,8 @@
                     Comunidad</button>
                 </div>
                 <div *ngIf='comunidadEsDelUsuarioLogueado' class="col-sm-3">
-                  <button style="width: 100%;" type="button" class="btn btn-outline-primary"
-                    (click)="verSolicitudes()">Ver solicitudes</button>
+                  <button id="ver-solicitudes-comunidad" style="width: 100%;" type="button"
+                    class="btn btn-outline-primary" (click)="verSolicitudes()">Ver solicitudes</button>
                 </div>
                 <div *ngIf='comunidadEsDelUsuarioLogueado' class="col-sm-3">
                   <button type="button" class="btn btn-outline-danger" (click)="verMiembrosDeComunidad()">Eliminar
@@ -60,17 +61,18 @@
                   style="padding-left: 15px;padding-right: 15px;">
                   <mat-form-field class="example-full-width">
                     <mat-label>Titulo de la publicacion</mat-label>
-                    <input matInput maxlength="100" #title formControlName="title"
-                      [ngClass]="{ 'is-invalid':f.title.errors }" placeholder="Ejemplo: Mi comunidad">
+                    <input id="text-input-titulo-crear-publicacion" matInput maxlength="100" #title
+                      formControlName="title" [ngClass]="{ 'is-invalid':f.title.errors }"
+                      placeholder="Ejemplo: Mi comunidad">
                     <mat-hint align="end">{{title.value.length}} / 100</mat-hint>
                     <div *ngIf="f.title.errors" class="invalid-feedback">
                       <div *ngIf="f.title.errors.required">Titulo requerido</div>
                     </div>
                   </mat-form-field>
 
-                  <ejs-richtexteditor #message id="iframeRTE" [toolbarSettings]="tools" [iframeSettings]="iframe"
-                    [ngClass]="{ 'is-invalid': f.message.errors }" placeholder="Ejemplo: Mensaje sobre la comunidad"
-                    formControlName="message">
+                  <ejs-richtexteditor id="text-input-cuerpo-crear-publicacion" #message id="iframeRTE"
+                    [toolbarSettings]="tools" [iframeSettings]="iframe" [ngClass]="{ 'is-invalid': f.message.errors }"
+                    placeholder="Ejemplo: Mensaje sobre la comunidad" formControlName="message">
                     >
                   </ejs-richtexteditor>
                   <div *ngIf="f.message.errors" class="invalid-feedback">
@@ -91,7 +93,8 @@
                         class="btn btn-danger float-right">Quitar</button>
                     </div>
                     <div class="col-sm-4">
-                      <button style="width: 100%;" type="submit" class="btn btn-warning float-right">Publicar</button>
+                      <button id="text-input-boton-crear-publicacion" style="width: 100%;" type="submit"
+                        class="btn btn-warning float-right">Publicar</button>
                     </div>
                   </div>
                   <div style="margin-top: 20px;">
@@ -126,12 +129,12 @@
                         </mat-panel-description>
                       </mat-expansion-panel-header>
                       <form [formGroup]="filtrosForm" (ngSubmit)="filtrarPublicaciones(filtrosForm.value)">
-                        <mat-form-field appearance="fill" class="col-4">
+                        <mat-form-field class="col-4">
                           <mat-label>Usuario: </mat-label>
                           <input matInput formControlName="usuario" type="text">
                         </mat-form-field>
 
-                        <mat-form-field appearance="fill" class="col-4">
+                        <mat-form-field class="col-4">
                           <mat-label>Rango de fechas</mat-label>
                           <mat-date-range-input [rangePicker]="picker2">
                             <input matStartDate formControlName="fechaInicial" placeholder="Fecha inicio">
@@ -142,7 +145,7 @@
                         </mat-form-field>
 
 
-                        <mat-form-field appearance="fill" class="col-4">
+                        <mat-form-field class="col-4">
                           <mat-label>Opciones de Valoracion</mat-label>
                           <mat-select formControlName="tipoValoracion" value="tipoValoracion">
                             <div *ngFor="let valoracion of opcionesValoracion;let i = index">
@@ -152,14 +155,17 @@
                             </div>
                           </mat-select>
                         </mat-form-field>
-                        <div class="container">
-                          <button mat-fab color="warn" class="button24" class="col-4" type="submit" aria-label="">
-                            <mat-icon>send</mat-icon>
-                          </button>
-                          <button mat-fab color="warn" class="button24" class="col-4" (click)='borrarCampos()'
-                            aria-label="">
-                            <mat-icon>delete</mat-icon>
-                          </button>
+                        <div class="row justify-content-center">
+                          <div class="col-sm-3">
+                            <button mat-fab color="yellow" type="submit" aria-label="">
+                              <mat-icon>search</mat-icon>
+                            </button>
+                          </div>
+                          <div class="col-sm-3">
+                            <button mat-fab color="red" (click)='borrarCampos()' aria-label="">
+                              <mat-icon>clear</mat-icon>
+                            </button>
+                          </div>
                         </div>
                       </form>
                     </mat-expansion-panel>
@@ -195,7 +201,8 @@
               <div class="container">
                 <div class="row">
                   <div class="col-md-12 col-md-offset-2">
-                    <a *ngIf='comunidadEsDelUsuarioLogueado || postIsOfUser(post)' class="btn btn-primary btn-sm float-right" (click)="deletePost(post)">Eliminar</a>
+                    <a *ngIf='comunidadEsDelUsuarioLogueado || postIsOfUser(post)'
+                      class="btn btn-primary btn-sm float-right" (click)="deletePost(post)">Eliminar</a>
                   </div>
                 </div>
               </div>

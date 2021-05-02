@@ -13,7 +13,7 @@
   <!--Div que contendra los cards de las comunidades-->
   <div class="content">
     <div fxLayout="row wrap" fxLayoutGap="18px grid">
-      <div  fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of comunidades">
+      <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of comunidades">
         <mat-card class="mat-elevation-z4">
           <mat-card-header>
             <mat-card-title>{{data.comunity?.nombre}}</mat-card-title>
@@ -26,7 +26,8 @@
             </p>
           </mat-card-content>
           <mat-card-actions>
-            <button class="text-center btn btn-success" (click)="verComunidad(data.comunity?.id)" mat-button>Ver
+            <button id="boton-ver-comunidades-{{data.idComunityAssign?.idComunidad}}"
+              class="text-center btn btn-success" (click)="verComunidad(data.comunity?.id)" mat-button>Ver
               comunidad</button>
             <button mat-button>SHARE</button>
           </mat-card-actions>

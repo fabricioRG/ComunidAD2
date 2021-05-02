@@ -10,7 +10,7 @@
 
                 <mat-form-field class="col-sm-12" appearance="fill">
                     <mat-label>Nombre de la comunidad*</mat-label>
-                    <input type="text" formControlName="nombreDeComunidad" matInput
+                    <input id="nombre-form-crear-comunidad" type="text" formControlName="nombreDeComunidad" matInput
                         [ngClass]="{ 'is-invalid': f.nombreDeComunidad.errors }" />
                     <div class="invalid-feedback" *ngIf="f.nombreDeComunidad.errors">
                         <div *ngIf="f.nombreDeComunidad.errors.required">
@@ -40,8 +40,10 @@
                 <!--Cursos-->
                 <mat-form-field class="col-sm-12" appearance="fill">
                     <mat-label>Curso al que sera orientada la comunidad*</mat-label>
-                    <mat-select formControlName="tipoDeCurso" [ngClass]="{ 'is-invalid': f.tipoDeCurso.errors }">
-                        <mat-option [value]="data.codigoDeCurso" *ngFor="let data of courses">
+                    <mat-select id="curso-form-crear-comunidad" formControlName="tipoDeCurso"
+                        [ngClass]="{ 'is-invalid': f.tipoDeCurso.errors }">
+                        <mat-option [value]="data.codigoDeCurso" *ngFor="let data of courses; let i = index"
+                            [id]="'option-crear-comunidad-' + i">
                             {{ data.codigoDeCurso }}
                             {{ data.nombre }}
                         </mat-option>
@@ -53,8 +55,8 @@
                     </mat-select>
                 </mat-form-field>
 
-                <mat-slide-toggle class="col-sm-12" appearance="fill" formControlName="privacidad" color="primary"
-                    style="margin-bottom: 15px;">
+                <mat-slide-toggle id="privacidad-form-crear-comunidad" class="col-sm-12" appearance="fill"
+                    formControlName="privacidad" color="primary" style="margin-bottom: 15px;">
                     Comunidad Privada</mat-slide-toggle>
 
                 <!--Foto  -->
@@ -71,7 +73,8 @@
 
                 <!--BOTON-->
                 <div class="text-center">
-                    <button type="submit" [disabled]="comunityForm.invalid" class="btn btn-success">
+                    <button id="boton-form-crear-comunidad" type="submit" [disabled]="comunityForm.invalid"
+                        class="btn btn-success">
                         Crear comunidad
                     </button>
                 </div>

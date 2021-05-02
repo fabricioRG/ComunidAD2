@@ -255,3 +255,13 @@ mat-card {
   font-size: 16px;
   margin-top: -8px;
 }
+
+.mat-fab.mat-yellow {
+  background-color: rgb(255, 183, 0);
+  color: #fff;
+}
+
+.mat-fab.mat-red {
+  background-color: rgb(255, 17, 0);
+  color: #fff;
+}

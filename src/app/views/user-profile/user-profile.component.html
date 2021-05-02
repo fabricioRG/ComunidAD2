@@ -52,7 +52,8 @@
                                         <p class="p iconText">{{userStateText}}</p>
                                     </div>
                                     <div class="col-sm-4">
-                                        <button mat-icon-button="accent" (click)="changeUserPrivacy()">
+                                        <button id="boton-cambiar-perfil" mat-icon-button="accent"
+                                            (click)="changeUserPrivacy()">
                                             <mat-icon [inline]="true" class="material-icon md-36">{{userPrivacyIcon}}
                                             </mat-icon>
                                         </button>
@@ -145,7 +146,7 @@
                             <div fxFlex="30%" fxFlex.xs="100%" fxFlex.md="33%" *ngFor="let data of comunidades">
                                 <mat-card class="mat-elevation-z2">
                                     <img mat-card-image *ngIf="data.comunity?.foto"
-                                    [src]='getImage(data.comunity?.datosFoto)'>
+                                        [src]='getImage(data.comunity?.datosFoto)'>
                                     <mat-card-content>
                                         <div class="community-card-title">
                                             <p>{{data.comunity?.nombre}}</p>

@@ -11,7 +11,7 @@
                 <input type="file" accept="image/*" id="wizard-picture" (change)="onSelectFile($event)" class="">
               </div>
 
-              <div >
+              <div>
                 <h2>{{usuario.nombreCompleto}}</h2>
                 <p class="text-muted font-size-sm">{{usuario.registroAcademico}}</p>
                 <p class="text-secondary mb-1">{{usuario.correoElectronico}}</p>
@@ -23,8 +23,8 @@
                     </button>
                     <p class="p iconText">{{userStateText}}</p>
                   </div>
-                  <div class="col-sm-4">
-                    <button mat-icon-button="accent" (click) = "changeUserPrivacy()">
+                  <div class="col-sm-4" name="botoncperfil" id="botoncperfil2">
+                    <button mat-icon-button="accent" (click)="changeUserPrivacy()">
                       <mat-icon [inline]="true" class="material-icon md-36">{{userPrivacyIcon}}</mat-icon>
                     </button>
                     <p class="p iconText">{{userPrivacyText}}</p>
