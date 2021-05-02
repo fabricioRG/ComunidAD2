@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json  ",
     "build": "ng build",
-    "cibuild": "ng test --code-coverage --no-watch && ng build --prod --not-progess",
+    "cibuild": "ng test --code-coverage --no-watch && ng build --prod --no-progress ",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
